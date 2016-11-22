@@ -30,8 +30,6 @@ module.exports = db => patch => {
 
   let errors = jsonPatch.apply(db.static, patch)
 
-  console.log(errors)
-
   let trigger = []
 
   patch.forEach(x => {
