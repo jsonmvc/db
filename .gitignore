@@ -7,3 +7,4 @@
 *.log
 *.tix
 output.js
+.tgz

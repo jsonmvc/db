@@ -14,8 +14,6 @@ module.exports = (obj, path) => {
     }
   }
 
-  console.error('This might apply to arrays so it might be best to implement a Firebase like solution for dealing with arrays')
-
   if (val instanceof Object === true) {
     val = JSON.parse(JSON.stringify(val))
   }
