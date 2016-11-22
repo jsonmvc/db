@@ -1,0 +1,35 @@
+{
+  "name": "jsonmvc-db",
+  "version": "0.1.0",
+  "description": "The jsonmvc data library",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/graph.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsonmvc/db.git"
+  },
+  "keywords": [
+    "json",
+    "data",
+    "schema",
+    "dynamic",
+    "immutable",
+    "jsonmvc",
+    "mvc",
+    "framework",
+    "functional",
+    "architecture"
+  ],
+  "author": "Constantin Dumitrescu <dum.constantin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsonmvc/db/issues"
+  },
+  "homepage": "https://github.com/jsonmvc/db#readme",
+  "devDependencies": {
+    "fast-json-patch": "^1.1.1",
+    "uniq": "^1.0.1"
+  }
+}
