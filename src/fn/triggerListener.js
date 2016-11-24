@@ -16,7 +16,7 @@ module.exports = (db, path) => {
 
       if (db.updates.cache[path] !== cacheTest) {
         db.updates.cache[path] = cacheTest
-        fns[i].call(null, val)
+        fns[i].call(null, JSON.parse(cacheTest))
       }
 
     })

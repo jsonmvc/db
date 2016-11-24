@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = path => {
+module.exports = function decomposePath(path) {
   let xs = []
 
   let x = path.slice(0, path.lastIndexOf('/'))

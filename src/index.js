@@ -8,6 +8,11 @@ const schema = require('./api/schema')
 
 module.exports = () => {
 
+
+  // @TODO: Add on the static tree the following:
+  // - nesting: gives all the dynamic nodes (with their siblings)
+  // - dirty: a value has changed
+  // -
   let db = {
     static: {},
     dynamic: {

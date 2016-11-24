@@ -23,6 +23,11 @@ module.exports = db => (path, deps, fn) => {
   db.dynamic.deps[path] = deps
   db.dynamic.fns[path] = fn
 
+  // @TODO: When adding in dynamic nesting always reorder
+  // based on the nesting depth - deepest last so that
+  // when iterating for computation the deepest nodes
+  // should be already computed when reaching the top
+  // ones.
   let xs = decomposePath(path)
   xs.map(x => {
     if (!db.dynamic.nesting[x]) {
@@ -30,5 +35,12 @@ module.exports = db => (path, deps, fn) => {
     }
     db.dynamic.nesting[x].push(path)
   })
+
+  // @TODO: Based on this nesting create a new array that
+  // contains also the dependencies of the nested nodes
+  // thus generating the entire list of nodes.
+  // Also order them depth last
+  // nestingShallow
+  // nestingDeep
 
 }

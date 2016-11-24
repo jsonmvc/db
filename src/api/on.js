@@ -1,6 +1,7 @@
 'use strict'
 const getStaticNodes = require('./../fn/getStaticNodes')
 const triggerListener = require('./../fn/triggerListener')
+const decomposePath = require('./../fn/decomposePath')
 
 /**
  * on
@@ -25,7 +26,21 @@ module.exports = db => (path, fn) => {
     if (!db.updates.triggers[x]) {
       db.updates.triggers[x] = []
     }
-    db.updates.triggers[x].push(path)
+
+    if (db.updates.triggers[x].indexOf(path) === -1) {
+      db.updates.triggers[x].push(path)
+    }
+
+    let parts = decomposePath(path)
+    parts.forEach(y => {
+      if (!db.updates.triggers[y]) {
+        db.updates.triggers[y] = []
+      }
+      if (db.updates.triggers[y].indexOf(path) === -1) {
+        db.updates.triggers[y].push(path)
+      }
+    })
+
   })
 
   triggerListener(db, path)
