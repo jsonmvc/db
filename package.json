@@ -4,7 +4,7 @@
   "description": "The jsonmvc data library",
   "main": "src/index.js",
   "scripts": {
-    "test": "node test/graph.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,13 @@
     "fast-json-patch": "^1.1.1",
     "json-merge-patch": "^0.2.3",
     "uniq": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest-cli": "^17.0.3",
+    "yaml-js": "^0.1.4"
+  },
+  "jest": {
+    "testRegex": "test/.*\\.js$",
+    "testEnvironment": "node"
   }
 }

@@ -6,7 +6,7 @@ const patch = require('./api/patch')
 const node = require('./api/node')
 const schema = require('./api/schema')
 
-module.exports = () => {
+module.exports = data => {
 
 
   // @TODO: Add on the static tree the following:
@@ -26,6 +26,15 @@ module.exports = () => {
       fns: {}
     },
     schema: {}
+  }
+
+  if (data) {
+    if (data.toString() !== '[object Object]') {
+      throw new Error('The data must be an object')
+    }
+
+    db.static = JSON.parse(JSON.stringify(data))
+
   }
 
   return {

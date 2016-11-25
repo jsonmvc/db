@@ -1,10 +1,18 @@
-const db = require('./../../src/index')()
+'use strict'
 
-db.patch({
-  op: 'add',
-  path: '/a/b',
-  value: '123'
+let db
+
+beforeEach(() => {
+  db = require('./../../src/index')()
 })
 
-console.log('Result', db.get('/a/b'))
+it('simple get', () => {
 
+  db.patch({
+    op: 'add',
+    path: '/a/b',
+    value: '123'
+  })
+
+  expect(db.get('/a/b')).toBe('123')
+})
