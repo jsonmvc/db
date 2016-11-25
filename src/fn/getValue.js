@@ -4,14 +4,19 @@ const splitPath = require('./splitPath')
 module.exports = (obj, path) => {
   let parts = splitPath(path)
   let val = obj
+  let isRoot = parts.length === 1 && parts[0] === ''
 
-  for (let i = 0; i < parts.length; i += 1) {
-    if (val[parts[i]]) {
-      val = val[parts[i]]
-    } else {
-      val = undefined
-      break
+  if (!isRoot) {
+
+    for (let i = 0; i < parts.length; i += 1) {
+      if (val[parts[i]]) {
+        val = val[parts[i]]
+      } else {
+        val = undefined
+        break
+      }
     }
+
   }
 
   if (val instanceof Object === true) {

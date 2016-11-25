@@ -1,0 +1,28 @@
+---
+# Tests for db.on
+# Check if the patches trigger the listeners
+
+- comment: Should trigger a listener
+  doc: {}
+  patch:
+  - op: add
+    path: "/foo/bar"
+    value: 123
+  listeners:
+  - "/"
+  - "/foo"
+  - "/foo/bar"
+
+- comment: With dynamic nodes
+  doc:
+    bar: 123
+  patch:
+  - op: add
+    path: /bar
+    value: 321
+  dynamic:
+  - "/foo"
+  - - "/bar"
+  listeners:
+  - "/foo"
+

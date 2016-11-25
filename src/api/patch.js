@@ -59,41 +59,41 @@ module.exports = db => patch => {
   // @TODO by the way object data that is passed
   // through reference might need copying before
   // applying the patch
-  let errors = jsonPatch.apply(db.static, patch)
+  let errors = jsonPatch.validate(patch, db.static)
 
-  errors.forEach(x => {
-    if (x !== undefined) {
-      console.error(x)
-    }
-  })
+  if (errors) {
+    throw errors
+  } else {
+    jsonPatch.apply(db.static, patch)
 
-  let trigger = []
+    let trigger = []
 
-  // @TODO: Dirty checking and triggering updates
-  // can happen in an asyncCall to further optimize
-  // patching speed
+    // @TODO: Dirty checking and triggering updates
+    // can happen in an asyncCall to further optimize
+    // patching speed
 
-  // @TODO: In order to optimize the checking
-  // of getNode when dealing with dynamic nodes
-  // flag which ones are dirty and need reevaluation
-  // And that minimal list will be computed
-  // when calling getNode
+    // @TODO: In order to optimize the checking
+    // of getNode when dealing with dynamic nodes
+    // flag which ones are dirty and need reevaluation
+    // And that minimal list will be computed
+    // when calling getNode
 
-  patch.forEach(x => {
-    let parts = decomposePath(x.path)
-    parts.push(x.path)
-    parts.forEach(y => {
-      if (db.updates.triggers[y]) {
-        trigger.push(db.updates.triggers[y])
-      }
+    patch.forEach(x => {
+      let parts = decomposePath(x.path)
+      parts.push(x.path)
+      parts.forEach(y => {
+        if (db.updates.triggers[y]) {
+          trigger.push(db.updates.triggers[y])
+        }
+      })
     })
-  })
 
-  trigger = flatten(trigger)
-  trigger = uniq(trigger)
+    trigger = flatten(trigger)
+    trigger = uniq(trigger)
 
-  trigger.map(x => {
-    triggerListener(db, x)
-  })
+    trigger.map(x => {
+      triggerListener(db, x)
+    })
+  }
 
 }

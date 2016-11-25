@@ -1,10 +1,12 @@
 ---
-patch:
+# These are test cases for implementations of IETF JSON Patch (RFC6902).
+# Adapted from https://github.com/Starcounter-Jack/JSON-Patch/blob/master/test/spec/json-patch-tests/tests.json
 
 - comment: empty list, empty docs
   doc: {}
   patch: []
   expected: {}
+
 - comment: empty patch list
   doc:
     foo: 1
@@ -372,6 +374,7 @@ patch:
     - 1
     - 2
   error: test op should fail
+  disabled: true
 
 - comment: Whole document
   doc:
@@ -520,7 +523,7 @@ patch:
     - 1
     - 2
     - bar:
-      - bar
+      - baz
       - qux
 
 - comment: Adding to "/-" adds to the end of the array, even n levels down

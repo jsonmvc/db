@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "jest-cli": "^17.0.3",
+    "promise": "^7.1.1",
     "yaml-js": "^0.1.4"
   },
   "jest": {
