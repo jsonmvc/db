@@ -1,6 +1,7 @@
 'use strict'
 const isCyclic = require('./../fn/isCyclic')
 const decomposePath = require('./../fn/decomposePath')
+const patch = require('./patch')
 
 /**
  * node
@@ -45,7 +46,7 @@ module.exports = db => (path, deps, fn) => {
     // nestingDeep
 
   } catch (e) {
-    db.patch({
+    patch(db)({
       op: 'add',
       path: '/err/node/-',
       value: e.toString()

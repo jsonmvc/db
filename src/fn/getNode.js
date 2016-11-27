@@ -2,6 +2,7 @@
 const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
+const patch = require('./../api/patch')
 
 const getNode = (db, path) => {
   let result
@@ -70,9 +71,9 @@ const getNode = (db, path) => {
         }
       } catch(e) {
         result = defaultValue
-        db.patch({
+        patch(db)({
           op: 'add',
-          path: '/err/node',
+          path: '/err/node/-',
           value: e.toString()
         })
       }

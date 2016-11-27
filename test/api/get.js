@@ -46,6 +46,10 @@ tests.forEach(x => {
 
     let val = db.get(x.get)
 
+    if (x.errFn) {
+      expect(db.get('/err/node').length).toBe(1)
+    }
+
     if (x.reference) {
       let before = db.get(x.get + '/' + x.reference)
       val[x.reference] = 'something else'
@@ -60,6 +64,7 @@ tests.forEach(x => {
 
       expect(val).toEqual(x.expect)
     }
+
 
   })
 

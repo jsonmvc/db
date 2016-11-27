@@ -1,1 +1,32 @@
 # Add a test that disallows static overlaping dynamic or the other way around
+
+
+- comment: Should add a few nodes
+  doc:
+    bar: 123
+  dynamic:
+    /foo: ['/bar']
+    /bam: ['/foo']
+    /qux: ['/bam']
+
+- comment: Shouldn't allow a circular dependency
+  doc: {}
+  dynamic:
+    /foo: ['/bar']
+    /bar: ['/bam']
+    /bam: ['/foo']
+  error: circular dependency
+
+- comment: Shouldn't allow a complex circular dependency
+  doc:
+    baa:
+      bla:
+        boo: 123
+      boo: 123
+    baz:
+      bar: 123
+  dynamic:
+    /baa/bla/foo: ['/baz/bar', '/baa/boo']
+    /baz/bam: ['/baa', '/foo']
+    /foo: ['/baz']
+  error: circular dependency
