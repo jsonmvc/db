@@ -4,7 +4,7 @@
   "description": "The jsonmvc data library",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "perf": "node perf/test.js"
   },
   "repository": {
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "benchmark": "^2.1.2",
+    "coveralls": "^2.11.15",
     "jest-cli": "^17.0.3",
     "lodash": "^4.17.2",
     "promise": "^7.1.1",
