@@ -12,7 +12,6 @@ module.exports = (db, path) => {
 
   for (let i = 0; i < len; i += 1) {
 
-    console.log('settings immeadig')
     setImmediate(() => {
       let val = getNode(db, path)
       let cacheTest = JSON.stringify(val)
@@ -22,10 +21,9 @@ module.exports = (db, path) => {
         try {
           fns[i].call(null, JSON.parse(cacheTest))
         } catch (e) {
-          console.log(e)
           patch(db)({
             op: 'add',
-            path: '/err/patch/-',
+            path: '/err/on/-',
             value: e.toString()
           })
         }

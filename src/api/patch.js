@@ -102,15 +102,7 @@ module.exports = db => function patchDb(patch) {
     trigger = uniq(trigger)
 
     trigger.map(x => {
-      try {
-        triggerListener(db, x)
-      } catch(e) {
-        patch(db)({
-          op: 'add',
-          path: '/err/patch/-',
-          value: e.toString()
-        })
-      }
+      triggerListener(db, x)
     })
   } catch (e) {
     patchDb({

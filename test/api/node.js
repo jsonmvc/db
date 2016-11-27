@@ -40,7 +40,12 @@ tests.forEach(x => {
       } else {
         fn = concat
       }
+
       db.node(y, x.dynamic[y], fn)
+
+      if (x.overwrite) {
+        db.node(y, x.dynamic[y], fn)
+      }
     })
 
     let after = db.get('/err/node')

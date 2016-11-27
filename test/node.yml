@@ -30,3 +30,10 @@
     /baz/bam: ['/baa', '/foo']
     /foo: ['/baz']
   error: circular dependency
+
+- comment: Shouldn't allow a node to overwrite another node
+  doc: {}
+  dynamic:
+    /foo: ['/bar']
+  overwrite: true
+  error: shouldn't allow overwrite

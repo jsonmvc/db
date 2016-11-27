@@ -53,10 +53,7 @@ tests.forEach(x => {
 
     x.listeners.forEach(y => {
       if (x.errFn) {
-        db.on(y, x => {
-          thro
-          console.log('babab', x)
-        })
+        db.on(y, errFn)
       } else {
         db.on(y, x => {
           fn(x, db.get(y))
