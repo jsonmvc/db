@@ -68,8 +68,22 @@
     bam: 321
   dynamic:
     /foo: ['/bar/boo', '/bar/baz']
-    /bar: ['/foo', '/bam']
-  get: /bar
+    /bat: ['/foo', '/bam']
+  get: /bat
   expect: 123-aaa-321
 
+- comment: Should give a mixed dynamic and static node
+  doc:
+    bar:
+      baz: aaa
+      boo: 123
+    bam: 321
+  dynamic:
+    /bar/qux: ['/bar/boo', '/bar/baz']
+    /foo: ['/bar']
+  get: /bar
+  expect:
+    baz: aaa
+    boo: 123
+    qux: 123-aaa
 
