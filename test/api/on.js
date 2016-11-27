@@ -21,6 +21,11 @@ const concat = function () {
   return Array.prototype.join.call(arguments, '-')
 }
 
+const undefinedFn = () => undefined
+const errFn = () => {
+  throw new Error('This is an error')
+}
+
 const identity = x => x
 
 tests.forEach(x => {
@@ -47,18 +52,29 @@ tests.forEach(x => {
     }
 
     x.listeners.forEach(y => {
-      db.on(y, x => {
-        fn(x, db.get(y))
-      })
+      if (x.errFn) {
+        db.on(y, x => {
+          thro
+          console.log('babab', x)
+        })
+      } else {
+        db.on(y, x => {
+          fn(x, db.get(y))
+        })
+      }
     })
 
     db.patch(x.patch)
 
     return delayed(() => {
-      fn.mock.calls.forEach(x => {
-        expect(x[0]).toEqual(x[1])
-      })
-      expect(fn.mock.calls.length).toBe(x.listeners.length)
+      if (x.errFn) {
+        expect(db.get('/err/on').length).toBe(1)
+      } else {
+        fn.mock.calls.forEach(x => {
+          expect(x[0]).toEqual(x[1])
+        })
+        expect(fn.mock.calls.length).toBe(x.listeners.length)
+      }
     })
 
   })

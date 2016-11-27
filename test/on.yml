@@ -115,3 +115,27 @@
     /bam: ['/baz', '/baz2', '/baz3']
   listeners:
   - "/bam"
+
+- comment: Deep listener
+  doc:
+    foo:
+      bar:
+        baz: 123
+  patch:
+  - op: add
+    path: /foo/bar/baz
+    value: 321
+  listeners:
+  - /foo/bar/baz
+
+- comment: Listener with error
+  doc:
+    foo: 123
+  patch:
+  - op: add
+    path: /foo
+    value: 321
+  errFn: true
+  listeners:
+  - /foo
+

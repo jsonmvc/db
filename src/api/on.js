@@ -2,6 +2,7 @@
 const getStaticNodes = require('./../fn/getStaticNodes')
 const triggerListener = require('./../fn/triggerListener')
 const decomposePath = require('./../fn/decomposePath')
+const patch = require('./patch')
 
 /**
  * on
@@ -47,9 +48,9 @@ module.exports = db => (path, fn) => {
     triggerListener(db, path)
 
   } catch (e) {
-    db.patch({
+    patch(db)({
       op: 'add',
-      path: '/err/on',
+      path: '/err/on/-',
       value: e.toString()
     })
   }

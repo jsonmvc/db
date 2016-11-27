@@ -725,3 +725,39 @@
     path: "/foo"
     value: 1
   error: Unrecognized op 'spam'
+
+- comment: merge patch test
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: merge
+    path: /foo
+    value:
+      bam: 123
+  expected:
+    foo:
+      bar: 123
+      bam: 123
+
+- comment: merge patch on an bad path
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: merge
+    path: /baz/bam
+    value:
+      bam: 123
+  error: path does not exits
+
+- comment: merge patch on an bad path
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: merge
+    path: /baz/bam
+    value:
+      bam: 123
+  error: path does not exits

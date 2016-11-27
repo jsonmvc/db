@@ -19,7 +19,8 @@ module.exports = data => {
     static: {
       err: {
         patch: [],
-        node: []
+        node: [],
+        on: []
       }
     },
     dynamic: {
@@ -43,7 +44,8 @@ module.exports = data => {
     db.static = JSON.parse(JSON.stringify(data))
     db.static.err = {
       patch: [],
-      node: []
+      node: [],
+      on: []
     }
 
   }

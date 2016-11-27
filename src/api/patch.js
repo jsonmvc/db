@@ -59,7 +59,15 @@ module.exports = db => function patchDb(patch) {
         }
       }
 
-      val = merge.apply(val, x.value)
+      if (val !== undefined) {
+        val = merge.apply(val, x.value)
+      } else {
+        patch(db)({
+          op: 'add',
+          path: '/err/patch/-',
+          value: 'Path ' + x.path + ' does not exists for a merge'
+        })
+      }
     })
 
     // @TODO by the way object data that is passed
@@ -67,12 +75,6 @@ module.exports = db => function patchDb(patch) {
     // applying the patch
     let result
     result = jsonPatch.apply(db.static, patch, true)
-
-    patch.forEach((x, i) => {
-      if (x.op === 'test' && result[i] === false) {
-        throw 'Test failed'
-      }
-    })
 
     let trigger = []
 
@@ -100,7 +102,15 @@ module.exports = db => function patchDb(patch) {
     trigger = uniq(trigger)
 
     trigger.map(x => {
-      triggerListener(db, x)
+      try {
+        triggerListener(db, x)
+      } catch(e) {
+        patch(db)({
+          op: 'add',
+          path: '/err/patch/-',
+          value: e.toString()
+        })
+      }
     })
   } catch (e) {
     patchDb({
