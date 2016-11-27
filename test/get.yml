@@ -1,0 +1,75 @@
+---
+# Tests for db.get
+# Check if the db is interogated properly and that the dynamic nodes produce correct results
+
+- comment: Should give a static value
+  doc:
+    bar: 123
+  get: /bar
+  expect: 123
+
+- comment: Should give a complex static value
+  doc:
+    bar:
+      baz: [1, 2, 3]
+      boo: 123
+      foo: '123'
+      bam: null
+  get: /bar
+  expect:
+    baz: [1, 2, 3]
+    boo: 123
+    foo: '123'
+    bam: null
+
+- comment: Shouldn't give back references
+  doc:
+    bar:
+      boo: 123
+  get: /bar
+  reference: boo
+
+- comment: Should give a simple dynamic node
+  doc:
+    bar:
+      boo: 123
+  dynamic:
+    /foo: ['/bar/boo']
+  get: /foo
+  expect: 123
+
+- comment: Should give a complex dynamic node
+  doc:
+    bar:
+      boo: 123
+      baz: [1, 2, 3]
+      boo: 123
+      foo: '123'
+      bam: null
+      bro:
+        boo: 111
+  dynamic:
+    /foo: ['/bar']
+  get: /foo
+  expect:
+    boo: 123
+    baz: [1, 2, 3]
+    boo: 123
+    foo: '123'
+    bam: null
+    bro:
+      boo: 111
+
+- comment: Should give a hierarchical dynamic node
+  doc:
+    bar:
+      baz: aaa
+      boo: 123
+    bam: 321
+  dynamic:
+    /foo: ['/bar/boo', '/bar/baz']
+    /bar: ['/foo', '/bam']
+  get: /bar
+  expect: 123-aaa-321
+
+

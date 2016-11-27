@@ -247,8 +247,7 @@
     path: ''
     value:
       baz: qux
-  expected:
-    baz: qux
+  error: Shouldn't allow to replace the whole document
 
 - comment: spurious patch properties
   doc:
@@ -503,8 +502,7 @@
     path: ''
     value:
       baz: qux
-  expected:
-    baz: qux
+  error: Shouldn't be able to change the root
 
 - comment: Adding to "/-" adds to the end of the array
   doc:

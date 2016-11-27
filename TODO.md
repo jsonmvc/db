@@ -44,3 +44,16 @@ existed thus still giving the lowst possible time for arriving in our destation.
 THis is oposed to the way patching is usually done - by starting at the root and
 working it.
 
+
+Array
+----
+Implement https://github.com/petkaantonov/deque to improve performance
+for destructive operations on arrays
+
+Testing
+----
+
+Implement testing to ensure all functions are optmized by V8
+https://github.com/petkaantonov/bluebird/wiki/Optimization-killers
+
+

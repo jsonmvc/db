@@ -16,25 +16,18 @@ tests.forEach(x => {
     it('should succeed: ' + x.comment, () => {
       let db = dbFn(x.doc)
       db.patch(x.patch)
+      x.expected.err = db.get('/err')
       expect(db.get('/')).toEqual(x.expected)
     })
   } else if (x.error) {
     it('should fail: ' + x.comment, () => {
       let db = dbFn(x.doc)
-      let err
-      let threw = false
-      try {
-        db.patch(x.patch)
-      } catch (e) {
-        err = e
-        threw = true
-      }
+      let before = db.get('/err/patch')
+      db.patch(x.patch)
 
-      if (!err) {
-        console.log(x)
-      }
+      let after = db.get('/err/patch')
 
-      expect(threw).toBe(true)
+      expect(after.length).toBe(before.length + 1)
     })
   }
 

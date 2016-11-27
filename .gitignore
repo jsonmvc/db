@@ -8,3 +8,4 @@
 *.tix
 output.js
 *.tgz
+/coverage/

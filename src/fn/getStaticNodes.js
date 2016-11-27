@@ -1,5 +1,5 @@
 'use strict'
-const flatten = require('./flatten')
+const flatten = require('lodash/flattenDeep')
 
 const getStaticNodes = (db, path) => {
 

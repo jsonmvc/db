@@ -14,7 +14,12 @@ module.exports = data => {
   // - dirty: a value has changed
   // -
   let db = {
-    static: {},
+    static: {
+      err: {
+        patch: [],
+        node: []
+      }
+    },
     dynamic: {
       nesting: {},
       deps: {},
@@ -34,6 +39,10 @@ module.exports = data => {
     }
 
     db.static = JSON.parse(JSON.stringify(data))
+    db.static.err = {
+      patch: [],
+      node: []
+    }
 
   }
 

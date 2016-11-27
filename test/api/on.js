@@ -20,6 +20,8 @@ const concat = function () {
   return Array.prototype.join.call(arguments, '-')
 }
 
+const identity = x => x
+
 tests.forEach(x => {
 
   if (x.disabled) {
@@ -31,8 +33,15 @@ tests.forEach(x => {
     let fn = jest.fn()
 
     if (x.dynamic) {
-      x.dynamic.forEach(y => {
-        db.node(x[0], x[1], concat)
+      let ys = Object.keys(x.dynamic)
+      ys.forEach((y, i) => {
+        let fn
+        if (x.dynamic[y].length === 1) {
+          fn = identity
+        } else {
+          fn = concat
+        }
+        db.node(y, x.dynamic[y], fn)
       })
     }
 
@@ -45,11 +54,9 @@ tests.forEach(x => {
     db.patch(x.patch)
 
     return delayed(() => {
-      console.log(fn.mock.calls)
       fn.mock.calls.forEach(x => {
         expect(x[0]).toEqual(x[1])
       })
-
       expect(fn.mock.calls.length).toBe(x.listeners.length)
     })
 

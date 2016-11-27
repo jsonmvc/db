@@ -13,7 +13,7 @@
   - "/foo"
   - "/foo/bar"
 
-- comment: With dynamic nodes
+- comment: One dynamic node with single path
   doc:
     bar: 123
   patch:
@@ -21,8 +21,97 @@
     path: /bar
     value: 321
   dynamic:
-  - "/foo"
-  - - "/bar"
+    /foo: ['/bar']
   listeners:
   - "/foo"
 
+- comment: One dynamic node with two paths
+  doc:
+    bar: 123,
+    baz: 321
+  patch:
+  - op: add
+    path: /bar
+    value: 321
+  dynamic:
+    /foo: ['/bar', '/baz']
+  listeners:
+  - "/foo"
+
+- comment: One dynamic node with two paths
+  doc:
+    bar: 123,
+    baz: 123,
+    bam: 123
+  patch:
+  - op: add
+    path: /bar
+    value: 321
+  dynamic:
+    /foo: ['/bar', '/baz', '/bam']
+  listeners:
+  - "/foo"
+
+- comment: Two dynamic nodes with single path
+  doc:
+    bar: 123,
+  patch:
+  - op: add
+    path: /bar
+    value: 321
+  dynamic:
+    /foo: ['/bar']
+    /baz: ['/foo']
+  listeners:
+  - "/baz"
+
+- comment: Two dynamic nodes with two paths
+  doc:
+    bar: 123,
+  patch:
+  - op: add
+    path: /bar
+    value: 321
+  - op: add
+    path: /boo
+    value: 321
+  - op: add
+    path: /qux
+    value: 321
+  dynamic:
+    /foo: ['/bar', '/boo']
+    /baz: ['/foo', '/qux']
+  listeners:
+  - "/baz"
+
+- comment: Three dynamic nodes with three paths
+  doc:
+    bar1: 123,
+  patch:
+  - op: add
+    path: /bar1
+    value: 321
+  - op: add
+    path: /bar2
+    value: 321
+  - op: add
+    path: /bar3
+    value: 321
+  - op: add
+    path: /foo2
+    value: 321
+  - op: add
+    path: /foo3
+    value: 321
+  - op: add
+    path: /baz2
+    value: 321
+  - op: add
+    path: /baz3
+    value: 321
+  dynamic:
+    /foo: ['/bar1', '/bar2', '/bar3']
+    /baz: ['/foo', '/foo2', '/foo3']
+    /bam: ['/baz', '/baz2', '/baz3']
+  listeners:
+  - "/bam"

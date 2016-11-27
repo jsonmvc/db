@@ -13,36 +13,45 @@ const decomposePath = require('./../fn/decomposePath')
  *   is executed (async!)
  */
 module.exports = db => (path, fn) => {
+  try {
 
-  if (!db.updates.fns[path]) {
-    db.updates.fns[path] = []
-  }
-
-  db.updates.fns[path].push(fn)
-
-  let nodes = getStaticNodes(db, path)
-
-  nodes.forEach(x => {
-    if (!db.updates.triggers[x]) {
-      db.updates.triggers[x] = []
+    if (!db.updates.fns[path]) {
+      db.updates.fns[path] = []
     }
 
-    if (db.updates.triggers[x].indexOf(path) === -1) {
-      db.updates.triggers[x].push(path)
-    }
+    db.updates.fns[path].push(fn)
 
-    let parts = decomposePath(path)
-    parts.forEach(y => {
-      if (!db.updates.triggers[y]) {
-        db.updates.triggers[y] = []
+    let nodes = getStaticNodes(db, path)
+
+    nodes.forEach(x => {
+      if (!db.updates.triggers[x]) {
+        db.updates.triggers[x] = []
       }
-      if (db.updates.triggers[y].indexOf(path) === -1) {
-        db.updates.triggers[y].push(path)
+
+      if (db.updates.triggers[x].indexOf(path) === -1) {
+        db.updates.triggers[x].push(path)
       }
+
+      let parts = decomposePath(path)
+      parts.forEach(y => {
+        if (!db.updates.triggers[y]) {
+          db.updates.triggers[y] = []
+        }
+        if (db.updates.triggers[y].indexOf(path) === -1) {
+          db.updates.triggers[y].push(path)
+        }
+      })
+
     })
 
-  })
+    triggerListener(db, path)
 
-  triggerListener(db, path)
+  } catch (e) {
+    db.patch({
+      op: 'add',
+      path: '/err/on',
+      value: e.toString()
+    })
+  }
 
 }

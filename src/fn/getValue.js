@@ -19,7 +19,11 @@ module.exports = (obj, path) => {
 
   }
 
-  if (val instanceof Object === true) {
+  if (val
+    && val.toString
+    && (val.toString() === '[object Object]'
+      || val instanceof Array)
+  ) {
     val = JSON.parse(JSON.stringify(val))
   }
 
