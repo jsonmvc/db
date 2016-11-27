@@ -6,11 +6,7 @@ module.exports = (obj, path, val) => {
   let ref = obj
 
   for (let i = 0; i < parts.length; i += 1) {
-    if (parts.length - 1 === i) {
-      ref[parts[i]] = val
-    } else {
-      ref = ref[parts[i]]
-    }
+    ref[parts[i]] = val
   }
 
 }
