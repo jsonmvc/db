@@ -39,6 +39,7 @@
     "jest-cli": "^17.0.3",
     "lodash": "^4.17.2",
     "promise": "^7.1.1",
+    "setimmediate": "^1.0.5",
     "yaml-js": "^0.1.4"
   },
   "jest": {

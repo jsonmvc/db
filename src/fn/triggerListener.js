@@ -1,7 +1,8 @@
 'use strict'
 
 const getNode = require('./getNode')
-const asyncCall = require('./asyncCall')
+
+require('setimmediate')
 
 module.exports = (db, path) => {
 
@@ -10,7 +11,7 @@ module.exports = (db, path) => {
 
   for (let i = 0; i < len; i += 1) {
 
-    asyncCall(() => {
+    setImmediate(() => {
       let val = getNode(db, path)
       let cacheTest = JSON.stringify(val)
 

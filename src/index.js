@@ -6,6 +6,8 @@ const patch = require('./api/patch')
 const node = require('./api/node')
 const schema = require('./api/schema')
 
+require('setimmediate')
+
 module.exports = data => {
 
 

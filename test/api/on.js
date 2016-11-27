@@ -6,11 +6,12 @@ const testsFile = fs.readFileSync(`${root}/test/on.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const Promise = require('promise')
-const asyncCall = require(`${root}/src/fn/asyncCall.js`)
+
+require('setimmediate')
 
 const delayed = fn => {
   return new Promise((resolve) => {
-    asyncCall(() => {
+    setImmediate(() => {
       resolve(fn())
     })
   })

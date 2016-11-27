@@ -1,7 +1,6 @@
 'use strict'
 const getNode = require('./../fn/getNode')
 
-
 /**
  * get
  *
