@@ -8,6 +8,11 @@
   get: /bar
   expect: 123
 
+- comment: Should give an undefined value
+  doc: {}
+  get: /bar
+  expect: undefined
+
 - comment: Should give a complex static value
   doc:
     bar:
@@ -37,6 +42,31 @@
     /foo: ['/bar/boo']
   get: /foo
   expect: 123
+
+- comment: Should give a null value of a dynamic node when at least one path is undefined
+  doc: {}
+  dynamic:
+    /foo: ['/bar']
+  get: /foo
+  expect: null
+
+- comment: Should give a null value of a dynamic node the dynamic node returns an undefined
+  doc:
+    bar: 123
+  dynamic:
+    /foo: ['/bar']
+  get: /foo
+  expect: null
+  undefinedFn: true
+
+- comment: Should give a null value of a dynamic node the dynamic node throws an error
+  doc:
+    bar: 123
+  dynamic:
+    /foo: ['/bar']
+  get: /foo
+  expect: null
+  errFn: true
 
 - comment: Should give a complex dynamic node
   doc:

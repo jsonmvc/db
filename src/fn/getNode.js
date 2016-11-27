@@ -52,6 +52,9 @@ const getNode = (db, path) => {
   // By being kept as reference it will modify in place with
   // the new values and thus when a new call is made the
   // value won't need updating
+
+  let defaultValue = null
+
   if (db.dynamic.fns[path]) {
     let nodes = db.dynamic.deps[path]
     let args = nodes.map(x => getNode(db, x))
@@ -67,8 +70,11 @@ const getNode = (db, path) => {
         }
       } catch(e) {
         result = defaultValue
-        console.error(`On ${path} there was an error`, e, args)
-        // @TODO: add to errors data structure
+        db.patch({
+          op: 'add',
+          path: '/err/node',
+          value: e.toString()
+        })
       }
     } else {
       result = defaultValue

@@ -10,6 +10,11 @@ const concat = function () {
   return Array.prototype.join.call(arguments, '-')
 }
 
+const undefinedFn = () => undefined
+const errFn = () => {
+  throw new Error('This is an error')
+}
+
 const identity = x => x
 
 tests.forEach(x => {
@@ -26,7 +31,11 @@ tests.forEach(x => {
       let ys = Object.keys(x.dynamic)
       ys.forEach((y, i) => {
         let fn
-        if (x.dynamic[y].length === 1) {
+        if (x.undefinedFn) {
+          fn = undefinedFn
+        } else if (x.errFn) {
+          fn = errFn
+        } else if (x.dynamic[y].length === 1) {
           fn = identity
         } else {
           fn = concat
@@ -43,7 +52,13 @@ tests.forEach(x => {
       let after = db.get(x.get + '/' + x.reference)
       expect(after).toEqual(before)
     } else {
-      expect(db.get(x.get)).toEqual(x.expect)
+      let val = db.get(x.get)
+
+      if (val === undefined && x.expect === "undefined") {
+        val = "undefined"
+      }
+
+      expect(val).toEqual(x.expect)
     }
 
   })
