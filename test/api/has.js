@@ -2,7 +2,7 @@
 
 const root = process.cwd()
 const fs = require('fs')
-const testsFile = fs.readFileSync(`${root}/test/get.yml`, 'utf-8')
+const testsFile = fs.readFileSync(`${root}/test/has.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 
@@ -44,27 +44,9 @@ tests.forEach(x => {
       })
     }
 
-    let val = db.get(x.get)
+    let val = db.has(x.get)
 
-    if (x.errFn) {
-      expect(db.get('/err/node').length).toBe(1)
-    }
-
-    if (x.reference) {
-      let before = db.get(x.get + '/' + x.reference)
-      val[x.reference] = 'something else'
-      let after = db.get(x.get + '/' + x.reference)
-      expect(after).toEqual(before)
-    } else {
-      let val = db.get(x.get)
-
-      if (val === undefined && x.expect === "undefined") {
-        val = "undefined"
-      }
-
-      expect(val).toEqual(x.expect)
-    }
-
+    expect(val).toBe(x.expect)
 
   })
 
