@@ -37,3 +37,15 @@
     /foo: ['/bar']
   overwrite: true
   error: shouldn't allow overwrite
+
+- comment: Shouldn't allow a node with an invalid path
+  doc: {}
+  dynamic:
+    123: ['/bar']
+  error: /err/types/db/2
+
+- comment: Shouldn't allow a node with an invalid deps
+  doc: {}
+  dynamic:
+    /foo: ['bar']
+  error: /err/types/db/2

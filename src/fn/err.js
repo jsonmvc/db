@@ -5,7 +5,7 @@ const patch = require('./../api/patch')
 module.exports = function errPatch(db, path, obj) {
   let err = get(db.static, path)
 
-  err.value = obj.value
+  err.value = obj
   err.id = path
 
   patch(db)({

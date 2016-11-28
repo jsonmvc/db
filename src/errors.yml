@@ -17,3 +17,13 @@ db:
     name: db
 
 
+node:
+  1:
+    text: Node already exists at the given path.
+    name: node
+  2:
+    text: One of given paths is not valid.
+    name: node
+  3:
+    text: Nodes can't be cyclical.
+    name: node

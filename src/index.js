@@ -4,7 +4,7 @@ const get = require('./api/get')
 const has = require('./api/has')
 const patch = require('./api/patch')
 const node = require('./api/node')
-const err = require('./fn/errPatch')
+const err = require('./fn/err')
 
 const errTypes = require('./errors.json')
 
@@ -55,13 +55,9 @@ module.exports = data => {
   if (data) {
     let datac = JSON.parse(JSON.stringify(data))
     if (typeof datac === 'string' || datac.toString() !== '[object Object]') {
-      err(db, '/err/types/db/1',  {
-        value: datac
-      })
+      err(db, '/err/types/db/1', datac)
     } else if (datac.err) {
-      err(db, '/err/types/db/2', {
-        value: datac
-      })
+      err(db, '/err/types/db/2', datac)
     } else {
       db.static = JSON.parse(JSON.stringify(data))
       db.static.err = {
