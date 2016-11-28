@@ -1,11 +1,14 @@
 patch:
   1:
-    text: Foo bar
+    text: Invalid arguments given.
     name: patch
 
 on:
   1:
-    text: Foo bar
+    text: Invalid arguments given
+    name: on
+  2:
+    text: A listener function threw an error
     name: on
 
 db:
@@ -15,7 +18,6 @@ db:
   2:
     text: Data shouldn't contain protected (add list of) properties.
     name: db
-
 
 node:
   1:

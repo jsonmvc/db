@@ -1,7 +1,7 @@
 'use strict'
 
 const getNode = require('./getNode')
-const patch = require('./../api/patch')
+const err = require('./err')
 
 require('setimmediate')
 
@@ -18,15 +18,18 @@ module.exports = (db, path) => {
 
       if (db.updates.cache[path] !== cacheTest) {
         db.updates.cache[path] = cacheTest
-        try {
-          fns[i].call(null, JSON.parse(cacheTest))
-        } catch (e) {
-          patch(db)({
-            op: 'add',
-            path: '/err/on/-',
-            value: e.toString()
-          })
-        }
+
+        ;(function () {
+          try {
+            fns[i].call(null, JSON.parse(cacheTest))
+          } catch (e) {
+            err(db, '/err/types/on/2', {
+              path: path,
+              error: e
+            })
+          }
+        }())
+
       }
 
     })

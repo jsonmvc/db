@@ -3,6 +3,7 @@ const getStaticNodes = require('./../fn/getStaticNodes')
 const triggerListener = require('./../fn/triggerListener')
 const decomposePath = require('./../fn/decomposePath')
 const patch = require('./patch')
+const err = require('./../fn/err')
 
 /**
  * on
@@ -14,6 +15,20 @@ const patch = require('./patch')
  *   is executed (async!)
  */
 module.exports = db => (path, fn) => {
+  let obj = {
+    path: path,
+    fn: fn
+  }
+
+  if (fn instanceof Function === false) {
+    err(db, '/err/types/on/1', obj)
+    return
+  }
+
+  if (fn.length !== 1) {
+    err(db, '/err/types/on/1', obj)
+    return
+  }
 
   if (!db.updates.fns[path]) {
     db.updates.fns[path] = []

@@ -2,6 +2,18 @@
 # Tests for db.on
 # Check if the patches trigger the listeners
 
+- comment: Listener with invalid function
+  doc: {}
+  invalidFn: true
+  listeners:
+  - "/foo"
+
+- comment: Listener with function args different than 1
+  doc: {}
+  noArgsFn: true
+  listeners:
+  - "/foo"
+
 - comment: Should trigger a listener
   doc: {}
   patch:
@@ -138,4 +150,6 @@
   errFn: true
   listeners:
   - /foo
+
+
 

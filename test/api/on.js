@@ -17,14 +17,13 @@ const delayed = fn => {
   })
 }
 
-const undefinedFn = () => undefined
-const errFn = () => {
+const undefinedFn = x => undefined
+const errFn = x => {
   throw new Error('This is an error')
 }
+const noArgsFn = () => undefined
 
 const identity = x => x
-
-const fn1 = fn => x => fn
 
 tests.forEach(x => {
 
@@ -59,6 +58,10 @@ tests.forEach(x => {
     x.listeners.forEach(y => {
       if (x.errFn) {
         db.on(y, errFn)
+      } else if (x.invalidFn) {
+        db.on(y, 123)
+      } else if (x.noArgsFn) {
+        db.on(y, noArgsFn)
       } else {
         db.on(y, x => {
           fn(x, db.get(y))
@@ -69,7 +72,7 @@ tests.forEach(x => {
     db.patch(x.patch)
 
     return delayed(() => {
-      if (x.errFn) {
+      if (x.errFn || x.invalidFn || x.noArgsFn) {
         expect(db.get('/err/on').length).toBe(1)
       } else {
         fn.mock.calls.forEach(x => {

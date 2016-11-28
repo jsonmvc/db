@@ -14,103 +14,123 @@ const merge = require('json-merge-patch')
  *
  * Applies a patch
  */
-module.exports = db => function patchDb(patch) {
-  if (patch instanceof Array === false) {
-    patch = [patch]
-  }
+module.exports = db => {
+  const err = require('./../fn/err')
+  return function patchDb(patch) {
 
-  try {
-    // Check if root exists for add operations
-    patch.forEach(x => {
+    if (
+      !(
+        patch instanceof Array === true
+        || (
+          patch !== undefined
+          && patch.toString
+          && patch.toString() === '[object Object]'
+          && typeof patch !== 'string'
+        )
+      )
+    ) {
+      err(db, '/err/types/patch/1', patch)
+      return
+    }
 
-      if (x.path === '') {
-        throw 'Changing the root is not allowed'
-      }
+    patch = patch instanceof Array ? patch : [patch]
 
-      let path = x.path.split('/')
-      path = path.slice(0, path.length - 1).join('/')
 
-      if ((x.op === 'add' || x.op === 'merge') && getValue(db.static, path) === undefined) {
-        let patches = nestingPatches(db.static, x.path)
-        jsonPatch.apply(db.static, patches)
-      }
-    })
+    for (let i = 0, len = patch.length; i < len; i += 1) {
 
-    let merges = []
-    patch = patch.filter(x => {
-      if (x.op === 'merge') {
-        merges.push(x)
-        return false
-      } else {
-        return true
-      }
-    })
+    }
+    try {
+      // Check if root exists for add operations
+      patch.forEach(x => {
 
-    merges.forEach(x => {
-      let parts = splitPath(x.path)
-      let val = db.static
-
-      for (let i = 0; i < parts.length; i += 1) {
-        if (val[parts[i]]) {
-          val = val[parts[i]]
-        } else {
-          val = undefined
-          break
+        if (x.path === '') {
+          throw 'Changing the root is not allowed'
         }
-      }
 
-      if (val !== undefined) {
-        val = merge.apply(val, x.value)
-      } else {
-        patch(db)({
-          op: 'add',
-          path: '/err/patch/-',
-          value: 'Path ' + x.path + ' does not exists for a merge'
-        })
-      }
-    })
+        let path = x.path.split('/')
+        path = path.slice(0, path.length - 1).join('/')
 
-    // @TODO by the way object data that is passed
-    // through reference might need copying before
-    // applying the patch
-    let result
-    result = jsonPatch.apply(db.static, patch, true)
-
-    let trigger = []
-
-    // @TODO: Dirty checking and triggering updates
-    // can happen in an asyncCall to further optimize
-    // patching speed
-
-    // @TODO: In order to optimize the checking
-    // of getNode when dealing with dynamic nodes
-    // flag which ones are dirty and need reevaluation
-    // And that minimal list will be computed
-    // when calling getNode
-
-    patch.forEach(x => {
-      let parts = decomposePath(x.path)
-      parts.push(x.path)
-      parts.forEach(y => {
-        if (db.updates.triggers[y]) {
-          trigger.push(db.updates.triggers[y])
+        if ((x.op === 'add' || x.op === 'merge') && getValue(db.static, path) === undefined) {
+          let patches = nestingPatches(db.static, x.path)
+          jsonPatch.apply(db.static, patches)
         }
       })
-    })
 
-    trigger = flatten(trigger)
-    trigger = uniq(trigger)
+      let merges = []
+      patch = patch.filter(x => {
+        if (x.op === 'merge') {
+          merges.push(x)
+          return false
+        } else {
+          return true
+        }
+      })
 
-    trigger.map(x => {
-      triggerListener(db, x)
-    })
-  } catch (e) {
-    patchDb({
-      op: 'add',
-      path: '/err/patch/-',
-      value: e.toString()
-    })
-    return
+      merges.forEach(x => {
+        let parts = splitPath(x.path)
+        let val = db.static
+
+        for (let i = 0; i < parts.length; i += 1) {
+          if (val[parts[i]]) {
+            val = val[parts[i]]
+          } else {
+            val = undefined
+            break
+          }
+        }
+
+        if (val !== undefined) {
+          val = merge.apply(val, x.value)
+        } else {
+          patch(db)({
+            op: 'add',
+            path: '/err/patch/-',
+            value: 'Path ' + x.path + ' does not exists for a merge'
+          })
+        }
+      })
+
+      // @TODO by the way object data that is passed
+      // through reference might need copying before
+      // applying the patch
+      let result
+      result = jsonPatch.apply(db.static, patch, true)
+
+      let trigger = []
+
+      // @TODO: Dirty checking and triggering updates
+      // can happen in an asyncCall to further optimize
+      // patching speed
+
+      // @TODO: In order to optimize the checking
+      // of getNode when dealing with dynamic nodes
+      // flag which ones are dirty and need reevaluation
+      // And that minimal list will be computed
+      // when calling getNode
+
+      patch.forEach(x => {
+        let parts = decomposePath(x.path)
+        parts.push(x.path)
+        parts.forEach(y => {
+          if (db.updates.triggers[y]) {
+            trigger.push(db.updates.triggers[y])
+          }
+        })
+      })
+
+      trigger = flatten(trigger)
+      trigger = uniq(trigger)
+
+      trigger.map(x => {
+        triggerListener(db, x)
+      })
+    } catch (e) {
+      patchDb({
+        op: 'add',
+        path: '/err/patch/-',
+        value: e.toString()
+      })
+      return
+    }
   }
-
 }
