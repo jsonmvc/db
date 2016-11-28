@@ -11,6 +11,9 @@ const concat = function () {
 }
 
 const undefinedFn = () => undefined
+
+const invalidFn = 123
+
 const errFn = () => {
   throw new Error('This is an error')
 }
@@ -35,6 +38,8 @@ tests.forEach(x => {
         fn = undefinedFn
       } else if (x.errFn) {
         fn = errFn
+      } else if (x.invalidFn) {
+        fn = invalidFn
       } else if (x.dynamic[y].length === 1) {
         fn = identity
       } else {

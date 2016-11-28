@@ -31,15 +31,25 @@ tests.forEach(x => {
       let ys = Object.keys(x.dynamic)
       ys.forEach((y, i) => {
         let fn
+        let len = x.dynamic[y].length
+        let toCall
+
         if (x.undefinedFn) {
-          fn = undefinedFn
+          toCall = undefinedFn
         } else if (x.errFn) {
-          fn = errFn
-        } else if (x.dynamic[y].length === 1) {
-          fn = identity
-        } else {
-          fn = concat
+          toCall = errFn
         }
+
+        if (len === 1) {
+          fn = x => toCall ? toCall() : x
+        } else if (len === 2) {
+          fn = (x, y) => toCall ? toCall() : `${x}-${y}`
+        } else if (len === 3) {
+          fn = (x, y, z) => toCall ? toCall() : `${x}-${y}-${z}`
+        } else if (len === 4) {
+          fn = (x, y, z, t) => toCall ? toCall() : `${x}-${y}-${z}-${t}`
+        }
+
         db.node(y, x.dynamic[y], fn)
       })
     }

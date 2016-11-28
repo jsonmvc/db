@@ -10,6 +10,7 @@ const isValidPath = require('./../fn/isValidPath')
  * Adds a dynamic node
  */
 module.exports = db => (path, deps, fn) => {
+
   let node = {
     path: path,
     deps: deps,
@@ -18,6 +19,21 @@ module.exports = db => (path, deps, fn) => {
 
   if (db.dynamic.deps[path]) {
     err(db, '/err/types/node/1', node)
+    return
+  }
+
+  if (fn instanceof Function === false) {
+    err(db, '/err/types/node/2', node)
+    return
+  }
+
+  if (deps instanceof Array === false) {
+    err(db, '/err/types/node/2', node)
+    return
+  }
+
+  if (deps.length !== fn.length) {
+    err(db, '/err/types/node/4', node)
     return
   }
 

@@ -49,3 +49,22 @@
   dynamic:
     /foo: ['bar']
   error: /err/types/db/2
+
+- comment: Shouldn't allow a node with an invalid function
+  doc: {}
+  dynamic:
+    /foo: ['bar']
+  invalidFn: true
+  error: /err/types/db/2
+
+- comment: Shouldn't allow a node with an invalid deps
+  doc: {}
+  dynamic:
+    /foo: 123
+  error: /err/types/db/2
+
+- comment: Shouldn't allow a node with a function having a different number of arguments than the dependencies
+  doc: {}
+  dynamic:
+    /foo: ['/bar', '/baz']
+  error: /err/types/db/2

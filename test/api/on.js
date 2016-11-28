@@ -17,16 +17,14 @@ const delayed = fn => {
   })
 }
 
-const concat = function () {
-  return Array.prototype.join.call(arguments, '-')
-}
-
 const undefinedFn = () => undefined
 const errFn = () => {
   throw new Error('This is an error')
 }
 
 const identity = x => x
+
+const fn1 = fn => x => fn
 
 tests.forEach(x => {
 
@@ -42,11 +40,18 @@ tests.forEach(x => {
       let ys = Object.keys(x.dynamic)
       ys.forEach((y, i) => {
         let fn
-        if (x.dynamic[y].length === 1) {
-          fn = identity
-        } else {
-          fn = concat
+        let len = x.dynamic[y].length
+
+        if (len === 1) {
+          fn = x => x
+        } else if (len === 2) {
+          fn = (x, y) => `${x}-${y}`
+        } else if (len === 3) {
+          fn = (x, y, z) => `${x}-${y}-${z}`
+        } else if (len === 4) {
+          fn = (x, y, z, t) => `${x}-${y}-${z}-${t}`
         }
+
         db.node(y, x.dynamic[y], fn)
       })
     }
