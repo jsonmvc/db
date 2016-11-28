@@ -26,16 +26,14 @@ tests.forEach(x => {
 
   it(x.comment, () => {
     let db
-    let err
 
-    try {
-      db = dbFn(x.doc)
-    } catch (e) {
-      err = e
-    }
+    db = dbFn(x.doc)
 
     if (x.error) {
-      expect(err).toBeDefined()
+      let path = db.get(`${x.error}/path`)
+      let err = db.get(path)
+
+      expect(err.length).toBe(1)
     } else {
       expect(db.get('/')).toEqual(x.expected)
     }

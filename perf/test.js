@@ -40,14 +40,16 @@ suite.add('DB patch test', {
     dbGet.get(nodeLocation)
   }
 })
+.add('DB has test', {
+  fn: function () {
+    dbGet.has(nodeLocation)
+  }
+})
 .on('start', x => {
   console.log('Started benchmark...')
 })
 .on('cycle', function(event) {
   console.log(String(event.target));
-})
-.on('complete', function() {
-    console.log('Fastest is ' + this.filter('fastest').map('name'));
 })
 .run({ 'async': true });
 

@@ -1,0 +1,18 @@
+patch:
+  1:
+    path: /err/patch
+    text: Foo bar
+    id: 123
+
+on:
+  1:
+    path: /err/on
+    text: Foo bar
+    id: 123
+
+db:
+  1:
+    path: /err/db
+    text: The argument of db(data) is a non-object literal.
+
+
