@@ -7,6 +7,7 @@ module.exports = function errPatch(db, path, obj) {
 
   err.value = obj
   err.id = path
+  err.stack = new Error().stack
 
   patch(db)({
     op: 'add',
