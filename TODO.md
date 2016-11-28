@@ -57,3 +57,6 @@ Testing
 Implement testing to ensure all functions are optmized by V8
 https://github.com/petkaantonov/bluebird/wiki/Optimization-killers
 
+Pointer parser porting from C implementation
+----
+https://github.com/miloyip/rapidjson/blob/master/include/rapidjson/pointer.h#L802
