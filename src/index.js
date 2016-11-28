@@ -4,7 +4,9 @@ const get = require('./api/get')
 const has = require('./api/has')
 const patch = require('./api/patch')
 const node = require('./api/node')
-const errPatch = require('./fn/errPatch')
+const err = require('./fn/errPatch')
+
+const errTypes = require('./errors.json')
 
 require('setimmediate')
 
@@ -31,6 +33,8 @@ module.exports = data => {
   let db = {
     static: {
       err: {
+        types: errTypes,
+        db: [],
         patch: [],
         node: [],
         on: []
@@ -49,13 +53,20 @@ module.exports = data => {
   }
 
   if (data) {
-    if (data.toString() !== '[object Object]') {
-      errPatch(db, '/err/types/db/1', {
-        value: JSON.parse(JSON.stringify(data))
+    let datac = JSON.parse(JSON.stringify(data))
+    if (typeof datac === 'string' || datac.toString() !== '[object Object]') {
+      err(db, '/err/types/db/1',  {
+        value: datac
+      })
+    } else if (datac.err) {
+      err(db, '/err/types/db/2', {
+        value: datac
       })
     } else {
       db.static = JSON.parse(JSON.stringify(data))
       db.static.err = {
+        types: errTypes,
+        db: [],
         patch: [],
         node: [],
         on: []

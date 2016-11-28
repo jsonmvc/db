@@ -54,6 +54,10 @@ const getNode = (db, path) => {
   // the new values and thus when a new call is made the
   // value won't need updating
 
+  if (typeof path !== 'string') {
+    return void 0
+  }
+
   let defaultValue = null
 
   if (db.dynamic.fns[path]) {

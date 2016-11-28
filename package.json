@@ -4,9 +4,10 @@
   "description": "The jsonmvc data library",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
-    "test-on-travis": "jest && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "perf": "node perf/test.js"
+    "buildErrors": "./node_modules/.bin/yaml2json src/errors.yml -s",
+    "test": "npm run buildErrors && jest",
+    "test-on-travis": "npm run buildErrors && jest && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "perf": "node perf/regex.js"
   },
   "repository": {
     "type": "git",
@@ -42,7 +43,8 @@
     "lodash": "^4.17.2",
     "promise": "^7.1.1",
     "setimmediate": "^1.0.5",
-    "yaml-js": "^0.1.4"
+    "yaml-js": "^0.1.4",
+    "yamljs": "^0.2.8"
   },
   "jest": {
     "testRegex": "test/.*\\.js$",

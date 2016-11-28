@@ -9,3 +9,4 @@
 output.js
 *.tgz
 /coverage/
+src/errors.json

@@ -13,6 +13,11 @@
   get: /bar
   expect: undefined
 
+- comment: Should give undefined if the path is undefined
+  doc: {}
+  get: undefined
+  expect: undefined
+
 - comment: Should give a complex static value
   doc:
     bar:

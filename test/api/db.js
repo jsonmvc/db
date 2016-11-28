@@ -30,10 +30,12 @@ tests.forEach(x => {
     db = dbFn(x.doc)
 
     if (x.error) {
-      let path = db.get(`${x.error}/path`)
-      let err = db.get(path)
+      let name = db.get(`${x.error}/name`)
+
+      let err = db.get(`/err/${name}`)
 
       expect(err.length).toBe(1)
+      expect(err[0].id).toBe(x.error)
     } else {
       expect(db.get('/')).toEqual(x.expected)
     }

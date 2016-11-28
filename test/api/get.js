@@ -44,6 +44,10 @@ tests.forEach(x => {
       })
     }
 
+    if (x.get === "undefined" ) {
+      x.get = undefined
+    }
+
     let val = db.get(x.get)
 
     if (x.errFn) {

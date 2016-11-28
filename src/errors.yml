@@ -1,18 +1,19 @@
 patch:
   1:
-    path: /err/patch
     text: Foo bar
-    id: 123
+    name: patch
 
 on:
   1:
-    path: /err/on
     text: Foo bar
-    id: 123
+    name: on
 
 db:
   1:
-    path: /err/db
-    text: The argument of db(data) is a non-object literal.
+    text: Data must be an object literal.
+    name: db
+  2:
+    text: Data shouldn't contain protected (add list of) properties.
+    name: db
 
 
