@@ -76,7 +76,7 @@ tests.forEach(x => {
       if (x.async) {
         x.patch.forEach((x, i) => {
           setTimeout(() => {
-            db.patch(x)
+            db.patch([x])
           }, i * 10)
         })
       } else {

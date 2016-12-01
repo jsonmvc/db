@@ -9,10 +9,10 @@ module.exports = function errPatch(db, path, obj) {
   err.id = path
   err.stack = new Error().stack
 
-  patch(db)({
+  patch(db)([{
     op: 'add',
     path: `/err/${err.name}/-`,
     value: err
-  })
+  }])
 
 }

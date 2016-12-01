@@ -21,7 +21,8 @@ module.exports = db => {
   const err = require('./../fn/err')
   return function patchDb(patch) {
 
-    if (patch.constructor !== Array) {
+    if (patch instanceof Array !== true) {
+      throw JSON.stringify(patch)
       patch = [patch]
     }
 
@@ -116,11 +117,7 @@ module.exports = db => {
         if (val !== undefined) {
           val = merge.apply(val, x.value)
         } else {
-          patch(db)({
-            op: 'add',
-            path: '/err/patch/-',
-            value: 'Path ' + x.path + ' does not exists for a merge'
-          })
+          err(db, '/err/types/patch/1', x)
         }
       })
 
@@ -159,11 +156,7 @@ module.exports = db => {
         triggerListener(db, x)
       })
     } catch (e) {
-      patchDb({
-        op: 'add',
-        path: '/err/patch/-',
-        value: e.toString()
-      })
+      err(db, '/err/types/patch/1', patch)
       return
     }
   }

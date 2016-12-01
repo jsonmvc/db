@@ -32,3 +32,6 @@ node:
   4:
     text: The node function need to have the same number of arguments as the dependencies.
     name: node
+  5:
+    text: Node was called and an error was raised
+    name: node

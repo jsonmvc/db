@@ -2,9 +2,9 @@
 const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
+const err = require('./err')
 
 const getNode = (db, path) => {
-  const patch = require('./../api/patch')
   let result
   // @TODO: If there is a schema and the dynamic node
   // then return an empty value for that type:
@@ -71,11 +71,7 @@ const getNode = (db, path) => {
         }
       } catch(e) {
         result = defaultValue
-        patch(db)({
-          op: 'add',
-          path: '/err/node/-',
-          value: e.toString()
-        })
+        err(db, '/err/types/node/5', e.message)
       }
     } else {
       result = defaultValue
