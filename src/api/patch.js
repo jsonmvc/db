@@ -11,6 +11,7 @@ const merge = require('json-merge-patch')
 const isPlainObject = require('lodash/isPlainObject')
 const isValidPath = require('./../fn/isValidPath')
 const isValidValue = require('./../fn/isValidValue')
+const isPatch = require('./../fn/isPatch')
 
 /**
  * patch
@@ -21,9 +22,9 @@ module.exports = db => {
   const err = require('./../fn/err')
   return function patchDb(patch) {
 
-    if (patch instanceof Array !== true) {
-      throw JSON.stringify(patch)
-      patch = [patch]
+    if (!isPatch(db.schema, patch)) {
+      err(db, '/err/types/patch/1', patch)
+      return
     }
 
     /*

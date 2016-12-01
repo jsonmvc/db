@@ -23,6 +23,11 @@
     bar: 2
     foo: 1
 
+- comment: should fail with a non-array patch
+  doc: {}
+  patch: {}
+  error: non-array patch
+
 - comment: rearrangements OK?  How about one level down...
   doc:
     foo:
