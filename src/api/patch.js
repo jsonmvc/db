@@ -18,6 +18,8 @@ module.exports = db => {
   const err = require('./../fn/err')
   return function patchDb(patch) {
 
+
+    //@TODO: Move this checking in patch checking
     if (
       !(
         patch instanceof Array === true

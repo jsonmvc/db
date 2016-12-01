@@ -27,6 +27,7 @@ const noArgsFn = () => undefined
 
 const identity = x => x
 
+
 tests.forEach(x => {
 
   if (x.disabled) {
