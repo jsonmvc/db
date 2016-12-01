@@ -25,6 +25,32 @@
   - "/foo"
   - "/foo/bar"
 
+- comment: Should trigger multiple listeners name the same
+  doc: {}
+  patch:
+  - op: add
+    path: "/foo/bar"
+    value: 123
+  listeners:
+  - "/foo/bar"
+  - "/foo/bar"
+
+- comment: Should trigger a listener when multiple static values change underneath that node
+  doc: {}
+  patch:
+  - op: add
+    path: "/foo/bar/baz"
+    value: 123
+  - op: add
+    path: "/foo/bar/baz"
+    value: 321
+  - op: add
+    path: "/foo/bar/baz"
+    value: 444
+  async: true
+  listeners:
+  - "/foo"
+
 - comment: One dynamic node with single path
   doc:
     bar: 123

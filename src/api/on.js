@@ -31,34 +31,31 @@ module.exports = db => (path, fn) => {
   }
 
   if (!db.updates.fns[path]) {
-    db.updates.fns[path] = []
-  }
+    db.updates.fns[path] = [fn]
+    db.updates.cache[path] = {}
 
-  db.updates.fns[path].push(fn)
+    let nodes = getStaticNodes(db, path)
 
-  let nodes = getStaticNodes(db, path)
-
-  nodes.forEach(x => {
-    if (!db.updates.triggers[x]) {
-      db.updates.triggers[x] = []
-    }
-
-    if (db.updates.triggers[x].indexOf(path) === -1) {
-      db.updates.triggers[x].push(path)
-    }
+    nodes.forEach(x => {
+      if (!db.updates.triggers[x]) {
+        db.updates.triggers[x] = [path]
+      } else if (db.updates.triggers[x].indexOf(path) === -1) {
+        db.updates.triggers[x].push(path)
+      }
+    })
 
     let parts = decomposePath(path)
     parts.forEach(y => {
       if (!db.updates.triggers[y]) {
-        db.updates.triggers[y] = []
-      }
-      if (db.updates.triggers[y].indexOf(path) === -1) {
+        db.updates.triggers[y] = [path]
+      } else if (db.updates.triggers[y].indexOf(path) === -1) {
         db.updates.triggers[y].push(path)
       }
     })
 
-  })
+  } else {
+    db.updates.fns[path].push(fn)
+  }
 
   triggerListener(db, path)
-
 }

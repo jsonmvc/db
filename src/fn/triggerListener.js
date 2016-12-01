@@ -16,8 +16,8 @@ module.exports = (db, path) => {
       let val = getNode(db, path)
       let cacheTest = JSON.stringify(val)
 
-      if (db.updates.cache[path] !== cacheTest) {
-        db.updates.cache[path] = cacheTest
+      if (db.updates.cache[path][i] !== cacheTest) {
+        db.updates.cache[path][i] = cacheTest
 
         ;(function () {
           try {

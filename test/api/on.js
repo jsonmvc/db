@@ -1,9 +1,11 @@
 'use strict'
 
+jest.useFakeTimers()
+
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/on.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const Promise = require('promise')
 
@@ -64,12 +66,22 @@ tests.forEach(x => {
         db.on(y, noArgsFn)
       } else {
         db.on(y, x => {
-          fn(x, db.get(y))
+          fn(x, db.get(y), y)
         })
       }
     })
 
-    db.patch(x.patch)
+    if (x.async) {
+      x.patch.forEach((x, i) => {
+        setTimeout(() => {
+          db.patch(x)
+        }, i * 10)
+      })
+    } else {
+      db.patch(x.patch)
+    }
+
+    jest.runAllTimers()
 
     return delayed(() => {
       if (x.errFn || x.invalidFn || x.noArgsFn) {
@@ -78,10 +90,21 @@ tests.forEach(x => {
         fn.mock.calls.forEach(x => {
           expect(x[0]).toEqual(x[1])
         })
-        expect(fn.mock.calls.length).toBe(x.listeners.length)
+        if (x.async) {
+          let result = fn.mock.calls.reduce((acc, x) => {
+            acc[x[2]] = x[0]
+            return acc
+          }, {})
+
+          Object.keys(result).forEach(x => {
+            expect(result[x]).toEqual(db.get(x))
+          })
+
+        } else {
+          expect(fn.mock.calls.length).toBe(x.listeners.length)
+        }
       }
     })
-
   })
 
 })
