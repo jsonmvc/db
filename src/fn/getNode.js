@@ -2,9 +2,9 @@
 const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
-const patch = require('./../api/patch')
 
 const getNode = (db, path) => {
+  const patch = require('./../api/patch')
   let result
   // @TODO: If there is a schema and the dynamic node
   // then return an empty value for that type:

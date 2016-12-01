@@ -1,8 +1,8 @@
 'use strict'
 const get = require('./getValue')
-const patch = require('./../api/patch')
 
 module.exports = function errPatch(db, path, obj) {
+  const patch = require('./../api/patch')
   let err = get(db.static, path)
 
   err.value = obj
