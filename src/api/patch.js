@@ -25,7 +25,7 @@ module.exports = db => {
       patch = [patch]
     }
 
-
+    /*
     for (let i = 0, len = patch.length; i < len; i += 1) {
       let x = patch[i]
 
@@ -55,6 +55,7 @@ module.exports = db => {
       }
 
     }
+    */
 
     //@TODO: Move this checking in patch checking
     if (
