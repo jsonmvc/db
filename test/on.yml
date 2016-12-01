@@ -151,5 +151,19 @@
   listeners:
   - /foo
 
-
-
+- comment: Multiple patch calls do not trigger
+  doc:
+    foo: 123
+  patch:
+  - op: add
+    path: /foo
+    value: 321
+  - op: add
+    path: /foo
+    value: 321321
+  - op: add
+    path: /foo
+    value: 321321
+  async: true
+  listeners:
+  - /foo
