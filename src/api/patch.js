@@ -8,6 +8,9 @@ const flatten = require('lodash/flattenDeep')
 const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
 const merge = require('json-merge-patch')
+const isPlainObject = require('lodash/isPlainObject')
+const isValidPath = require('./../fn/isValidPath')
+const isValidValue = require('./../fn/isValidValue')
 
 /**
  * patch
@@ -18,6 +21,40 @@ module.exports = db => {
   const err = require('./../fn/err')
   return function patchDb(patch) {
 
+    if (patch.constructor !== Array) {
+      patch = [patch]
+    }
+
+
+    for (let i = 0, len = patch.length; i < len; i += 1) {
+      let x = patch[i]
+
+      if (
+        x.constructor === Object
+        && isValidPath(x.path)
+        && (
+          ((x.op === 'add' || x.op === 'replace' || x.op === 'test' || x.op === 'merge') && isValidValue(x.value))
+          || ((x.op === 'move' || x.op === 'copy') && isValidPath(x.from))
+          || x.op === 'remove'
+        )
+      ) {
+        let y = {
+          op: x.op,
+          path: x.path
+        }
+        if ((x.op === 'add' || x.op === 'replace' || x.op === 'test' || x.op === 'merge')) {
+          // @TODO: If schema, test if value is valid based on path
+          y.value = x.value
+        } else if ((x.op === 'move' || x.op === 'copy')) {
+          y.from = x.from
+        }
+        patch[i] = y
+      } else {
+        err(db, '/err/types/patch/1', patch)
+        return
+      }
+
+    }
 
     //@TODO: Move this checking in patch checking
     if (
@@ -35,12 +72,6 @@ module.exports = db => {
       return
     }
 
-    patch = patch instanceof Array ? patch : [patch]
-
-
-    for (let i = 0, len = patch.length; i < len; i += 1) {
-
-    }
     try {
       // Check if root exists for add operations
       patch.forEach(x => {

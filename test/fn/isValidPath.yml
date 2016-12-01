@@ -1,0 +1,5 @@
+
+- comment: Append to array
+  value: /foo/-
+  expected: true
+

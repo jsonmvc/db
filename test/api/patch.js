@@ -2,7 +2,7 @@
 
 const root = process.cwd()
 const fs = require('fs')
-const testsFile = fs.readFileSync(`${root}/test/patch.yml`, 'utf-8')
+const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 

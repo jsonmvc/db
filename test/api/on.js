@@ -4,7 +4,7 @@ jest.useFakeTimers()
 
 const root = process.cwd()
 const fs = require('fs')
-const testsFile = fs.readFileSync(`${root}/test/on.yml`, 'utf-8')
+const testsFile = fs.readFileSync(`${root}/test/api/on.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const Promise = require('promise')
