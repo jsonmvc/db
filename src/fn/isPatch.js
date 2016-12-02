@@ -5,17 +5,21 @@ const isJsonData = require('./isJsonData')
 const isPlainObject = require('lodash/isPlainObject')
 const diff = require('lodash/difference')
 
-const patchProps = [
-  'add',
-  'copy',
-  'remove',
-  'move',
-  'test',
-  'replace',
+const props = [
   'from',
   'value',
   'path',
   'op'
+]
+
+const ops = [
+  'add',
+  'remove',
+  'replace',
+  'copy',
+  'move',
+  'test',
+  'merge'
 ]
 
 module.exports = function isPatch(schema, patch) {
@@ -34,9 +38,10 @@ module.exports = function isPatch(schema, patch) {
     if (!(
       isPlainObject(x)
       && isValidPath(x.path)
-      && (x.value ? isValidValue(x.value) : true)
-      && (x.from ? isValidPath(x.from) : true)
-      && diff(Object.keys(x), patchProps).length === 0
+      && diff(Object.keys(x), props).length === 0
+      && ops.indexOf(x.op) !== -1
+      && ((x.op === 'add' || x.op === 'replace' || x.op === 'test') ? isValidValue(x.value) : true)
+      && ((x.op === 'move' || x.op === 'copy') ? isValidPath(x.from) : true)
       )
     ) {
       return false
