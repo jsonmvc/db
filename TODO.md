@@ -60,3 +60,45 @@ https://github.com/petkaantonov/bluebird/wiki/Optimization-killers
 Pointer parser porting from C implementation
 ----
 https://github.com/miloyip/rapidjson/blob/master/include/rapidjson/pointer.h#L802
+
+
+Other optimisations
+----
+Implement dedupe arrays for all db arrays
+Store patches with a flag (true / false) if applied
+and give rthem an ID so that they can be referenced in error
+and give rthem an ID so that they can be referenced in error
+objects.
+objects.
+efs: {},
+When storing patches, store them in nested arrays
+so that correct patching can be applied at a later time
+
+@TODO: Add on the static tree the following:
+- nesting: gives all the dynamic nodes (with their siblings)
+- dirty: a value has changed
+
+@TODO: In order to optimise the splitPath / decomposePath
+operations, once a path is entered into the system it is
+preserved in two forms: original && splitted
+Where the string is needed for matching the first is used
+and the latter according to what is needed (joining,
+creating partial paths, etc)
+Also joining paths by using a for loop is much more
+efficient than using arr.join('/')
+http://jsben.ch/#/OJ3vo
+
+@TODO: Instead of using for loops use 
+let l = arr.length
+while(l--) {
+ // arr[l]
+}
+Much more efficient:
+https://jsperf.com/fastest-array-loops-in-javascript/32
+
+@TODO: Implement search logic to go through refs
+to find the node. During the bottom-up search if the
+path does not exists create an object that up to
+the found path will be added to the tree (depending
+on the operation)
+
