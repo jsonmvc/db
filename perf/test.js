@@ -37,7 +37,7 @@ dbGet.node(nodeLocation, ['/baz', '/boo/baa/bam'], x => x)
 
 suite.add('DB patch test', {
   fn: function() {
-    dbPatch.patch(patch)
+    dbPatch.patch(patch, true, false)
   }
 })
 .add('Fast-Json-Patch patch test', {

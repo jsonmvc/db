@@ -16,9 +16,12 @@ const err = require('./../fn/err')
  *
  * Applies a patch
  */
-module.exports = db => patch => {
+module.exports = db => (patch, shouldValidate, shouldClone) => {
 
-  if (!isPatch(db.schema, patch)) {
+  shouldValidate = shouldValidate !== undefined ? shouldValidate : true
+  shouldClone = shouldClone !== undefined ? shouldClone : true
+
+  if (shouldValidate && !isPatch(db.schema, patch)) {
     err(db, '/err/types/patch/1', patch)
     return
   }
@@ -27,7 +30,7 @@ module.exports = db => patch => {
   // through reference might need copying before
   // applying the patch
   let result
-  result = applyPatch(db, patch)
+  result = applyPatch(db, patch, shouldClone)
 
   if (!result) {
     err(db, '/err/types/patch/2', patch)

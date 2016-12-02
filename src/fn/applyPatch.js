@@ -8,13 +8,13 @@ const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
 const clone = require('lodash/cloneDeep')
 
-module.exports = function applyPatch(db, patch) {
+module.exports = function applyPatch(db, patch, shouldClone) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
   let objIsArray = false
   let fromIsArray = false
-
   let revert
+
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
     x = patch[i]
@@ -103,9 +103,9 @@ module.exports = function applyPatch(db, patch) {
       case 'replace':
 
         if (objIsArray) {
-          obj.splice(last, 0, clone(x.value))
+          obj.splice(last, 0, shouldClone ? clone(x.value) : x.value)
         } else if (isPlainObject(obj)) {
-          obj[last] = clone(x.value)
+          obj[last] = shouldClone ? clone(x.value) : x.value
         }
       break
 
@@ -124,7 +124,7 @@ module.exports = function applyPatch(db, patch) {
 
         if (x.op === 'move') {
           delete from[lastFrom]
-        } else {
+        } else if (isPlainObject(temp)) {
           temp = clone(temp)
         }
 
