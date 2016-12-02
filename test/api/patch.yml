@@ -42,6 +42,23 @@
     value: 123
   error: patch invalid
 
+- comment: should fail with a fn value
+  doc: {}
+  patch:
+  - op: add
+    path: /foo
+  valueFn: true
+  error: fn value patch
+
+- comment: should fail with a circular value
+  doc: {}
+  patch:
+  - op: add
+    path: /foo
+  circular: true
+  error: circular value patch
+
+
 - comment: rearrangements OK?  How about one level down...
   doc:
     foo:

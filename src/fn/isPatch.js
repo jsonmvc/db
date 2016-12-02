@@ -1,11 +1,17 @@
 'use strict'
 const isValidPath = require('./isValidPath')
 const isValidValue = require('./isValidValue')
+const isJsonData = require('./isJsonData')
 const isPlainObject = require('lodash/isPlainObject')
+
 
 module.exports = function isPatch(schema, patch) {
 
   if (patch instanceof Array !== true) {
+    return false
+  }
+
+  if (!isJsonData(patch)) {
     return false
   }
 

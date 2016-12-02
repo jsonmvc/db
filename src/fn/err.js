@@ -3,11 +3,17 @@ const get = require('./getValue')
 
 module.exports = function errPatch(db, path, obj) {
   const patch = require('./../api/patch')
-  let err = get(db.static, path)
+  var err = get(db.static, path)
 
-  err.value = obj
+  ;(function () {
+    try {
+      err.value = JSON.parse(JSON.stringify(obj))
+    } catch(e) {
+      err.value = '[ERROR] ' + e.message
+    }
+  }())
+
   err.id = path
-  err.stack = new Error().stack
 
   patch(db)([{
     op: 'add',

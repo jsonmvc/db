@@ -23,6 +23,17 @@ tests.forEach(x => {
     it('should fail: ' + x.comment, () => {
       let db = dbFn(x.doc)
       let before = db.get('/err/patch')
+
+      if (x.valueFn) {
+        x.patch[0].value = function () {}
+      } else if (x.circular) {
+        var a = {}
+        var b = {}
+        a.b = b
+        b.a = a
+        x.patch[0].value = a
+      }
+
       db.patch(x.patch)
 
       let after = db.get('/err/patch')
