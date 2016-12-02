@@ -2,16 +2,21 @@
 const Benchmark = require('benchmark');
 const suite = new Benchmark.Suite
 const jsonpatch = require('fast-json-patch')
+const sample = require('./sample.json')
 
 const dbFn = require('./../src/index.js')
 
 const patch = [{
   op: 'add',
   path: '/foo/bar',
-  value: 123
+  value: sample
 }]
 
 const dbPatch = dbFn({
+  foo: {}
+})
+
+const dbJson = dbFn({
   foo: {}
 })
 
@@ -33,6 +38,11 @@ dbGet.node(nodeLocation, ['/baz', '/boo/baa/bam'], x => x)
 suite.add('DB patch test', {
   fn: function() {
     dbPatch.patch(patch)
+  }
+})
+.add('Fast-Json-Patch patch test', {
+  fn: function () {
+    jsonpatch.apply(dbJson.db.static, patch, true)
   }
 })
 .add('DB get test', {
