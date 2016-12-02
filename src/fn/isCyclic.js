@@ -29,7 +29,7 @@ module.exports = deps => {
 
   let isCyclic = false
 
-  parent:
+  root:
   for (let i = 0; i < parents.length; i += 1) {
     let visited = Object.assign({}, willVisit)
     let parent = parents[i]
@@ -41,7 +41,7 @@ module.exports = deps => {
       if (deps[child]) {
         if (visited[child]) {
           isCyclic = true
-          break parent
+          break root
         } else {
           visited[child] = true
           children = children.concat(deps[child])

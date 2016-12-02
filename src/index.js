@@ -19,17 +19,6 @@ module.exports = data => {
   // 4. Resource type (that triggered the error)
   // 5. Resource value (if applicable)
   // 6. Resource id (if applicable)
-
-  // @TODO: Implement dedupe arrays for all db arrays
-  // @TODO: Store patches with a flag (true / false) if applied
-  // and give them an ID so that they can be referenced in error
-  // objects.
-  // When storing patches, store them in nested arrays
-  // so that correct patching can be applied at a later time
-
-  // @TODO: Add on the static tree the following:
-  // - nesting: gives all the dynamic nodes (with their siblings)
-  // - dirty: a value has changed
   let db = {
     static: {
       err: {
