@@ -1,7 +1,6 @@
 'use strict'
 const isValidPath = require('./isValidPath')
 const isValidValue = require('./isValidValue')
-const isJsonData = require('./isJsonData')
 const isPlainObject = require('lodash/isPlainObject')
 const diff = require('lodash/difference')
 
@@ -25,10 +24,6 @@ const ops = [
 module.exports = function isPatch(schema, patch) {
 
   if (patch instanceof Array !== true) {
-    return false
-  }
-
-  if (!isJsonData(patch)) {
     return false
   }
 

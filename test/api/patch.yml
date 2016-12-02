@@ -50,13 +50,13 @@
   valueFn: true
   error: fn value patch
 
-- comment: should fail with a circular value
+- comment: should not include circular dependencies
   doc: {}
   patch:
   - op: add
     path: /foo
   circular: true
-  error: circular value patch
+  expected: {}
 
 - comment: should fail with a nonvalid jsondata
   doc: {}

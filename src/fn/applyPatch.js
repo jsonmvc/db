@@ -6,10 +6,13 @@ const isPlainObject = require('lodash/isPlainObject')
 const merge = require('lodash/merge')
 const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
+const clone = require('lodash/cloneDeep')
 
 module.exports = function applyPatch(db, patch) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
+  let objIsArray = false
+  let fromIsArray = false
 
   let revert
   root:
@@ -53,6 +56,7 @@ module.exports = function applyPatch(db, patch) {
     }
 
     if (isArray(obj)) {
+      objIsArray = true
       if (last === '-') {
         last = obj.length
       } else if (!isNumber(last)) {
@@ -73,6 +77,7 @@ module.exports = function applyPatch(db, patch) {
     }
 
     if (isArray(from)) {
+      fromIsArray = true
       if (lastFrom === '-') {
         lastFrom = from.length - 1
       } else if (!isNumber(lastFrom)) {
@@ -97,15 +102,15 @@ module.exports = function applyPatch(db, patch) {
       case 'add':
       case 'replace':
 
-        if (isArray(obj)) {
-          obj.splice(last, 0, x.value)
+        if (objIsArray) {
+          obj.splice(last, 0, clone(x.value))
         } else if (isPlainObject(obj)) {
-          obj[last] = x.value
+          obj[last] = clone(x.value)
         }
       break
 
       case 'remove':
-        if (isArray(obj)) {
+        if (objIsArray) {
           obj.splice(last, 1)
         } else {
           delete obj[last]
@@ -119,6 +124,8 @@ module.exports = function applyPatch(db, patch) {
 
         if (x.op === 'move') {
           delete from[lastFrom]
+        } else {
+          temp = clone(temp)
         }
 
         obj[last] = temp
