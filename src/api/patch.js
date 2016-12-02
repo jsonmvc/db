@@ -8,9 +8,6 @@ const flatten = require('lodash/flattenDeep')
 const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
 const merge = require('json-merge-patch')
-const isPlainObject = require('lodash/isPlainObject')
-const isValidPath = require('./../fn/isValidPath')
-const isValidValue = require('./../fn/isValidValue')
 const isPatch = require('./../fn/isPatch')
 
 /**
@@ -59,21 +56,6 @@ module.exports = db => {
     }
     */
 
-    //@TODO: Move this checking in patch checking
-    if (
-      !(
-        patch instanceof Array === true
-        || (
-          patch !== undefined
-          && patch.toString
-          && patch.toString() === '[object Object]'
-          && typeof patch !== 'string'
-        )
-      )
-    ) {
-      err(db, '/err/types/patch/1', patch)
-      return
-    }
 
     try {
       // Check if root exists for add operations

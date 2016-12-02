@@ -28,6 +28,20 @@
   patch: {}
   error: non-array patch
 
+- comment: should fail with second path invalid
+  doc: {}
+  patch:
+  - op: add
+    path: /foo
+    value: 123
+  - op: add
+    path:
+    - foo
+  - op: add
+    path: /foo
+    value: 123
+  error: patch invalid
+
 - comment: rearrangements OK?  How about one level down...
   doc:
     foo:

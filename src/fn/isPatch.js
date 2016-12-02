@@ -12,10 +12,12 @@ module.exports = function isPatch(schema, patch) {
   for (let i = 0, len = patch.length; i < len; i += 1) {
       let x = patch[i]
 
-      if (
+      if (!(
         isPlainObject(x)
         && isValidPath(x.path)
-        && x.value ? isValidValue(x.value) : true
+        && (x.value ? isValidValue(x.value) : true)
+        && (x.from ? isValidPath(x.from) : true)
+        )
         /*
         && (
           ((x.op === 'add' || x.op === 'replace' || x.op === 'test' || x.op === 'merge') && isValidValue(x.value))
@@ -24,8 +26,6 @@ module.exports = function isPatch(schema, patch) {
         )
         */
       ) {
-        return true
-      } else {
         return false
       }
 

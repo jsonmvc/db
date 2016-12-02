@@ -3,3 +3,7 @@
   value: /foo/-
   expected: true
 
+- comment: Disallow array
+  value:
+  - foo
+  expected: false
