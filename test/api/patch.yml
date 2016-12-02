@@ -417,7 +417,6 @@
     - 1
     - 2
   error: test op should fail
-  disabled: true
 
 - comment: Whole document
   doc:
@@ -805,3 +804,56 @@
     value:
       bam: 123
   error: path does not exits
+
+- comment: merge patch with on bad value
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: merge
+    path: /foo/bar
+    value:
+      bam: 123
+  error: value cannot be merged
+
+- comment: copy with out of bounds
+  doc:
+    foo:
+    - 1
+    - 2
+    bar:
+    - 1
+  patch:
+  - op: copy
+    path: /bar/-
+    from: /foo/10
+  error: copy with out of bounds
+
+- comment: move should fail with non existent from
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: move
+    path: /foo/bam
+    from: /foo/boo/baz
+  error: move should fail
+
+- comment: should copy the last item from an array
+  doc:
+    foo:
+    - 1
+    - 2
+    bar:
+    - 1
+  patch:
+  - op: copy
+    path: /bar/-
+    from: /foo/-
+  expected:
+    foo:
+    - 1
+    - 2
+    bar:
+    - 1
+    - 2

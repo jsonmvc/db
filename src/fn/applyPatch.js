@@ -74,7 +74,7 @@ module.exports = function applyPatch(db, patch) {
 
     if (isArray(from)) {
       if (lastFrom === '-') {
-        lastFrom = from.length
+        lastFrom = from.length - 1
       } else if (!isNumber(lastFrom)) {
         // Must be a number, else what's the point in
         // trying to cast it to one?
@@ -101,9 +101,6 @@ module.exports = function applyPatch(db, patch) {
           obj.splice(last, 0, x.value)
         } else if (isPlainObject(obj)) {
           obj[last] = x.value
-        } else {
-          revert = i
-          break root
         }
       break
 
@@ -146,8 +143,8 @@ module.exports = function applyPatch(db, patch) {
 
   }
 
-  if (revert) {
-    console.error('Should revert from ' + revert + ' backwards')
+  if (revert !== undefined) {
+    // @TODO: Revert all changes done up until revertIndex
   }
 
   return revert === undefined
