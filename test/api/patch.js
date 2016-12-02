@@ -6,6 +6,7 @@ const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 
+
 tests.forEach(x => {
 
   if (x.disabled) {
@@ -32,9 +33,12 @@ tests.forEach(x => {
         a.b = b
         b.a = a
         x.patch[0].value = a
+      } else if (x.nonValidJson) {
+        x.patch[0].value = /123/
       }
 
       db.patch(x.patch)
+
 
       let after = db.get('/err/patch')
 

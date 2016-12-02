@@ -58,6 +58,13 @@
   circular: true
   error: circular value patch
 
+- comment: should fail with a nonvalid jsondata
+  doc: {}
+  patch:
+  - op: add
+    path: /foo
+  nonValidJson: true
+  error: nonvalid jsondata
 
 - comment: rearrangements OK?  How about one level down...
   doc:
@@ -293,8 +300,7 @@
     path: "/foo"
     value: 1
     spurious: 1
-  expected:
-    foo: 1
+  error: not valid patch
 
 - doc:
     foo: 
