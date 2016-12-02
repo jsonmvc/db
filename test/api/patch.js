@@ -3,9 +3,8 @@
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
-
 
 tests.forEach(x => {
 
@@ -16,7 +15,8 @@ tests.forEach(x => {
   if (x.expected) {
     it('should succeed: ' + x.comment, () => {
       let db = dbFn(x.doc)
-      db.patch(x.patch)
+      let result = db.patch(x.patch)
+
       x.expected.err = db.get('/err')
       expect(db.get('/')).toEqual(x.expected)
     })
@@ -38,7 +38,6 @@ tests.forEach(x => {
       }
 
       db.patch(x.patch)
-
 
       let after = db.get('/err/patch')
 

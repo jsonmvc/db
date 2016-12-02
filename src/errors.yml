@@ -2,6 +2,9 @@ patch:
   1:
     text: Invalid arguments given.
     name: patch
+  2:
+    text: Tried to apply patch but failed and rolled back.
+    name: patch
 
 on:
   1:

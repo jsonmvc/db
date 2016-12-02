@@ -144,7 +144,8 @@
     - qux: hello
       foo: world
 
-- doc:
+- comment: Should fail with out of bounds
+  doc:
     bar:
     - 1
     - 2
@@ -154,7 +155,8 @@
     value: '5'
   error: Out of bounds (upper)
 
-- doc:
+- comment: Should fail with out of bounds 2
+  doc:
     bar:
     - 1
     - 2

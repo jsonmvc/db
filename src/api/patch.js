@@ -9,6 +9,7 @@ const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
 const merge = require('json-merge-patch')
 const isPatch = require('./../fn/isPatch')
+const applyPatch = require('./../fn/applyPatch')
 
 /**
  * patch
@@ -25,57 +26,18 @@ module.exports = db => {
     }
 
     try {
-      // Check if root exists for add operations
-      patch.forEach(x => {
-
-        if (x.path === '') {
-          throw 'Changing the root is not allowed'
-        }
-
-        let path = x.path.split('/')
-        path = path.slice(0, path.length - 1).join('/')
-
-        if ((x.op === 'add' || x.op === 'merge') && getValue(db.static, path) === undefined) {
-          let patches = nestingPatches(db.static, x.path)
-          jsonPatch.apply(db.static, patches)
-        }
-      })
-
-      let merges = []
-      patch = patch.filter(x => {
-        if (x.op === 'merge') {
-          merges.push(x)
-          return false
-        } else {
-          return true
-        }
-      })
-
-      merges.forEach(x => {
-        let parts = splitPath(x.path)
-        let val = db.static
-
-        for (let i = 0; i < parts.length; i += 1) {
-          if (val[parts[i]]) {
-            val = val[parts[i]]
-          } else {
-            val = undefined
-            break
-          }
-        }
-
-        if (val !== undefined) {
-          val = merge.apply(val, x.value)
-        } else {
-          err(db, '/err/types/patch/1', x)
-        }
-      })
 
       // @TODO by the way object data that is passed
       // through reference might need copying before
       // applying the patch
       let result
-      result = jsonPatch.apply(db.static, patch, true)
+      patch = JSON.parse(JSON.stringify(patch))
+      result = applyPatch(db, patch)
+
+      if (!result) {
+        err(db, '/err/types/patch/2', patch)
+        return result
+      }
 
       let trigger = []
 
