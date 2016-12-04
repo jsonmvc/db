@@ -1,7 +1,5 @@
 'use strict'
 const isEqual = require('lodash/isEqual')
-const isNumber = require('lodash/isNumber')
-const isArray = require('lodash/isArray')
 const isPlainObject = require('lodash/isPlainObject')
 const merge = require('lodash/merge')
 const splitPath = require('./splitPath')
@@ -9,145 +7,71 @@ const decomposePath = require('./decomposePath')
 const clone = require('lodash/cloneDeep')
 
 module.exports = function applyPatch(db, patch, shouldClone) {
-
-  let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
-  let objIsArray = false
-  let fromIsArray = false
   let revert
+  let len = patch.length
+  let i = 0
+
 
   root:
-  for (i = 0, len = patch.length; i < len; i += 1) {
-    x = patch[i]
+  while (i < len) {
+    let x = patch[i]
 
-    // @TODO: Implement both path && from in a function
+    let op = x.op
+    let from = x.from
+    let path = x.path
+    let value = x.value
+    let pathParts = path.split('/')
+    let len = pathParts.length - 1
+    let last = pathParts[len]
 
-    parts = splitPath(x.path)
-    obj = db.static
-    for (j = 0, lenj = parts.length - 1; j < lenj; j += 1) {
+    // Store the refs of the children with ref to their partents
+    // e.g. parent of
+    let obj = db.refs[path]
+    if (obj === undefined) {
+      let curUp = 1
+      obj = db.static
+      while (curUp < len) {
+        obj = obj[pathParts[curUp++]]
+      }
+    }
 
-      part = parts[j]
-      if (!obj[part] && x.op === 'add') {
-        obj[part] = {}
-        obj = obj[part]
+    if (op === 'add' || op === 'replace') {
+        //if (pathRef.isArray) {
+        //  pathRef.obj.splice(pathRef.last, 0, shouldClone ? clone(value) : value)
+        //} else {
+          obj[last] = value // shouldClone ? clone(value) : value
+        //}
+    } else if (op === 'merge') {
+      if (!isPlainObject(pathRef.obj[pathRef.last])) {
+        revert = i
+        break root
+      }
+      pathRef.obj[pathRef.last] = merge(pathRef.obj[pathRef.last], value)
+    } else if (op === 'remove') {
+      if (pathRef.isArray) {
+        pathRef.obj.splice(pathRef.last, 1)
       } else {
-        obj = obj[part]
-        if (!obj) {
-          revert = i
-          break root
-        }
+        delete pathRef.obj[pathRef.last]
       }
-    }
+    } else if (op === 'copy' || op === 'move') {
+      let temp
+      temp = fromRef.obj[fromRef.last]
 
-    last = parts[parts.length - 1]
-
-    if (x.op === 'move' || x.op === 'copy') {
-      parts = splitPath(x.from)
-      from = db.static
-      for (j = 0, lenj = parts.length - 1; j < lenj; j += 1) {
-        if (from[parts[j]])  {
-          from = from[parts[j]]
-        } else {
-          revert = i
-          break
-        }
+      if (op === 'move') {
+        delete fromRef.obj[fromRef.last]
+      } else if (isPlainObject(temp)) {
+        temp = clone(temp)
       }
 
-      lastFrom = parts[parts.length - 1]
-    }
-
-    if (isArray(obj)) {
-      objIsArray = true
-      if (last === '-') {
-        last = obj.length
-      } else if (!isNumber(last)) {
-        // Must be a number, else what's the point in
-        // trying to cast it to one?
-        let initial = last
-        last = parseInt(last, 10)
-
-        if (isNaN(last) || initial.toString() !== last.toString()) {
-          revert = i
-          break root
-        }
-      }
-      if (last > obj.length || last < 0) {
+      pathRef.obj[pathRef.last] = temp
+    } else if (op === 'test') {
+      if (!isEqual(pathRef.obj[pathRef.last], value)) {
         revert = i
         break root
       }
     }
 
-    if (isArray(from)) {
-      fromIsArray = true
-      if (lastFrom === '-') {
-        lastFrom = from.length - 1
-      } else if (!isNumber(lastFrom)) {
-        // Must be a number, else what's the point in
-        // trying to cast it to one?
-        let initial = lastFrom
-        lastFrom = parseInt(lastFrom, 10)
-
-        if (isNaN(lastFrom) || initial.toString() !== lastFrom.toString()) {
-          revert = i
-          break root
-        }
-      }
-      if (lastFrom > from.length || lastFrom < 0) {
-        revert = i
-        break root
-      }
-    }
-
-    switch (x.op) {
-
-      case 'add':
-      case 'replace':
-
-        if (objIsArray) {
-          obj.splice(last, 0, shouldClone ? clone(x.value) : x.value)
-        } else if (isPlainObject(obj)) {
-          obj[last] = shouldClone ? clone(x.value) : x.value
-        }
-      break
-
-      case 'remove':
-        if (objIsArray) {
-          obj.splice(last, 1)
-        } else {
-          delete obj[last]
-        }
-      break
-
-      case 'copy':
-      case 'move':
-
-        temp = from[lastFrom]
-
-        if (x.op === 'move') {
-          delete from[lastFrom]
-        } else if (isPlainObject(temp)) {
-          temp = clone(temp)
-        }
-
-        obj[last] = temp
-
-      break
-
-      case 'test':
-        if (!isEqual(obj[last], x.value)) {
-          revert = i
-          break root
-        }
-      break
-
-      case 'merge':
-        if (!isPlainObject(obj[last])) {
-          revert = i
-          break root
-        }
-        obj[last] = merge(obj[last], x.value)
-      break
-    }
-
+    i += 1
   }
 
   if (revert !== undefined) {
@@ -155,5 +79,4 @@ module.exports = function applyPatch(db, patch, shouldClone) {
   }
 
   return revert === undefined
-
 }

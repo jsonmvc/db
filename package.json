@@ -39,6 +39,7 @@
   "devDependencies": {
     "benchmark": "^2.1.2",
     "coveralls": "^2.11.15",
+    "double-ended-queue": "^2.1.0-0",
     "jest-cli": "^17.0.3",
     "lodash": "^4.17.2",
     "promise": "^7.1.1",

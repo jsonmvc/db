@@ -3,7 +3,7 @@
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 
 tests.forEach(x => {
@@ -37,7 +37,7 @@ tests.forEach(x => {
         x.patch[0].value = /123/
       }
 
-      db.patch(x.patch)
+      let result = db.patch(x.patch)
 
       let after = db.get('/err/patch')
 

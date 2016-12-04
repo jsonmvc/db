@@ -23,15 +23,15 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
 
   if (shouldValidate && !isPatch(db.schema, patch)) {
     err(db, '/err/types/patch/1', patch)
-    return
+    return false
   }
 
   // @TODO by the way object data that is passed
   // through reference might need copying before
   // applying the patch
-  let result
-  result = applyPatch(db, patch, shouldClone)
-
+  let result = applyPatch(db, patch, shouldClone)
+  return result
+/*
   if (!result) {
     err(db, '/err/types/patch/2', patch)
     return result
@@ -65,4 +65,5 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   trigger.map(x => {
     triggerListener(db, x)
   })
+  */
 }

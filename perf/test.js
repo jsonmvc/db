@@ -11,48 +11,37 @@ const patch = [{
   path: '/foo/bar',
   value: sample
 }]
+;
+
+const patches = [{
+  "op": "add",
+  "path": "/baz/0/qux",
+  "value": "world"
+}];
 
 const dbPatch = dbFn({
-  foo: {}
+  "foo": 1,
+  "baz": [{
+    "qux": "hello"
+  }]
 })
+
 
 const dbJson = dbFn({
-  foo: {}
+  "foo": 1,
+  "baz": [{
+    "qux": "hello"
+  }]
 })
-
-const dbGet = dbFn({
-  foo: {
-    bar: 123
-  },
-  boo: {
-    baa: {
-      bam: 123
-    }
-  }
-})
-
-const nodeLocation = '/qux'
-dbGet.node('/baz', ['/foo/bar'], x => x)
-dbGet.node(nodeLocation, ['/baz', '/boo/baa/bam'], x => x)
 
 suite.add('DB patch test', {
   fn: function() {
-    dbPatch.patch(patch, true, false)
+    dbPatch.patch(patches, false, false)
   }
 })
 .add('Fast-Json-Patch patch test', {
   fn: function () {
-    jsonpatch.apply(dbJson.db.static, patch, true)
-  }
-})
-.add('DB get test', {
-  fn: function () {
-    dbGet.get(nodeLocation)
-  }
-})
-.add('DB has test', {
-  fn: function () {
-    dbGet.has(nodeLocation)
+    jsonpatch.apply(dbJson.db.static, patches)
   }
 })
 .on('start', x => {

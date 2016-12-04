@@ -38,7 +38,8 @@ module.exports = data => {
       cache: {},
       triggers: {},
       fns: {}
-    }
+    },
+    refs: {}
   }
 
   if (data) {
