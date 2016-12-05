@@ -32,17 +32,14 @@
   },
   "homepage": "https://github.com/jsonmvc/db#readme",
   "dependencies": {
-    "fast-json-patch": "^1.1.1",
-    "json-merge-patch": "^0.2.3",
-    "uniq": "^1.0.1"
+    "uniq": "^1.0.1",
+    "lodash": "^4.17.2",
+    "setimmediate": "^1.0.5"
   },
   "devDependencies": {
     "benchmark": "^2.1.2",
     "coveralls": "^2.11.15",
     "jest-cli": "^17.0.3",
-    "lodash": "^4.17.2",
-    "promise": "^7.1.1",
-    "setimmediate": "^1.0.5",
     "yaml-js": "^0.1.4",
     "yamljs": "^0.2.8"
   },

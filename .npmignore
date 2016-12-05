@@ -1,3 +1,9 @@
 *.md
 test
-npm-shrinkwrap.json
+perf/
+coverage/
+.coveralls.yml
+.travis.yml
+*.tgz
+.npmignore
+*.yml
