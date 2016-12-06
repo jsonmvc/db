@@ -4,6 +4,7 @@ const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/get.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
+const merge = require('lodash/merge')
 const dbFn = require(`${root}/src/index`)
 
 const concat = function () {
@@ -56,6 +57,8 @@ tests.forEach(x => {
 
     if (x.get === "undefined" ) {
       x.get = undefined
+    } else if (x.get === '/') {
+      x.expect = merge(db.get('/'), x.expect)
     }
 
     let val = db.get(x.get)

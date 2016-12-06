@@ -102,3 +102,7 @@ path does not exists create an object that up to
 the found path will be added to the tree (depending
 on the operation)
 
+MUST DO!!!!!!
+https://github.com/cujojs/most/issues/137
+Inlining
+

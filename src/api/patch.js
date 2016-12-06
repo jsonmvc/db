@@ -1,12 +1,10 @@
 'use strict'
-const jsonPatch = require('fast-json-patch')
 const getValue = require('./../fn/getValue')
 const decomposePath = require('./../fn/decomposePath')
 const uniq = require('uniq')
 const flatten = require('lodash/flattenDeep')
 const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
-const merge = require('json-merge-patch')
 const isPatch = require('./../fn/isPatch')
 const applyPatch = require('./../fn/applyPatch')
 const err = require('./../fn/err')

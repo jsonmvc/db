@@ -18,6 +18,18 @@
   get: undefined
   expect: undefined
 
+- comment: Should give undefined if path is not a string
+  doc: {}
+  get: 123
+  expected: undefined
+
+- comment: Should give the root path
+  doc:
+    foo: 123
+  get: /
+  expect:
+    foo: 123
+
 - comment: Should give a complex static value
   doc:
     bar:
