@@ -106,3 +106,10 @@ MUST DO!!!!!!
 https://github.com/cujojs/most/issues/137
 Inlining
 
+------
+Errors
+------
+
+1. Add timestamps in order to organize errors (from different types) chronologically
+2. Add arguments and function used for failed nodes
+
