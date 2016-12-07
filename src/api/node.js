@@ -32,10 +32,13 @@ module.exports = db => (path, deps, fn) => {
     return
   }
 
+  // @TODO: Add this to warnings
+  /*
   if (deps.length !== fn.length) {
     err(db, '/err/types/node/4', node)
     return
   }
+  */
 
   let paths = deps.concat(path)
   let validPaths = paths.filter(isValidPath)
