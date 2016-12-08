@@ -63,6 +63,9 @@ module.exports = db => (path, deps, fn) => {
   // when iterating for computation the deepest nodes
   // should be already computed when reaching the top
   // ones.
+  //
+  // @TODO: Add the root to the nesting so that:
+  // db.get('/') also gets all the dynamic nodes in
   let xs = decomposePath(path)
   xs.map(x => {
     if (!db.dynamic.nesting[x]) {

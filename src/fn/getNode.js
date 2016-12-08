@@ -60,22 +60,22 @@ const getNode = (db, path) => {
     let nodes = db.dynamic.deps[path]
     let args = nodes.map(x => getNode(db, x))
 
-    if (args.indexOf(undefined) === -1) {
-      try {
-        result = db.dynamic.fns[path].apply(null, args)
-        if (result === undefined) {
-          result = defaultValue
-          // @TODO: log this as an error, an edge case
-          // that the developer didn't forsee when writing
-          // his function
-        }
-      } catch(e) {
+    // @TODO: decide how to handle case that uses only
+    // existing values vs nodes that handle non existing
+    // values
+    try {
+      result = db.dynamic.fns[path].apply(null, args)
+      if (result === undefined) {
         result = defaultValue
-        err(db, '/err/types/node/5', e.message)
+        // @TODO: log this as an error, an edge case
+        // that the developer didn't forsee when writing
+        // his function
       }
-    } else {
+    } catch(e) {
       result = defaultValue
+      err(db, '/err/types/node/5', e.message)
     }
+
   } else {
     let val = getValue(db.static, path)
 

@@ -112,4 +112,4 @@ Errors
 
 1. Add timestamps in order to organize errors (from different types) chronologically
 2. Add arguments and function used for failed nodes
-
+3. Add complete description to errors to why they happen
