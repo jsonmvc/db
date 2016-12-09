@@ -202,3 +202,17 @@
   async: true
   listeners:
   - /foo
+
+- comment: Should trigger if is listening to a path changed by a merge
+  doc:
+    foo:
+      bar: {}
+  patch:
+  - op: merge
+    path: /foo/bar
+    value:
+      bam: 123
+  dynamic:
+    /bam: ['/foo/bar/bam']
+  listeners:
+  - /bam

@@ -57,6 +57,14 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     })
   })
 
+  patch.forEach(x => {
+    let dep = db.dynamic.inverseDeps[x.path]
+
+    if (dep) {
+      trigger = trigger.concat(dep)
+    }
+  })
+
   trigger = flatten(trigger)
   trigger = uniq(trigger)
 

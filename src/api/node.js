@@ -81,4 +81,16 @@ module.exports = db => (path, deps, fn) => {
   // nestingShallow
   // nestingDeep
 
+  node.deps.forEach(x => {
+    let dep = decomposePath(x)
+
+    dep.forEach(y => {
+      if (!db.dynamic.inverseDeps[y]) {
+        db.dynamic.inverseDeps[y] = [node.path]
+      } else {
+        db.dynamic.inverseDeps[y].push(node.path)
+      }
+    })
+
+  })
 }

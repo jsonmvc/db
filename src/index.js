@@ -30,7 +30,9 @@ module.exports = data => {
       }
     },
     dynamic: {
+      patching: {},
       nesting: {},
+      inverseDeps: {},
       deps: {},
       fns: {}
     },
