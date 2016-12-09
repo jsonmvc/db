@@ -8,6 +8,11 @@ require('setimmediate')
 module.exports = (db, path) => {
 
   let fns = db.updates.fns[path]
+
+  if (!fns) {
+    return
+  }
+
   let len = fns.length
 
   for (let i = 0; i < len; i += 1) {
