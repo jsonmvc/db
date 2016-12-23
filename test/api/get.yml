@@ -134,3 +134,13 @@
     boo: 123
     qux: 123-aaa
 
+- comment: Should get a nested value in a dynamic node
+  doc:
+    bar:
+      baz:
+        bam: aaa
+    bam: 321
+  dynamic:
+    /foo: ['/bar']
+  get: /foo/baz/bam
+  expect: aaa

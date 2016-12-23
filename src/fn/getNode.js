@@ -2,6 +2,7 @@
 const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
+const decomposePath = require('./decomposePath')
 const err = require('./err')
 
 const getNode = (db, path) => {
@@ -56,15 +57,36 @@ const getNode = (db, path) => {
 
   let defaultValue = null
 
-  if (db.dynamic.fns[path]) {
-    let nodes = db.dynamic.deps[path]
+  let decomposed = decomposePath(path)
+  decomposed.unshift(path)
+
+  let dynamicParent
+  let dynamicChildren
+  let isDynamic = false
+  do {
+    dynamicParent = decomposed.shift()
+
+    if (db.dynamic.fns[dynamicParent]) {
+      isDynamic = true
+      dynamicChildren = path.substr(dynamicParent.length)
+    }
+
+  } while (decomposed.length != 0 && isDynamic === false)
+
+  // console.log(db.dynamic.fns, path, decomposed)
+
+  // Test to see if this is dynamic or if it's parents are dynamic
+
+
+  if (isDynamic) {
+    let nodes = db.dynamic.deps[dynamicParent]
     let args = nodes.map(x => getNode(db, x))
 
     // @TODO: decide how to handle case that uses only
     // existing values vs nodes that handle non existing
     // values
     try {
-      result = db.dynamic.fns[path].apply(null, args)
+      result = db.dynamic.fns[dynamicParent].apply(null, args)
       if (result === undefined) {
         result = defaultValue
         // @TODO: log this as an error, an edge case
@@ -74,6 +96,17 @@ const getNode = (db, path) => {
     } catch(e) {
       result = defaultValue
       err(db, '/err/types/node/5', e.message)
+    }
+
+    if (dynamicChildren) {
+      dynamicChildren = dynamicChildren.split('/')
+      dynamicChildren.shift()
+
+      do {
+        let child = dynamicChildren.shift()
+        result = result[child]
+      } while (dynamicChildren.length !== 0)
+
     }
 
   } else {

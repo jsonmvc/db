@@ -216,3 +216,17 @@
     /bam: ['/foo/bar/bam']
   listeners:
   - /bam
+
+- comment: Should trigger a nested dynanamic node
+  doc:
+    foo:
+      bar:
+        baz: aaa
+  patch:
+  - op: add
+    path: /foo/bar/baz
+    value: bbb
+  dynamic:
+    /qux: ['/foo']
+  listeners:
+  - /qux/bar
