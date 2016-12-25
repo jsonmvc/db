@@ -104,7 +104,12 @@ const getNode = (db, path) => {
 
       do {
         let child = dynamicChildren.shift()
-        result = result[child]
+        if (result) {
+          result = result[child]
+        } else {
+          result = void 0
+          break;
+        }
       } while (dynamicChildren.length !== 0)
 
     }

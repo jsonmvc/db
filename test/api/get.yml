@@ -144,3 +144,14 @@
     /foo: ['/bar']
   get: /foo/baz/bam
   expect: aaa
+
+- comment: Should get a null for a nested inexisting value in a dynamic node
+  doc:
+    bar:
+      baz:
+        bam: aaa
+    bam: 321
+  dynamic:
+    /foo: ['/bar']
+  get: /foo/bla
+  expect: undefined
