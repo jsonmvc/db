@@ -113,3 +113,14 @@ Errors
 1. Add timestamps in order to organize errors (from different types) chronologically
 2. Add arguments and function used for failed nodes
 3. Add complete description to errors to why they happen
+
+
+-----
+Utils
+-----
+1. Location history. Enable the develoeper to get the entire history of a certain node.
+   getHistory('/foo') -> [{ time: 123, value: 'a' }, { time: 124, value: 'b' }]
+   To make this more comprehensive add the patch that made the change.
+   To correlate this with what is shown to the user add debug data - which value was 
+   eventually used in the UI? (this is usefull to track down
+   issues with decisional trees that get trigger in a rapid succession of the value)
