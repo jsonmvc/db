@@ -95,6 +95,8 @@ const getNode = (db, path) => {
       }
     } catch(e) {
       result = defaultValue
+      e.message += `\n path: ${path}`
+      e.message += `\n node: ${dynamicParent}`
       err(db, '/err/types/node/5', e.message)
     }
 
