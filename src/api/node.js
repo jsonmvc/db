@@ -17,11 +17,6 @@ module.exports = db => (path, deps, fn) => {
     fn: fn
   }
 
-  if (db.dynamic.deps[path]) {
-    err(db, '/err/types/node/1', node)
-    return
-  }
-
   if (fn instanceof Function === false) {
     err(db, '/err/types/node/2', node)
     return

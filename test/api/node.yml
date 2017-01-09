@@ -31,12 +31,11 @@
     /foo: ['/baz']
   error: circular dependency
 
-- comment: Shouldn't allow a node to overwrite another node
+- comment: Should allow a node to overwrite another node
   doc: {}
   dynamic:
     /foo: ['/bar']
   overwrite: true
-  error: shouldn't allow overwrite
 
 - comment: Shouldn't allow a node with an invalid path
   doc: {}
