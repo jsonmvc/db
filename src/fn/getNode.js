@@ -122,7 +122,7 @@ const getNode = (db, path) => {
     // If root was found
     if (val !== undefined) {
 
-      if (val.toString && val.toString() === '[object Object]') {
+      if (val !== null && val.toString && val.toString() === '[object Object]') {
         let nodes = db.dynamic.nesting[path]
 
         if (nodes) {

@@ -162,3 +162,10 @@
       baz: false
   get: /bar/baz
   expect: false
+
+- comment: Should get a null value
+  doc:
+    bar:
+      baz: null
+  get: /bar/baz
+  expect: null
