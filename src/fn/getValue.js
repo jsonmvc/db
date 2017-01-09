@@ -9,7 +9,7 @@ module.exports = (obj, path) => {
   if (!isRoot) {
 
     for (let i = 0; i < parts.length; i += 1) {
-      if (val[parts[i]]) {
+      if (val && val[parts[i]] !== undefined) {
         val = val[parts[i]]
       } else {
         val = undefined

@@ -155,3 +155,10 @@
     /foo: ['/bar']
   get: /foo/bla
   expect: undefined
+
+- comment: Should get a falsy value
+  doc:
+    bar:
+      baz: false
+  get: /bar/baz
+  expect: false
