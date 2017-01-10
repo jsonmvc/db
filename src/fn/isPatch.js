@@ -21,7 +21,7 @@ const ops = [
   'merge'
 ]
 
-module.exports = function isPatch(schema, patch) {
+function isPatch(schema, patch) {
 
   if (patch instanceof Array !== true) {
     return false
@@ -46,3 +46,12 @@ module.exports = function isPatch(schema, patch) {
 
   return true
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  isPatch = debugWrapper('isPatch', isPatch)
+}
+
+module.exports = isPatch

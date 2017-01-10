@@ -5,7 +5,7 @@ const setValue = require('./setValue')
 const decomposePath = require('./decomposePath')
 const err = require('./err')
 
-const getNode = (db, path) => {
+let getNode = (db, path) => {
   let result
   // @TODO: If there is a schema and the dynamic node
   // then return an empty value for that type:
@@ -144,6 +144,13 @@ const getNode = (db, path) => {
   }
 
   return result
+}
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  getNode = debugWrapper('getNode', getNode, 1)
 }
 
 module.exports = getNode

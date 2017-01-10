@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function decomposePath(path) {
+function decomposePath(path) {
   let xs = []
 
   let x = path.slice(0, path.lastIndexOf('/'))
@@ -10,4 +10,13 @@ module.exports = function decomposePath(path) {
   }
   return xs
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  decomposePath = debugWrapper('decomposePath', decomposePath, 1)
+}
+
+module.exports = decomposePath
 

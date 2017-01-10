@@ -8,7 +8,7 @@ const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
 const clone = require('lodash/cloneDeep')
 
-module.exports = function applyPatch(db, patch, shouldClone) {
+function applyPatch(db, patch, shouldClone) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
   let objIsArray = false
@@ -157,3 +157,12 @@ module.exports = function applyPatch(db, patch, shouldClone) {
   return revert === undefined
 
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  applyPatch = debugWrapper('applyPatch', applyPatch)
+}
+
+module.exports = applyPatch

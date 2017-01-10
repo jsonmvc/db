@@ -5,10 +5,17 @@ const has = require('./api/has')
 const patch = require('./api/patch')
 const node = require('./api/node')
 const err = require('./fn/err')
+const isDebug = require('./fn/isDebug')
 
 const errTypes = require('./errors.json')
 
 require('setimmediate')
+
+if (isDebug) {
+  if (typeof window !== 'undefined') {
+    window.JSONMVC_DEBUG = {}
+  }
+}
 
 module.exports = data => {
 

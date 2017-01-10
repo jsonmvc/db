@@ -17,7 +17,7 @@ const extendDeps = deps =>
       return acc
     }, {})
 
-module.exports = deps => {
+function isCyclic(deps) {
   deps = extendDeps(deps)
 
   let parents = Object.keys(deps)
@@ -55,3 +55,12 @@ module.exports = deps => {
 
   return isCyclic
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  isCyclic = debugWrapper('isCyclic', isCyclic)
+}
+
+module.exports = isCyclic

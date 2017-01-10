@@ -1,7 +1,7 @@
 'use strict'
 const splitPath = require('./splitPath')
 
-module.exports = (obj, path) => {
+function getValue(obj, path) {
   let parts = splitPath(path)
   let val = obj
   let isRoot = parts.length === 1 && parts[0] === ''
@@ -29,3 +29,12 @@ module.exports = (obj, path) => {
 
   return val
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  getValue = debugWrapper('getValue', getValue, 1)
+}
+
+module.exports = getValue

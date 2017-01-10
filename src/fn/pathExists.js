@@ -2,7 +2,7 @@
 const getValue = require('./getValue')
 const splitPath = require('./splitPath')
 
-module.exports = function pathExists(db, path) {
+function pathExists(db, path) {
   let parts = splitPath(path)
   let val = db.static
 
@@ -20,3 +20,12 @@ module.exports = function pathExists(db, path) {
 
   return hasStaticNode || hasDynamicNode
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  pathExists = debugWrapper('pathExists', pathExists, 1)
+}
+
+module.exports = pathExists

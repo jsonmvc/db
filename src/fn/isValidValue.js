@@ -6,9 +6,7 @@ const isString = require('lodash/isString')
 const isNumber = require('lodash/isNumber')
 const isBoolean = require('lodash/isBoolean')
 
-// @TODO: Concat these implementation to reduce
-// fn calls
-module.exports = function isValidValue(value) {
+function isValidValue(value) {
   let type = typeof value
   return value !== undefined
     && (
@@ -20,3 +18,14 @@ module.exports = function isValidValue(value) {
       isPlainObject(value)
     )
 }
+
+let isDebug = require('./isDebug')
+let debugWrapper = require('./debugWrapper')
+
+if (isDebug) {
+  isValidValue = debugWrapper('isValidValue', isValidValue)
+}
+
+// @TODO: Concat these implementation to reduce
+// fn calls
+module.exports = isValidValue
