@@ -15,7 +15,7 @@ let isDebug = require('./isDebug')
 let debugWrapper = require('./debugWrapper')
 
 if (isDebug) {
-  decomposePath = debugWrapper('decomposePath', decomposePath, 1)
+  decomposePath = debugWrapper('decomposePath', decomposePath, 0)
 }
 
 module.exports = decomposePath

@@ -1,21 +1,53 @@
 'use strict'
+
+const isDebug = require('./fn/isDebug')
+if (isDebug) {
+  if (typeof window !== 'undefined') {
+    window.JSONMVC_DEBUG = {}
+
+    function parseData(data, name) {
+      let x = data[name]
+
+      if (data.length) {
+        x = data
+      }
+
+      let result = {
+        name: name,
+        count: x.length,
+        time: x.reduce((acc, y) => { acc += y; return acc }, 0),
+        longest: x.reduce((acc, y) => { return acc > y ? acc : y }, 0)
+      }
+
+      result.average = result.time / result.count
+
+      return result
+     }
+
+    window.showLogs = function (name) {
+      let data = JSONMVC_DEBUG[name]
+
+     if (data.length) {
+       data = [parseData(data, name)]
+     } else {
+       data = Object.keys(data).map(x => parseData(data, x))
+     }
+
+     console.table(data)
+    }
+  }
+}
+
 const on = require('./api/on')
 const get = require('./api/get')
 const has = require('./api/has')
 const patch = require('./api/patch')
 const node = require('./api/node')
 const err = require('./fn/err')
-const isDebug = require('./fn/isDebug')
 
 const errTypes = require('./errors.json')
 
 require('setimmediate')
-
-if (isDebug) {
-  if (typeof window !== 'undefined') {
-    window.JSONMVC_DEBUG = {}
-  }
-}
 
 module.exports = data => {
 

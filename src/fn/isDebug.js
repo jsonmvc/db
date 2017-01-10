@@ -9,6 +9,4 @@ if (
   isDebug = true
 }
 
-isDebug = true
-
 module.exports = isDebug
