@@ -1,6 +1,6 @@
 {
   "name": "jsonmvc-db",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "dependencies": {
     "lodash": {
       "version": "4.17.4",
