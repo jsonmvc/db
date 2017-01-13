@@ -50,6 +50,7 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   patch.forEach(x => {
     let parts = decomposePath(x.path)
     parts.push(x.path)
+
     parts.forEach(y => {
       if (db.updates.triggers[y]) {
         trigger.push(db.updates.triggers[y])

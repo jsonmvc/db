@@ -230,3 +230,18 @@
     /qux: ['/foo']
   listeners:
   - /qux/bar
+
+- comment: Should trigger if the listener is on a sub dynamic property
+  doc:
+    foo:
+      bar: 123
+  dynamic:
+    /bam: ['/foo']
+  patch:
+  - op: add
+    path: /foo/bar
+    value: 124
+  listeners:
+  - /bam/bar
+  async: true
+
