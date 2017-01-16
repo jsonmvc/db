@@ -88,4 +88,7 @@ module.exports = db => (path, deps, fn) => {
     })
 
   })
+
+  // @TODO: When replacing a node (e.g. if another one exists at the same path)
+  // trigger all the listeners for this node with the new computation
 }

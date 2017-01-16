@@ -34,7 +34,25 @@ module.exports = db => (path, fn) => {
     db.updates.fns[path] = [fn]
     db.updates.cache[path] = {}
 
+    let parts = decomposePath(path)
     let nodes = getStaticNodes(db, path)
+
+    parts.forEach(x => {
+      if (db.dynamic.fns[x]) {
+        let n = getStaticNodes(db, x)
+
+        // @TODO: Instead of triggering for every change
+        // on the root node, trigger when the sub-property 
+        // of the root node that is defined by the listened 
+        // path.
+        // E.g.
+        // foo/bar - static
+        // bam -> foo - dynamic
+        // bam/bar -> foo/bar - listener
+
+        nodes = nodes.concat(n)
+      }
+    })
 
     nodes.forEach(x => {
       if (!db.updates.triggers[x]) {
@@ -44,7 +62,6 @@ module.exports = db => (path, fn) => {
       }
     })
 
-    let parts = decomposePath(path)
     parts.forEach(y => {
       if (!db.updates.triggers[y]) {
         db.updates.triggers[y] = [path]
