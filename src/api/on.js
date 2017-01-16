@@ -30,6 +30,7 @@ module.exports = db => (path, fn) => {
     return
   }
 
+  let fnIndex = db.updates.fns.length
   if (!db.updates.fns[path]) {
     db.updates.fns[path] = [fn]
     db.updates.cache[path] = {}
@@ -75,4 +76,8 @@ module.exports = db => (path, fn) => {
   }
 
   triggerListener(db, path)
+
+  return function unsubscribe() {
+    db.updates.fns[path].splice(fnIndex, 1)
+  }
 }
