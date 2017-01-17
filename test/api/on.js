@@ -58,19 +58,31 @@ tests.forEach(x => {
       })
     }
 
+    let unsubscribes = []
+
     x.listeners.forEach(y => {
+      let unsubscribe
       if (x.errFn) {
-        db.on(y, errFn)
+        unsubscribe = db.on(y, errFn)
       } else if (x.invalidFn) {
-        db.on(y, 123)
+        unsubscribe = db.on(y, 123)
       } else if (x.noArgsFn) {
-        db.on(y, noArgsFn)
+        unsubscribe = db.on(y, noArgsFn)
       } else {
-        db.on(y, x => {
+        unsubscribe = db.on(y, x => {
           fn(x, db.get(y), y)
         })
       }
+      unsubscribes.push(unsubscribe)
     })
+
+    if (x.unsubscribe === true) {
+      setTimeout(() => {
+        unsubscribes.forEach(y => {
+          y()
+        })
+      })
+    }
 
     if (x.patch) {
       if (x.async) {
@@ -93,7 +105,7 @@ tests.forEach(x => {
         fn.mock.calls.forEach(x => {
           expect(x[0]).toEqual(x[1])
         })
-        if (x.async) {
+        if (x.async && x.unsubscribe !== true) {
           let result = fn.mock.calls.reduce((acc, x) => {
             acc[x[2]] = x[0]
             return acc

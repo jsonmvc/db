@@ -245,3 +245,19 @@
   - /bam/bar
   async: true
 
+- comment: Should unsubscribe a listener
+  doc:
+    foo: 123
+  patch:
+  - op: add
+    path: /foo
+    value: 124
+  - op: add
+    path: /foo
+    value: 125
+  listeners:
+  - /foo
+  async: true
+  unsubscribe: true
+
+
