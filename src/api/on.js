@@ -5,6 +5,8 @@ const decomposePath = require('./../fn/decomposePath')
 const patch = require('./patch')
 const err = require('./../fn/err')
 
+let listenerId = 0
+
 /**
  * on
  *
@@ -30,9 +32,10 @@ module.exports = db => (path, fn) => {
     return
   }
 
-  let fnIndex = db.updates.fns.length
+  listenerId += 1
   if (!db.updates.fns[path]) {
-    db.updates.fns[path] = [fn]
+    db.updates.fns[path] = {}
+    db.updates.fns[path][listenerId] = fn
     db.updates.cache[path] = {}
 
     let parts = decomposePath(path)
@@ -72,12 +75,12 @@ module.exports = db => (path, fn) => {
     })
 
   } else {
-    db.updates.fns[path].push(fn)
+    db.updates.fns[path][listenerId] = fn
   }
 
   triggerListener(db, path)
 
   return function unsubscribe() {
-    db.updates.fns[path].splice(fnIndex, 1)
+    delete db.updates.fns[path][listenerId]
   }
 }

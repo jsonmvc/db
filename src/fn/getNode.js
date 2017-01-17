@@ -95,9 +95,10 @@ let getNode = (db, path) => {
       }
     } catch(e) {
       result = defaultValue
-      e.message += `\n path: ${path}`
-      e.message += `\n node: ${dynamicParent}`
-      err(db, '/err/types/node/5', e.message)
+      let msg = e.toString()
+      msg += `\n path: ${path}`
+      msg += `\n node: ${dynamicParent}`
+      err(db, '/err/types/node/5', msg)
     }
 
     if (dynamicChildren) {
