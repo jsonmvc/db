@@ -103,13 +103,15 @@ const getNode = (db, path) => {
     result = val
   }
 
-  db.cache[path] = result
+  if (result) {
+    db.cache[path] = result
 
-  if (dynamicChildrenBkp) {
-    if (!db.cachedChildren[dynamicParent]) {
-      db.cachedChildren[dynamicParent] = [path]
-    } else {
-      db.cachedChildren[dynamicParent].push(path)
+    if (dynamicChildrenBkp) {
+      if (!db.cachedChildren[dynamicParent]) {
+        db.cachedChildren[dynamicParent] = [path]
+      } else {
+        db.cachedChildren[dynamicParent].push(path)
+      }
     }
   }
 

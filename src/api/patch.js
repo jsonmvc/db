@@ -59,12 +59,7 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
 
     for (let j = 0; j < parts.length; j += 1) {
       let part = parts[j]
-
       affected = affected.concat(getAffected(db, part))
-
-      // toate nodurile care il au pe part ca dep
-      // toate nodurile care au aceleasi noduri ca dep
-      // pentru fiecare nod sterge cache-ul daca exists
     }
 
   }
@@ -85,7 +80,6 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   })
 
   let trigger = []
-
 
   patch.forEach(x => {
     let parts = decomposePath(x.path)
