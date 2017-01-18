@@ -9,6 +9,20 @@ const isPatch = require('./../fn/isPatch')
 const applyPatch = require('./../fn/applyPatch')
 const err = require('./../fn/err')
 
+function getAffected(db, path) {
+  let nodes = [path]
+  let deps = db.dynamic.reverseDeps[path]
+
+  if (deps) {
+    nodes = nodes.concat(deps)
+    deps.forEach(x => {
+      nodes = nodes.concat(getAffected(db, x))
+    })
+  }
+
+  return nodes
+}
+
 /**
  * patch
  *
@@ -35,17 +49,43 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     return result
   }
 
+  // Refresh caching
+  let no = patch.length
+  let affected = []
+  for (let i = 0; i < no; i += 1) {
+    let d = patch[i]
+    let parts = decomposePath(d.path)
+    parts.push(d.path)
+
+    for (let j = 0; j < parts.length; j += 1) {
+      let part = parts[j]
+
+      affected = affected.concat(getAffected(db, part))
+
+      // toate nodurile care il au pe part ca dep
+      // toate nodurile care au aceleasi noduri ca dep
+      // pentru fiecare nod sterge cache-ul daca exists
+    }
+
+  }
+
+  affected.forEach(x => {
+    delete db.cache[x]
+
+    let children = db.cachedChildren[x]
+
+    if (children) {
+      children.forEach(x => {
+        delete db.cache[x]
+      })
+
+      delete db.cachedChildren[x]
+    }
+
+  })
+
   let trigger = []
 
-  // @TODO: Dirty checking and triggering updates
-  // can happen in an asyncCall to further optimize
-  // patching speed
-
-  // @TODO: In order to optimize the checking
-  // of getNode when dealing with dynamic nodes
-  // flag which ones are dirty and need reevaluation
-  // And that minimal list will be computed
-  // when calling getNode
 
   patch.forEach(x => {
     let parts = decomposePath(x.path)

@@ -13,47 +13,10 @@ const getNode = (db, path) => {
   // array -> []
   // string, number -> null
   //
-  // @TODO: Dynamic nodes list underneath this path are already
-  // computed and should be used in a for loop instead of a recursive
-  // function
-  //
-  // @TODO: Before calling a dynamic node check if the arguments are the same
-  // as before. If so, just take the last value and return
-  //
-  // @TODO: Create a hashmap for fn args using JSON.stringify and concatenating
-  // the results in order to have an efficient comparison.
-  //
-  // @TODO: Reverse the order in which the node is retrieved:
-  // let node = {}
-  // let dynamic = []
-  // if (isstatic) node = // static generation
-  // if (isDynamic) dynamic.push(path)
-  //
-  // 
-  // dynamic = dynamic.concat(db.dynamic.nesting[path])
-  // // Go in reverse order because they are order based
-  // on their nesting rules so if a node needs to result
-  // from one of its siblings that is already generated
-  // at the time of requiring the value
-  // Also, because a dirty list can be generated
-  // when patching, it means that list can be called instead.
-  //
-  // for (let i = dynamic.length - 1; i >= 0; i -= 1) {
-  // }
-  //
-  // When the final object was generated a JSON.stringified copy
-  // is saved so when a getNode on the same path is called 
-  // and no dynamic node is dirty
-  // and the path itself is not dirty then just
-  // return the parsed cached value
-  // Also store the node both as an object as stringified
-  // The object will contain both the dynamic nodes value.
-  // By checking which nodes are dirty then this object
-  // can be used and only those values and again
-  // stringified / kept as reference
-  // By being kept as reference it will modify in place with
-  // the new values and thus when a new call is made the
-  // value won't need updating
+
+  if (db.cache[path]) {
+    return db.cache[path]
+  }
 
   let defaultValue = null
 
@@ -73,10 +36,7 @@ const getNode = (db, path) => {
 
   } while (decomposed.length != 0 && isDynamic === false)
 
-  // console.log(db.dynamic.fns, path, decomposed)
-
-  // Test to see if this is dynamic or if it's parents are dynamic
-
+  let dynamicChildrenBkp = dynamicChildren
 
   if (isDynamic) {
     let nodes = db.dynamic.deps[dynamicParent]
@@ -141,6 +101,16 @@ const getNode = (db, path) => {
     }
 
     result = val
+  }
+
+  db.cache[path] = result
+
+  if (dynamicChildrenBkp) {
+    if (!db.cachedChildren[dynamicParent]) {
+      db.cachedChildren[dynamicParent] = [path]
+    } else {
+      db.cachedChildren[dynamicParent].push(path)
+    }
   }
 
   return result

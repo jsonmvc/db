@@ -29,9 +29,22 @@ module.exports = data => {
         on: []
       }
     },
+    cachedChildren: {
+
+    },
+    cache: {
+
+    },
+    updates: {
+
+    },
+    triggers: {
+
+    },
     dynamic: {
       patching: {},
       nesting: {},
+      reverseDeps: {},
       inverseDeps: {},
       deps: {},
       fns: {}
