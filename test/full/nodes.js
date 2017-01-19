@@ -14,18 +14,11 @@ it('Should test complex node scenarios', () => {
 
   let db = dbFn(doc)
 
-  db.node('/bar', ['/foo/bar'], x => {
-    return x
+  db.node('/bam', ['/foo/bar/baz'], x => {
+    return x + 10
   })
 
-  db.node('/baz', ['/bar'], x => x)
-
-
-  db.node('/foo/bam', ['/baz'], x => x)
-
-  // console.log(db.db.dynamic.reverseDeps)
-
-  db.on('/bar', x => {
+  db.on('/bam', x => {
     console.log(x)
   })
 
@@ -34,5 +27,23 @@ it('Should test complex node scenarios', () => {
     path: '/foo/bar/baz',
     value: 125
   }])
+
+  setTimeout(() => {
+    db.patch([{
+      op: 'merge',
+      path: '/foo/bar',
+      value: {
+        baz: 128
+      }
+    }])
+  })
+
+  return new Promise((resolve) => {
+
+    setTimeout(() => {
+      resolve()
+
+    }, 2000)
+  })
 
 })

@@ -103,6 +103,7 @@ const getNode = (db, path) => {
     result = val
   }
 
+  /*
   if (result) {
     db.cache[path] = result
 
@@ -114,6 +115,7 @@ const getNode = (db, path) => {
       }
     }
   }
+  */
 
   return result
 }

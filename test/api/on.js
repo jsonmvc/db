@@ -2,12 +2,18 @@
 
 jest.useFakeTimers()
 
+const isObjectLike = require('lodash').isObjectLike
+const isArray = require('lodash').isArray
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/on.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const Promise = require('promise')
+
+const additionalProps = ['err']
+
+// tests = [tests[tests.length - 1]]
 
 require('setimmediate')
 
@@ -36,7 +42,8 @@ tests.forEach(x => {
 
   it(x.comment, () => {
     let db = dbFn(x.doc)
-    let fn = jest.fn()
+    let fns = {}
+    let dynamicFns = {}
 
     if (x.dynamic) {
       let ys = Object.keys(x.dynamic)
@@ -55,6 +62,7 @@ tests.forEach(x => {
         }
 
         db.node(y, x.dynamic[y], fn)
+        dynamicFns[y] = fn
       })
     }
 
@@ -69,8 +77,9 @@ tests.forEach(x => {
       } else if (x.noArgsFn) {
         unsubscribe = db.on(y, noArgsFn)
       } else {
+        fns[y] = jest.fn()
         unsubscribe = db.on(y, x => {
-          fn(x, db.get(y), y)
+          fns[y](x, db.get(y), y)
         })
       }
       unsubscribes.push(unsubscribe)
@@ -102,21 +111,101 @@ tests.forEach(x => {
       if (x.errFn || x.invalidFn || x.noArgsFn) {
         expect(db.get('/err/on').length).toBe(1)
       } else {
-        fn.mock.calls.forEach(x => {
-          expect(x[0]).toEqual(x[1])
+
+        if (x.expectDoc) {
+
+          function recurseTest(cur, path) {
+
+            if (!path) {
+              path = '/'
+
+              let doc = db.get(path)
+              additionalProps.forEach(x => {
+                delete doc[x]
+              })
+              expect(doc).toEqual(cur)
+            } else {
+              expect(cur).toEqual(db.get(path))
+            }
+
+            if (isArray(cur)) {
+
+              cur.forEach((x, index) => {
+                let curPath = path + '/' + index
+                let el = db.get(curPath)
+                expect(el).toEqual(x)
+
+                if (isObjectLike(x)) {
+                  recurseTest(x, curPath)
+                }
+              })
+
+            } else if (isObjectLike(cur)) {
+
+              Object.keys(cur).forEach(x => {
+                let curPath = path === '/' ? '/' + x : path + '/' + x
+                let el = db.get(curPath)
+
+                expect(el).toEqual(cur[x])
+
+                if (isObjectLike(cur[x])) {
+                  recurseTest(cur[x], curPath)
+                }
+              })
+
+            }
+
+          }
+
+          recurseTest(x.expectDoc)
+
+        }
+
+        x.listeners.forEach(y => {
+          let calls = fns[y].mock.calls
+
+          // Test all values match up
+          calls.forEach(x => {
+            expect(x[0]).toEqual(x[1])
+          })
+
+          // The last listener called must match the current
+          // value if the path is a dynamic node
+
+          let last = calls[calls.length - 1]
+          if (x.dynamic && x.dynamic[y]) {
+            let node = x.dynamic[y]
+            let args = node.reduce((acc, x) => {
+              acc.push(db.get(x))
+              return acc
+            }, [])
+
+            let result = dynamicFns[y].apply(null, args)
+            expect(last[0]).toEqual(result)
+          }
+
         })
+
         if (x.async && x.unsubscribe !== true) {
-          let result = fn.mock.calls.reduce((acc, x) => {
-            acc[x[2]] = x[0]
-            return acc
-          }, {})
+          let result
+
+          x.listeners.forEach(y => {
+            result = fns[y].mock.calls.reduce((acc, x) => {
+              acc[x[2]] = x[0]
+              return acc
+            }, {})
+          })
 
           Object.keys(result).forEach(x => {
             expect(result[x]).toEqual(db.get(x))
           })
 
         } else {
-          expect(fn.mock.calls.length).toBe(x.listeners.length)
+          let callsNo = Object.keys(fns).reduce((acc, x) => {
+            acc += fns[x].mock.calls.length
+            return acc
+          }, 0)
+          expect(callsNo).toBe(x.listeners.length)
         }
       }
     })

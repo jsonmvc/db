@@ -260,4 +260,26 @@
   async: true
   unsubscribe: true
 
-
+- comment: Should trigger a listener when the dynamic node changes after a merge
+  doc:
+    foo:
+      bar:
+        baz: 125
+  patch:
+  - op: add
+    path: /foo/bar/baz
+    value: 135
+  - op: merge
+    path: /foo/bar
+    value:
+      baz: 145
+  dynamic:
+    /bam: ['/foo/bar/baz']
+  listeners:
+  - /bam
+  - /foo
+  async: true
+  expectDoc:
+    foo:
+      bar:
+        baz: 145
