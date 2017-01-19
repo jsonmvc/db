@@ -283,3 +283,83 @@
     foo:
       bar:
         baz: 145
+
+- comment: Should trigger all the listeners
+  doc:
+    foo:
+      bar:
+        baz: 123
+  patch:
+  - op: add
+    path: /foo/bar/baz
+    value: 125
+  - op: add
+    path: /foo/bar/bam
+    value: 126
+  - op: add
+    path: /foo/bar/baz
+    value: 127
+  - op: merge
+    path: /foo/bar
+    value:
+      baz: 128
+  - op: merge
+    path: /foo
+    value:
+      bar:
+        baz: 129
+        bam: 130
+  dynamic:
+    /foo2/bar/baz: ['/foo/bar/baz']
+    /foo2/baz: ['/foo/bar']
+    /foo2: ['/foo']
+    /foo3/bar/bam: ['/foo/bar/bam']
+    /foo3/bar: ['/foo/bar']
+    /foo3: ['/foo']
+    /foo4: ['/foo', '/foo2', '/foo3']
+    /foo5: ['/foo4', '/foo/bar/bam']
+  listeners:
+  - /foo/bar/baz
+  - /foo/bar
+  - /foo
+  - /foo2/bar/baz
+  - /foo2/bar
+  - /foo2
+  - /foo3/bar/bam
+  - /foo3/bar
+  - /foo3
+  - /foo4
+  - /foo5
+  async: true
+  expectDoc:
+    foo:
+      bar:
+        baz: 129
+        bam: 130
+
+- comment: Test with multiple nested children under a dynamic node
+  doc:
+    foo:
+      bar:
+        bam: 123
+  patch:
+  - op: add
+    path: /foo/bar/bam
+    value: 125
+  - op: add
+    path: /foo/bar/bam
+    value: 127
+  - op: add
+    path: /foo/bar/blo
+    value: 128
+  - op: merge
+    path: /foo
+    value:
+      bar:
+        bam: 129
+        blo: 130
+  dynamic:
+    /baz: ['/foo']
+  listeners:
+  - /baz/bar
+  - /baz/bar/bam

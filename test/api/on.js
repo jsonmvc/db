@@ -114,6 +114,9 @@ tests.forEach(x => {
 
         if (x.expectDoc) {
 
+          // Test the current document to the expected
+          // one - this is useful to ensure caching
+          // is properly cleared
           function recurseTest(cur, path) {
 
             if (!path) {
@@ -171,7 +174,6 @@ tests.forEach(x => {
 
           // The last listener called must match the current
           // value if the path is a dynamic node
-
           let last = calls[calls.length - 1]
           if (x.dynamic && x.dynamic[y]) {
             let node = x.dynamic[y]

@@ -1,5 +1,7 @@
 'use strict'
 
+jest.useFakeTimers()
+
 const root = process.cwd()
 const dbFn = require(`${root}/src/index`)
 
@@ -19,7 +21,7 @@ it('Should test complex node scenarios', () => {
   })
 
   db.on('/bam', x => {
-    console.log(x)
+    // console.log(x)
   })
 
   db.patch([{
@@ -44,6 +46,8 @@ it('Should test complex node scenarios', () => {
       resolve()
 
     }, 2000)
+
+    jest.runAllTimers()
   })
 
 })

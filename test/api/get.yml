@@ -169,3 +169,11 @@
       baz: null
   get: /bar/baz
   expect: null
+
+- comment: Should return undefined for a nested child on a dynamic node with a bad computation value
+  doc: {}
+  dynamic:
+    /foo: ['/bar']
+  get: /foo/baz
+  expect: undefined
+

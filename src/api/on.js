@@ -44,16 +44,6 @@ module.exports = db => (path, fn) => {
     parts.forEach(x => {
       if (db.dynamic.fns[x]) {
         let n = getStaticNodes(db, x)
-
-        // @TODO: Instead of triggering for every change
-        // on the root node, trigger when the sub-property 
-        // of the root node that is defined by the listened 
-        // path.
-        // E.g.
-        // foo/bar - static
-        // bam -> foo - dynamic
-        // bam/bar -> foo/bar - listener
-
         nodes = nodes.concat(n)
       }
     })

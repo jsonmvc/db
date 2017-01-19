@@ -3,6 +3,8 @@ const getValue = require('./../fn/getValue')
 const decomposePath = require('./../fn/decomposePath')
 const uniq = require('uniq')
 const flatten = require('lodash/flattenDeep')
+const isObjectLike = require('lodash/isObjectLike')
+const isArray = require('lodash/isArray')
 const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
 const isPatch = require('./../fn/isPatch')
@@ -11,14 +13,23 @@ const err = require('./../fn/err')
 
 function getAffected(db, path) {
   let nodes = [path]
+  let inverse = db.dynamic.inverseDeps[path]
   let deps = db.dynamic.reverseDeps[path]
 
   if (deps) {
+    if (inverse) {
+      deps = deps.concat(inverse)
+    }
     nodes = nodes.concat(deps)
     deps.forEach(x => {
       nodes = nodes.concat(getAffected(db, x))
     })
   }
+
+  if (inverse) {
+    nodes = nodes.concat(inverse)
+  }
+
 
   return nodes
 }
@@ -60,6 +71,23 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     for (let j = 0; j < parts.length; j += 1) {
       let part = parts[j]
       affected = affected.concat(getAffected(db, part))
+    }
+
+    if (d.op === 'merge') {
+
+      function recurseAffected(value, path) {
+        if (isObjectLike(value)) {
+          Object.keys(value).forEach(x => {
+            let newPath = path === '/' ? '/' + x : path + '/' + x
+            affected.push(newPath)
+            recurseAffected(value[x], newPath)
+          })
+        } else {
+          affected.push(path)
+        }
+      }
+
+      recurseAffected(d.value, d.path)
     }
 
   }
