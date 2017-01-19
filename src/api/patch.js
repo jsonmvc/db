@@ -68,6 +68,10 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     let parts = decomposePath(d.path)
     parts.push(d.path)
 
+    if (db.cachedNested[d.path]) {
+      affected = affected.concat(db.cachedNested[d.path])
+    }
+
     for (let j = 0; j < parts.length; j += 1) {
       let part = parts[j]
       affected = affected.concat(getAffected(db, part))

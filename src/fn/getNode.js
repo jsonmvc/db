@@ -21,6 +21,7 @@ const getNode = (db, path) => {
   let defaultValue = null
 
   let decomposed = decomposePath(path)
+  let decomposedBkp = decomposed.slice()
   decomposed.unshift(path)
 
   let dynamicParent
@@ -112,7 +113,14 @@ const getNode = (db, path) => {
       } else {
         db.cachedChildren[dynamicParent].push(path)
       }
+    } else {
+      if (!db.cachedNested[decomposedBkp[0]]){
+        db.cachedNested[decomposedBkp[0]] = [path]
+      } else {
+        db.cachedNested[decomposedBkp[0]].push(path)
+      }
     }
+
   }
 
   return result

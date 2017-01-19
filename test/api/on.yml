@@ -363,3 +363,20 @@
   listeners:
   - /baz/bar
   - /baz/bar/bam
+
+- comment: Should trigger a listner on add that replaces and object
+  doc:
+    foo:
+      bar:
+        baz: 123
+  patch:
+  - op: add
+    path: /foo/bar/baz
+    value: 125
+  - op: add
+    path: /foo/bar
+    value:
+      baz: 127
+  listeners:
+  - /foo/bar/baz
+  async: true

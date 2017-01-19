@@ -10,10 +10,11 @@ const testsFile = fs.readFileSync(`${root}/test/api/on.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const Promise = require('promise')
+const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-// tests = [tests[tests.length - 1]]
+// tests = [tests[tests.length - 2]]
 
 require('setimmediate')
 
@@ -172,18 +173,75 @@ tests.forEach(x => {
             expect(x[0]).toEqual(x[1])
           })
 
+          let last = calls[calls.length - 1]
+
+          if (!last) {
+            return
+          }
+
+          let path = last[2]
+
+          let parts = decomposePath(path)
+
+          let dynamicParent
+
+          parts.forEach(y => {
+            if (x.dynamic && x.dynamic[y]) {
+              dynamicParent = y
+            }
+          })
+
           // The last listener called must match the current
           // value if the path is a dynamic node
-          let last = calls[calls.length - 1]
-          if (x.dynamic && x.dynamic[y]) {
-            let node = x.dynamic[y]
+          if (x.dynamic && (x.dynamic[y] || dynamicParent)) {
+            let loc = dynamicParent ? dynamicParent : y
+            let node = x.dynamic[loc]
             let args = node.reduce((acc, x) => {
               acc.push(db.get(x))
               return acc
             }, [])
 
-            let result = dynamicFns[y].apply(null, args)
+            let result = dynamicFns[loc].apply(null, args)
+
+            if (dynamicParent) {
+              let childParts = y.split('/')
+              childParts.shift()
+
+              let parentParts = dynamicParent.split('/')
+              parentParts.shift()
+
+              parentParts.forEach(x => {
+                childParts.shift()
+              })
+
+              childParts.forEach(x => {
+                if (result) {
+                  result = result[x]
+                } else {
+                  result = undefined
+                }
+              })
+
+            }
+
             expect(last[0]).toEqual(result)
+
+          } else if (last) {
+            let parts = path.split('/')
+            parts.shift()
+
+            let val = db.get('/')
+            while (parts.length > 0) {
+              let prop = parts.shift()
+              if (val) {
+                val = val[prop]
+              } else {
+                val = void 0
+                break
+              }
+            }
+
+            // expect(last[0]).toEqual(val)
           }
 
         })

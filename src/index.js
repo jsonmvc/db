@@ -29,6 +29,9 @@ module.exports = data => {
         on: []
       }
     },
+    cachedNested: {
+
+    },
     cachedChildren: {
 
     },
