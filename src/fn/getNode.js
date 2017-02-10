@@ -1,4 +1,5 @@
 'use strict'
+
 const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
@@ -61,13 +62,13 @@ const getNode = (db, path) => {
       err(db, '/err/types/node/5', e.message)
     }
 
-    if (dynamicChildren) {
+    if (dynamicChildren && result !== undefined) {
       dynamicChildren = dynamicChildren.split('/')
       dynamicChildren.shift()
 
       do {
         let child = dynamicChildren.shift()
-        if (result) {
+        if (result !== undefined && result !== null) {
           result = result[child]
         } else {
           result = void 0
@@ -89,12 +90,23 @@ const getNode = (db, path) => {
         if (nodes) {
           val = nodes.reduce((acc, x) => {
             let node = getNode(db, x)
-            let root = x.replace(path, '')
+            let root = x
+
+            if (path !== '/') {
+              root = x.replace(path, '')
+            }
             setValue(acc, root, node)
+
+
             return acc
           }, val)
         }
 
+        /*
+        if (path === '/foo/bar') {
+          throw new Error(JSON.stringify(val, null, ' '))
+        }
+        */
       } else {
         // val remains the same and does't need cloning
       }
@@ -113,7 +125,7 @@ const getNode = (db, path) => {
       } else {
         db.cachedChildren[dynamicParent].push(path)
       }
-    } else {
+    } else if (decomposedBkp.length > 0) {
       if (!db.cachedNested[decomposedBkp[0]]){
         db.cachedNested[decomposedBkp[0]] = [path]
       } else {

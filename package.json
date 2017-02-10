@@ -47,6 +47,7 @@
   "jest": {
     "testRegex": "test/.*\\.js$",
     "testEnvironment": "node",
+    "verbose": true,
     "collectCoverage": "true"
   }
 }

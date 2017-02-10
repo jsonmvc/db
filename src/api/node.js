@@ -62,6 +62,10 @@ module.exports = db => (path, deps, fn) => {
   // @TODO: Add the root to the nesting so that:
   // db.get('/') also gets all the dynamic nodes in
   let xs = decomposePath(path)
+
+  // Add the db root
+  xs.push('/')
+
   xs.map(x => {
     if (!db.dynamic.nesting[x]) {
       db.dynamic.nesting[x] = []

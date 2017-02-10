@@ -364,7 +364,7 @@
   - /baz/bar
   - /baz/bar/bam
 
-- comment: Should trigger a listner on add that replaces and object
+- comment: Should trigger a listener on add that replaces and object
   doc:
     foo:
       bar:
@@ -380,3 +380,16 @@
   listeners:
   - /foo/bar/baz
   async: true
+
+- comment: Should not fail if a value is undefined
+  doc:
+    foo: 123
+  dynamic:
+    /bar: ['/foo']
+  undefinedDynamic: true
+  patch:
+  - op: add
+    path: /foo
+    value: 125
+  listeners:
+  - /bar/baz

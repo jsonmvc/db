@@ -15,7 +15,7 @@ function callNode(db, path, i) {
   let val = getNode(db, path)
   let cacheTest = JSON.stringify(val)
 
-  if (db.updates.cache[path][i] !== cacheTest) {
+  if (db.updates.cache[path][i] !== cacheTest && cacheTest !== undefined) {
     db.updates.cache[path][i] = cacheTest
 
     ;(function () {
@@ -24,7 +24,7 @@ function callNode(db, path, i) {
       } catch (e) {
         err(db, '/err/types/on/2', {
           path: path,
-          error: e
+          error: e.message
         })
       }
     }())

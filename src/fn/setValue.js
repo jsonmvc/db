@@ -5,8 +5,13 @@ module.exports = (obj, path, val) => {
   let parts = splitPath(path)
   let ref = obj
 
-  for (let i = 0; i < parts.length; i += 1) {
-    ref[parts[i]] = val
+  while (parts.length > 1) {
+    ref = ref[parts.shift()]
   }
 
+  if (ref) {
+    ref[parts.shift()] = val
+  }
+
+  return obj
 }

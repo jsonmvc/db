@@ -96,6 +96,17 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
 
   }
 
+  affected = affected.reduce((acc, x) => {
+    let parts = decomposePath(x)
+    acc = acc.concat(parts)
+    return acc
+  }, affected)
+
+  affected = uniq(affected)
+
+  // Include root
+  affected.push('/')
+
   affected.forEach(x => {
     delete db.cache[x]
 

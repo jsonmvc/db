@@ -14,7 +14,7 @@ const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-// tests = [tests[tests.length - 2]]
+// tests = [tests[tests.length - 10]]
 
 require('setimmediate')
 
@@ -60,6 +60,10 @@ tests.forEach(x => {
           fn = (x, y, z) => `${x}-${y}-${z}`
         } else if (len === 4) {
           fn = (x, y, z, t) => `${x}-${y}-${z}-${t}`
+        }
+
+        if (x.undefinedDynamic) {
+          fn = undefinedFn
         }
 
         db.node(y, x.dynamic[y], fn)
@@ -226,11 +230,13 @@ tests.forEach(x => {
 
             expect(last[0]).toEqual(result)
 
-          } else if (last) {
+          } else if (last && x.unsubscribe !== true) {
             let parts = path.split('/')
+
             parts.shift()
 
             let val = db.get('/')
+
             while (parts.length > 0) {
               let prop = parts.shift()
               if (val) {
@@ -241,7 +247,7 @@ tests.forEach(x => {
               }
             }
 
-            // expect(last[0]).toEqual(val)
+            expect(last[0]).toEqual(val)
           }
 
         })
@@ -265,7 +271,12 @@ tests.forEach(x => {
             acc += fns[x].mock.calls.length
             return acc
           }, 0)
-          expect(callsNo).toBe(x.listeners.length)
+
+          if (x.undefinedDynamic) {
+            expect(callsNo).toBe(0)
+          } else {
+            expect(callsNo).toBe(x.listeners.length)
+          }
         }
       }
     })
