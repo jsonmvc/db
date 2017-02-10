@@ -70,7 +70,8 @@ module.exports = db => (path, fn) => {
 
   triggerListener(db, path)
 
+  let id = listenerId
   return function unsubscribe() {
-    delete db.updates.fns[path][listenerId]
+    delete db.updates.fns[path][id]
   }
 }
