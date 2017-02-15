@@ -1,5 +1,8 @@
 'use strict'
 
+
+// @TODO: Add test when a listener cache returns undefined
+
 jest.useFakeTimers()
 
 const isObjectLike = require('lodash').isObjectLike

@@ -20,7 +20,10 @@ function callNode(db, path, i) {
 
     ;(function () {
       try {
-        fn.call(null, JSON.parse(cacheTest))
+        if (undefined !== cacheTest) {
+          cacheTest = JSON.parse(cacheTest)
+        }
+        fn.call(null, cacheTest)
       } catch (e) {
         err(db, '/err/types/on/2', {
           path: path,
