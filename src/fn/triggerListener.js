@@ -24,7 +24,7 @@ function callNode(db, path, i) {
       } catch (e) {
         err(db, '/err/types/on/2', {
           path: path,
-          error: e
+          error: e.message + ' ' + e.stack
         })
       }
     }())
