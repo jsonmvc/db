@@ -857,3 +857,19 @@
     bar:
     - 1
     - 2
+
+- comment: should allow patch with underscore in path
+  doc:
+    foo:
+      bar: 123
+  patch:
+  - op: add
+    path: /foo/_bar
+    value: 123
+  expected:
+    foo:
+      bar: 123
+      _bar: 123
+
+#TODO:
+# replace /items/0 does not update the array instead is doing a shift
