@@ -176,4 +176,3 @@
     /foo: ['/bar']
   get: /foo/baz
   expect: undefined
-
