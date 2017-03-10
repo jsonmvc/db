@@ -4,6 +4,8 @@ const decomposePath = require('./../fn/decomposePath')
 const err = require('./../fn/err')
 const isValidPath = require('./../fn/isValidPath')
 const clearNode = require('./../fn/clearNode')
+const triggerListener = require('./../fn/triggerListener')
+const pathTriggers = require('./../fn/pathTriggers')
 
 /**
  * node
@@ -98,6 +100,10 @@ module.exports = db => (path, deps, fn) => {
       }
     })
 
+  })
+
+  pathTriggers(db, path).map(x => {
+    triggerListener(db, x)
   })
 
   return function removeNode() {

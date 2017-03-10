@@ -1,12 +1,16 @@
 'use strict'
 
+jest.useFakeTimers()
+
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/node.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
 const decomposePath = require(`${root}/src/fn/decomposePath`)
 const splitPath = require(`${root}/src/fn/splitPath`)
+
+tests = [tests[tests.length - 2]]
 
 const concat = function () {
   return Array.prototype.join.call(arguments, '-')
@@ -32,11 +36,21 @@ tests.forEach(x => {
   it(x.comment, () => {
     let db = dbFn(x.doc)
     let fn = jest.fn()
+    let listeners = {}
 
     let ys = Object.keys(x.dynamic)
     let initial = db.get('/')
 
     let before = db.get('/err/node')
+
+    // Listeners
+    if (x.listeners) {
+      x.listeners.forEach(y => {
+        listeners[y] = jest.fn()
+        db.on(y, listeners[y])
+      })
+    }
+
     ys.forEach(y => {
       let fn
       if (x.undefinedFn) {
@@ -70,7 +84,15 @@ tests.forEach(x => {
       })
     }
 
+    if (x.listeners) {
+      jest.runAllTimers()
+      Object.keys(listeners).forEach(y => {
+        expect(listeners[y].mock.calls.length).toBe(1)
+      })
+    }
+
     if (x.remove) {
+
       // Trigger cache
       db.get('/')
       ys.forEach(y => {
@@ -79,6 +101,12 @@ tests.forEach(x => {
           db.get(x)
         })
       })
+
+      if (x.cacheDynamicChildren) {
+        x.cacheDynamicChildren.forEach(y => {
+          db.get(y)
+        })
+      }
 
       removes.forEach(x => {
         x()
@@ -100,6 +128,10 @@ tests.forEach(x => {
       })
 
       expect(db.get('/')).toEqual(initial)
+
+      x.cacheDynamicChildren.forEach(y => {
+        expect(db.get(y)).toBe(undefined)
+      })
     }
 
   })

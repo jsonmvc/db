@@ -71,4 +71,20 @@
   dynamic:
     /foo: ['/bar']
     /bam/baz/bloo: ['/foo']
+    /bla: ['/bam']
+  cacheDynamicChildren:
+  - /bla/baz/bim
+  - /bla/baz
+  - /bla
   remove: true
+
+- comment: Should trigger listeners when adding a node
+  doc:
+    foo: 321
+    bar:
+      baz: 123
+  dynamic:
+    /bar/bla: ['/foo']
+  listeners:
+  - '/bar'
+  - '/bar/bla'

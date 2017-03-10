@@ -145,6 +145,32 @@
   get: /foo/baz/bam
   expect: aaa
 
+- comment: Should get a nested parent value in a dynamic node 
+  doc:
+    bar:
+      baz:
+        bam: aaa
+  dynamic:
+    /foo: ['/bar']
+  get: /foo/baz
+  expect:
+    bam: aaa
+
+- comment: Should get a nested parent value in a dynamic node which has dynamic nodes
+  doc:
+    qux: 123
+    bar:
+      baz:
+        bam: aaa
+  dynamic:
+    /bar/baz/boo: ['/qux']
+    /foo: ['/bar']
+  get: /foo
+  expect:
+    baz:
+      bam: aaa
+      boo: 123
+
 - comment: Should get a null for a nested inexisting value in a dynamic node
   doc:
     bar:
@@ -176,3 +202,4 @@
     /foo: ['/bar']
   get: /foo/baz
   expect: undefined
+
