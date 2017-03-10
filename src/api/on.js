@@ -1,4 +1,5 @@
 'use strict'
+const isFunction = require('lodash/isFunction')
 const getStaticNodes = require('./../fn/getStaticNodes')
 const triggerListener = require('./../fn/triggerListener')
 const decomposePath = require('./../fn/decomposePath')
@@ -22,15 +23,17 @@ module.exports = db => (path, fn) => {
     fn: fn
   }
 
-  if (fn instanceof Function === false) {
+  if (!isFunction(fn)) {
     err(db, '/err/types/on/1', obj)
     return
   }
 
+  /*
   if (fn.length !== 1) {
     err(db, '/err/types/on/1', obj)
     return
   }
+  */
 
   listenerId += 1
   if (!db.updates.fns[path]) {

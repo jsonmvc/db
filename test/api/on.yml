@@ -8,12 +8,6 @@
   listeners:
   - "/foo"
 
-- comment: Listener with function args different than 1
-  doc: {}
-  noArgsFn: true
-  listeners:
-  - "/foo"
-
 - comment: Should trigger a listener
   doc: {}
   patch:
