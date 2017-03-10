@@ -61,3 +61,14 @@
   dynamic:
     /foo: 123
   error: /err/types/db/2
+
+- comment: Should remove a node
+  doc:
+    bar: 123
+    bam:
+      baz:
+        bim: 321
+  dynamic:
+    /foo: ['/bar']
+    /bam/baz/bloo: ['/foo']
+  remove: true

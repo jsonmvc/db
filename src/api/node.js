@@ -3,6 +3,7 @@ const isCyclic = require('./../fn/isCyclic')
 const decomposePath = require('./../fn/decomposePath')
 const err = require('./../fn/err')
 const isValidPath = require('./../fn/isValidPath')
+const clearNode = require('./../fn/clearNode')
 
 /**
  * node
@@ -66,7 +67,10 @@ module.exports = db => (path, deps, fn) => {
     if (!db.dynamic.nesting[x]) {
       db.dynamic.nesting[x] = []
     }
-    db.dynamic.nesting[x].push(path)
+
+    if (db.dynamic.nesting[x].indexOf(path) === -1) {
+      db.dynamic.nesting[x].push(path)
+    }
   })
 
   // @TODO: Based on this nesting create a new array that
@@ -96,6 +100,18 @@ module.exports = db => (path, deps, fn) => {
 
   })
 
-  // @TODO: When replacing a node (e.g. if another one exists at the same path)
-  // trigger all the listeners for this node with the new computation
+  return function removeNode() {
+    delete db.dynamic.fns[path]
+
+    delete db.cache[path]
+    delete db.cache['/']
+    xs.forEach(x => {
+      delete db.cache[x]
+    })
+
+    clearNode(db.dynamic.nesting, path)
+    clearNode(db.dynamic.reverseDeps, path)
+    clearNode(db.dynamic.inverseDeps, path)
+
+  }
 }
