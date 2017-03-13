@@ -107,6 +107,8 @@ module.exports = db => (path, deps, fn) => {
   })
 
   return function removeNode() {
+
+    let triggers = pathTriggers(db, path)
     delete db.dynamic.fns[path]
 
     // Delete cache upwards
@@ -130,5 +132,8 @@ module.exports = db => (path, deps, fn) => {
     clearNode(db.dynamic.reverseDeps, path)
     clearNode(db.dynamic.inverseDeps, path)
 
+    triggers.map(x => {
+      triggerListener(db, x)
+    })
   }
 }
