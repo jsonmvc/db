@@ -109,10 +109,21 @@ module.exports = db => (path, deps, fn) => {
   return function removeNode() {
     delete db.dynamic.fns[path]
 
+    // Delete cache upwards
     delete db.cache[path]
     delete db.cache['/']
+    let xs = decomposePath(path)
+    xs.push(path)
     xs.forEach(x => {
       delete db.cache[x]
+    })
+
+    let reg = new RegExp(`^${path}`)
+    // Delete cache downwards
+    Object.keys(db.cache).forEach(x => {
+      if (x.match(reg) !== null) {
+        delete db.cache[x]
+      }
     })
 
     clearNode(db.dynamic.nesting, path)
