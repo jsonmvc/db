@@ -3,7 +3,9 @@
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/get.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
+
+// tests = [tests[tests.length - 5]]
 const merge = require('lodash/merge')
 const dbFn = require(`${root}/src/index`)
 

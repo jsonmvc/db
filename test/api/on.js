@@ -1,6 +1,5 @@
 'use strict'
 
-
 // @TODO: Add test when a listener cache returns undefined
 
 jest.useFakeTimers()
