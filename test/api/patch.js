@@ -3,8 +3,12 @@
 const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
-const tests = require('yaml-js').load(testsFile)
+let tests = require('yaml-js').load(testsFile)
 const dbFn = require(`${root}/src/index`)
+const merge = require('lodash/merge')
+const identity = x => x
+
+// tests = [tests[tests.length - 1]]
 
 tests.forEach(x => {
 
@@ -15,9 +19,25 @@ tests.forEach(x => {
   if (x.expected) {
     it('should succeed: ' + x.comment, () => {
       let db = dbFn(x.doc)
-      let result = db.patch(x.patch)
 
-      x.expected.err = db.get('/err')
+      if (x.expected) {
+        x.expected = merge(db.get('/'), x.expected)
+      }
+
+      if (x.dynamic) {
+        Object.keys(x.dynamic).forEach(y => {
+          db.node(y, x.dynamic[y], identity)
+        })
+      }
+
+      if (x.cache) {
+        x.cache.forEach(y => {
+          db.get(y)
+        })
+      }
+
+      db.patch(x.patch)
+
       expect(db.get('/')).toEqual(x.expected)
     })
   } else if (x.error) {

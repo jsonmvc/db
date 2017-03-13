@@ -102,8 +102,8 @@ tests.forEach(x => {
         })
       })
 
-      if (x.cacheDynamicChildren) {
-        x.cacheDynamicChildren.forEach(y => {
+      if (x.cache) {
+        x.cache.forEach(y => {
           db.get(y)
         })
       }
@@ -129,7 +129,7 @@ tests.forEach(x => {
 
       expect(db.get('/')).toEqual(initial)
 
-      x.cacheDynamicChildren.forEach(y => {
+      x.cache.forEach(y => {
         expect(db.get(y)).toBe(undefined)
       })
     }

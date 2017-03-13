@@ -72,7 +72,7 @@
     /foo: ['/bar']
     /bam/baz/bloo: ['/foo']
     /bla: ['/bam']
-  cacheDynamicChildren:
+  cache:
   - /bla/baz/bim
   - /bla/baz
   - /bla

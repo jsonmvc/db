@@ -203,3 +203,25 @@
   get: /foo/baz
   expect: undefined
 
+- comment: Should get the complete root node including dynamic nodes
+  doc:
+    bar: 123
+    bam:
+      baz:
+        bim: 321
+  dynamic:
+    /foo: ['/bar']
+    /bam/baz/bloo: ['/foo']
+    /bla: ['/bam']
+  get: /
+  expect:
+    bar: 123
+    foo: 123
+    bam:
+      baz:
+        bim: 321
+        bloo: 123
+    bla:
+      baz:
+        bim: 321
+        bloo: 123

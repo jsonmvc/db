@@ -5,7 +5,8 @@ const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/get.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
 
-// tests = [tests[tests.length - 5]]
+//tests = [tests[tests.length - 1]]
+
 const merge = require('lodash/merge')
 const dbFn = require(`${root}/src/index`)
 
@@ -29,6 +30,12 @@ tests.forEach(x => {
   it(x.comment, () => {
     let db = dbFn(x.doc)
     let fn = jest.fn()
+
+    if (x.get === "undefined" ) {
+      x.get = undefined
+    } else if (x.get === '/') {
+      x.expect = merge(db.get('/'), x.expect)
+    }
 
     if (x.dynamic) {
       let ys = Object.keys(x.dynamic)
@@ -55,12 +62,6 @@ tests.forEach(x => {
 
         db.node(y, x.dynamic[y], fn)
       })
-    }
-
-    if (x.get === "undefined" ) {
-      x.get = undefined
-    } else if (x.get === '/') {
-      x.expect = merge(db.get('/'), x.expect)
     }
 
     let val = db.get(x.get)

@@ -871,5 +871,38 @@
       bar: 123
       _bar: 123
 
+- comment: should remove cache for nodes affected by patch
+  doc:
+    bar: 123
+    bam:
+      baz:
+        bim: 321
+  patch:
+  - op: replace
+    path: /bar
+    value: 444
+  - op: replace
+    path: /bam/baz/bim
+    value: 555
+  dynamic:
+    /foo: ['/bar']
+    /bam/baz/bloo: ['/foo']
+    /bla: ['/bam']
+  cache:
+  - /bla/baz/bim
+  - /bla/baz
+  - /bla
+  expected:
+    bar: 444
+    foo: 444
+    bam:
+      baz:
+        bim: 555
+        bloo: 444
+    bla:
+      baz:
+        bim: 555
+        bloo: 444
+
 #TODO:
 # replace /items/0 does not update the array instead is doing a shift
