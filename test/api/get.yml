@@ -225,3 +225,5 @@
       baz:
         bim: 321
         bloo: 123
+
+# @TODO: Should not return a reference to the cache that can then be altered
