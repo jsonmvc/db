@@ -19,7 +19,7 @@ const getNode = (db, path) => {
   // @TODO: Add a flag that clones or gives a reference to the cache
   // as needed
   if (db.cache[path]) {
-    return JSON.parse(JSON.stringify(db.cache[path]))
+    return db.cache[path]
   }
 
   let defaultValue = null
