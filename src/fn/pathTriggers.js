@@ -21,6 +21,9 @@ module.exports = function pathTriggers(db, path) {
   }
 
   trigger = flatten(trigger)
+
+  trigger.push(path)
+
   trigger = uniq(trigger)
 
   return trigger
