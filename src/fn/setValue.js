@@ -9,12 +9,11 @@ module.exports = (obj, path, val) => {
 
   for (let i = 0; i < parts.length; i += 1) {
 
-    if (ref[parts[i]] !== undefined) {
-      ref = ref[parts[i]]
-    } else {
-      ref = undefined
-      break
+    if (ref[parts[i]] === undefined) {
+      ref[parts[i]] = {}
     }
+
+    ref = ref[parts[i]]
   }
 
   if (ref) {

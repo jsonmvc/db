@@ -226,4 +226,15 @@
         bim: 321
         bloo: 123
 
+- comment: Should return a path that has only dynamic nodes
+  doc:
+    foo: 123
+  dynamic:
+    /bam/bar/baz: ['/foo']
+  get: /bam
+  expect:
+    bar:
+      baz: 123
+
 # @TODO: Should not return a reference to the cache that can then be altered
+
