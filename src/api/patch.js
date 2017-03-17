@@ -61,6 +61,8 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     return result
   }
 
+  // @TODO: Instead of deleting cache right away figure out if the values have
+  // changes first
   // Refresh caching
   let no = patch.length
   let affected = []
