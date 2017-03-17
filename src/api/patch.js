@@ -9,6 +9,7 @@ const triggerListener = require('./../fn/triggerListener')
 const splitPath = require('./../fn/splitPath')
 const isPatch = require('./../fn/isPatch')
 const applyPatch = require('./../fn/applyPatch')
+const pathTriggers = require('./../fn/pathTriggers')
 const err = require('./../fn/err')
 
 function getAffected(db, path) {
@@ -114,26 +115,10 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   let trigger = []
 
   patch.forEach(x => {
-    let parts = decomposePath(x.path)
-    parts.push(x.path)
-
-    parts.forEach(y => {
-      if (db.updates.triggers[y]) {
-        trigger.push(db.updates.triggers[y])
-      }
-    })
-  })
-
-  patch.forEach(x => {
-    let dep = db.dynamic.inverseDeps[x.path]
-
-    if (dep) {
-      trigger = trigger.concat(dep)
-    }
+    trigger = trigger.concat(pathTriggers(db, x.path))
   })
 
   trigger = flatten(trigger)
-  trigger = uniq(trigger)
 
   trigger.map(x => {
     triggerListener(db, x)
