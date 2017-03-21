@@ -29,21 +29,10 @@ module.exports = data => {
         on: []
       }
     },
-    // Used for testing nested static nodes.
-    // E.g. if a patch path is /foo/bar
-    // and a cache was made on /foo/bar/baz
-    // this will appear here as:
-    // /foo/bar: ['/foo/bar/baz']
-    cachedNested: {
 
-    },
-    // Used for testing nested dynamic nodes.
-    // Same as above
-    cachedChildren: {
-
-    },
     cache: {
-
+      paths: {},
+      tree: {}
     },
     updates: {
 

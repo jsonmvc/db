@@ -10,30 +10,8 @@ const splitPath = require('./../fn/splitPath')
 const isPatch = require('./../fn/isPatch')
 const applyPatch = require('./../fn/applyPatch')
 const pathTriggers = require('./../fn/pathTriggers')
+const invalidateCache = require('./../fn/invalidateCache')
 const err = require('./../fn/err')
-
-function getAffected(db, path) {
-  let nodes = [path]
-  let inverse = db.dynamic.inverseDeps[path]
-  let deps = db.dynamic.reverseDeps[path]
-
-  if (deps) {
-    if (inverse) {
-      deps = deps.concat(inverse)
-    }
-    nodes = nodes.concat(deps)
-    deps.forEach(x => {
-      nodes = nodes.concat(getAffected(db, x))
-    })
-  }
-
-  if (inverse) {
-    nodes = nodes.concat(inverse)
-  }
-
-
-  return nodes
-}
 
 /**
  * patch
@@ -56,63 +34,12 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   let result
   result = applyPatch(db, patch, shouldClone)
 
-  if (!result) {
+  if (undefined !== result.revert) {
     err(db, '/err/types/patch/2', patch)
     return result
   }
 
-  // @TODO: Instead of deleting cache right away figure out if the values have
-  // changes first
-  // Refresh caching
-  let no = patch.length
-  let affected = []
-  for (let i = 0; i < no; i += 1) {
-    let d = patch[i]
-    let parts = decomposePath(d.path)
-    parts.push(d.path)
-
-    if (db.cachedNested[d.path]) {
-      affected = affected.concat(db.cachedNested[d.path])
-    }
-
-    for (let j = 0; j < parts.length; j += 1) {
-      let part = parts[j]
-      affected = affected.concat(getAffected(db, part))
-    }
-
-    if (d.op === 'merge') {
-
-      function recurseAffected(value, path) {
-        if (isObjectLike(value)) {
-          Object.keys(value).forEach(x => {
-            let newPath = path === '/' ? '/' + x : path + '/' + x
-            affected.push(newPath)
-            recurseAffected(value[x], newPath)
-          })
-        } else {
-          affected.push(path)
-        }
-      }
-
-      recurseAffected(d.value, d.path)
-    }
-
-  }
-
-  affected.forEach(x => {
-    delete db.cache[x]
-
-    let children = db.cachedChildren[x]
-
-    if (children) {
-      children.forEach(x => {
-        delete db.cache[x]
-      })
-
-      delete db.cachedChildren[x]
-    }
-
-  })
+  invalidateCache(db, result.cache)
 
   let trigger = []
 
@@ -125,4 +52,6 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
   trigger.map(x => {
     triggerListener(db, x)
   })
+
+  return result
 }

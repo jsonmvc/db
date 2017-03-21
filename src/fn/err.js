@@ -8,7 +8,7 @@ module.exports = function errPatch(db, path, obj) {
   err.value = obj
   err.id = path
 
-  patch(db)([{
+  return patch(db)([{
     op: 'add',
     path: `/err/${err.name}/-`,
     value: err

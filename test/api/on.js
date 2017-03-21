@@ -16,7 +16,7 @@ const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-// tests = [tests[tests.length - 2]]
+tests = [tests[tests.length - 3]]
 
 require('setimmediate')
 

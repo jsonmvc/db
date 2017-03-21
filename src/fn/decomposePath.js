@@ -8,6 +8,7 @@ module.exports = function decomposePath(path) {
     xs.push(x)
     x = x.slice(0, x.lastIndexOf('/'))
   }
+
   return xs
 }
 

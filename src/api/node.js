@@ -6,6 +6,7 @@ const isValidPath = require('./../fn/isValidPath')
 const clearNode = require('./../fn/clearNode')
 const triggerListener = require('./../fn/triggerListener')
 const pathTriggers = require('./../fn/pathTriggers')
+const expandNodeDeps = require('./../fn/expandNodeDeps')
 
 /**
  * node
@@ -75,32 +76,7 @@ module.exports = db => (path, deps, fn) => {
     }
   })
 
-  // @TODO: Based on this nesting create a new array that
-  // contains also the dependencies of the nested nodes
-  // thus generating the entire list of nodes.
-  // Also order them depth last
-  // nestingShallow
-  // nestingDeep
-
-  node.deps.forEach(x => {
-
-    if (!db.dynamic.reverseDeps[x]) {
-      db.dynamic.reverseDeps[x] = [node.path]
-    } else {
-      db.dynamic.reverseDeps[x].push(node.path)
-    }
-
-    let dep = decomposePath(x)
-
-    dep.forEach(y => {
-      if (!db.dynamic.inverseDeps[y]) {
-        db.dynamic.inverseDeps[y] = [node.path]
-      } else {
-        db.dynamic.inverseDeps[y].push(node.path)
-      }
-    })
-
-  })
+  expandNodeDeps(db.dynamic)
 
   pathTriggers(db, path).map(x => {
     triggerListener(db, x)
@@ -129,8 +105,6 @@ module.exports = db => (path, deps, fn) => {
     })
 
     clearNode(db.dynamic.nesting, path)
-    clearNode(db.dynamic.reverseDeps, path)
-    clearNode(db.dynamic.inverseDeps, path)
 
     triggers.map(x => {
       triggerListener(db, x)

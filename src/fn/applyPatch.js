@@ -15,6 +15,11 @@ module.exports = function applyPatch(db, patch, shouldClone) {
   let fromIsArray = false
   let revert
 
+  let cache = {
+    partial: [],
+    full: []
+  }
+
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
     x = patch[i]
@@ -107,6 +112,8 @@ module.exports = function applyPatch(db, patch, shouldClone) {
         } else if (isPlainObject(obj)) {
           obj[last] = shouldClone ? clone(x.value) : x.value
         }
+
+        cache.full.push(x.path)
       break
 
       case 'remove':
@@ -115,6 +122,8 @@ module.exports = function applyPatch(db, patch, shouldClone) {
         } else {
           delete obj[last]
         }
+
+        cache.full.push(x.path)
       break
 
       case 'copy':
@@ -124,11 +133,13 @@ module.exports = function applyPatch(db, patch, shouldClone) {
 
         if (x.op === 'move') {
           delete from[lastFrom]
+          cache.full.push(x.from)
         } else if (isPlainObject(temp)) {
           temp = clone(temp)
         }
 
         obj[last] = temp
+        cache.full.push(x.path)
 
       break
 
@@ -145,6 +156,7 @@ module.exports = function applyPatch(db, patch, shouldClone) {
           break root
         }
         obj[last] = merge(obj[last], x.value)
+        cache.full.push(x.path)
       break
     }
 
@@ -154,6 +166,8 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     // @TODO: Revert all changes done up until revertIndex
   }
 
-  return revert === undefined
-
+  return {
+    revert,
+    cache
+  }
 }

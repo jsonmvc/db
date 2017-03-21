@@ -3,6 +3,7 @@ const splitPath = require('./splitPath')
 const getValue = require('./getValue')
 const setValue = require('./setValue')
 const decomposePath = require('./decomposePath')
+const setCache = require('./setCache')
 const err = require('./err')
 
 const getNode = (db, path) => {
@@ -18,8 +19,8 @@ const getNode = (db, path) => {
   //
   // @TODO: Add a flag that clones or gives a reference to the cache
   // as needed
-  if (db.cache[path]) {
-    return db.cache[path]
+  if (db.cache.paths[path]) {
+    return db.cache.paths[path]
   }
 
   let defaultValue = null
@@ -113,22 +114,7 @@ const getNode = (db, path) => {
   }
 
   if (result) {
-    db.cache[path] = result
-
-    if (dynamicChildrenBkp) {
-      if (!db.cachedChildren[dynamicParent]) {
-        db.cachedChildren[dynamicParent] = [path]
-      } else {
-        db.cachedChildren[dynamicParent].push(path)
-      }
-    } else {
-      if (!db.cachedNested[decomposedBkp[0]]){
-        db.cachedNested[decomposedBkp[0]] = [path]
-      } else {
-        db.cachedNested[decomposedBkp[0]].push(path)
-      }
-    }
-
+    setCache(db, path, result)
   }
 
   return result

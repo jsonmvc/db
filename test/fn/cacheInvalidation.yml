@@ -4,25 +4,14 @@
   - /k2/k3/k4/k5
   - /p1/p2/p3
   nodes:
-    /p1/p2:
-      deps: [/x1]
-    /a1/a2:
-      deps: [/c1/c2]
-      fn: null
-    /b1/b2/b3:
-      deps: [/a1/a2/a3]
-      fn: null
-    /c1:
-      deps: [/e1/e2, /d1/d2]
-      fn: null
-    /e1:
-      deps: [/f1]
-      fn: null
-    /d1:
-      deps: [/k2/k3]
-      fn: null
-    /x1:
-      deps: [/a1]
+    /p1/p2: [/x1]
+    /a1/a2: [/c1/c2]
+    /b1/b2/b3: [/a1/a2/a3]
+    /c1: [/e1/e2, /d1/d2]
+    /e1: [/f1, /m1]
+    /d1: [/k2/k3]
+    /x1: [/a1]
+    /m1/m2: [/o]
   changed:
   - /k2/k3/k4
   expect:
