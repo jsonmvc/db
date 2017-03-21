@@ -1,0 +1,40 @@
+
+- comment: test 1
+  cache:
+  - /k2/k3/k4/k5
+  - /p1/p2/p3
+  nodes:
+    /p1/p2:
+      deps: [/x1]
+    /a1/a2:
+      deps: [/c1/c2]
+      fn: null
+    /b1/b2/b3:
+      deps: [/a1/a2/a3]
+      fn: null
+    /c1:
+      deps: [/e1/e2, /d1/d2]
+      fn: null
+    /e1:
+      deps: [/f1]
+      fn: null
+    /d1:
+      deps: [/k2/k3]
+      fn: null
+    /x1:
+      deps: [/a1]
+  changed:
+  - /k2/k3/k4
+  expect:
+  - /
+  - /c1
+  - /c1/c2
+  - /c1/c2/c3
+  - /a1
+  - /a1/a2
+  - /a1/a2/a3
+  - /a1/a2/a4
+  - /d1
+  - /e1
+  - /e1/e2
+  - /e1/e2/e4
