@@ -62,9 +62,6 @@ function affectedNodes(db, path, nodes) {
 
 function invalidateCache(db, changed) {
 
-  delete db.cache['/']
-  return
-
   changed.full.forEach(x => {
 
     let affected = affectedNodes(db, x)

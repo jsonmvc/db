@@ -119,26 +119,9 @@ module.exports = db => (path, deps, fn) => {
     let triggers = pathTriggers(db, path)
     delete db.dynamic.fns[path]
 
-    // Delete cache upwards
-    delete db.cache[path]
-    delete db.cache['/']
-    let xs = decomposePath(path)
-    xs.push(path)
-    xs.forEach(x => {
-      delete db.cache[x]
-    })
-
-    let reg = new RegExp(`^${path}`)
-    // Delete cache downwards
-    Object.keys(db.cache).forEach(x => {
-      if (x.match(reg) !== null) {
-        delete db.cache[x]
-      }
-    })
+    invalidateCache(db, { full: [node.path] })
 
     clearNode(db.dynamic.nesting, path)
-    clearNode(db.dynamic.reverseDeps, path)
-    clearNode(db.dynamic.inverseDeps, path)
 
     triggers.map(x => {
       triggerListener(db, x)
