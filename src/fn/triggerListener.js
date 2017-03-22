@@ -15,6 +15,8 @@ function callNode(db, path, i) {
   let val = getNode(db, path)
   let cacheTest = JSON.stringify(val)
 
+  console.log('Triggering', path, val)
+
   if (db.updates.cache[path][i] !== cacheTest) {
     db.updates.cache[path][i] = cacheTest
 

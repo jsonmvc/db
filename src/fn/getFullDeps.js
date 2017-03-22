@@ -20,7 +20,7 @@ function getFullDeps(nodesDeps, path) {
     // Add all dynamic nodes
     for (let k = 0; k < paths.length; k += 1) {
       let cur = paths[k]
-      if (parts.indexOf(cur) !== -1 || cur.match(reg) !== null) {
+      if (parts.indexOf(cur) !== -1 || cur.match(reg) !== null && deps.indexOf(cur) !== -1) {
         selected = true
         deps.push(cur)
         deps = deps.concat(getFullDeps(nodesDeps, cur))

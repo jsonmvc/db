@@ -14,6 +14,17 @@ string, numbers -> null
 However if one tries to get a static property from the data tree
 and it does not exists it will return undefined.
 
+-----
+Idea
+-----
+Add a wildcard match for dynamic nodes: E.g.:
+/foo/\*/bar - (without the \)
+
+Whenever the path is requested: e.g. /foo/12/bar
+the node will compute at that location.
+
+If /foo/12 is called then bar will execute and provide a value even
+if the data is non-existent
 
 ----
 Patch

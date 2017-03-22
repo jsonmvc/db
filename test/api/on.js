@@ -16,7 +16,7 @@ const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-tests = [tests[tests.length - 3]]
+tests = [tests[tests.length - 4]]
 
 require('setimmediate')
 
@@ -223,7 +223,6 @@ tests.forEach(x => {
                   result = undefined
                 }
               })
-
             }
 
             expect(last[0]).toEqual(result)
