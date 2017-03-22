@@ -88,3 +88,11 @@
   listeners:
   - '/bar'
   - '/bar/bla'
+
+- comment: Should properly expand nested deps
+  doc: {}
+  dynamic:
+    /bar: ['/baz/bam']
+    /baz: ['/bla/bam/bak']
+    /bla/bam: ['/qux']
+    /qux: ['/fi']

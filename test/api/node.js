@@ -10,7 +10,7 @@ const dbFn = require(`${root}/src/index`)
 const decomposePath = require(`${root}/src/fn/decomposePath`)
 const splitPath = require(`${root}/src/fn/splitPath`)
 
-// tests = [tests[tests.length - 2]]
+// tests = [tests[tests.length - 1]]
 
 const concat = function () {
   return Array.prototype.join.call(arguments, '-')

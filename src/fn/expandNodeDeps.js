@@ -16,6 +16,7 @@ function expandNodeDeps(dynamic) {
     dynamic.fullDeps[path] = deps
     dynamic.staticDeps[path] = getStaticDeps(paths, deps)
   }
+
 }
 
 module.exports = expandNodeDeps

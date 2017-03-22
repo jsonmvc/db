@@ -4,10 +4,6 @@ const decomposePath = require('./decomposePath')
 function getFullDeps(nodesDeps, path) {
   let nodeDeps = nodesDeps[path]
 
-  if (!nodeDeps) {
-    return []
-  }
-
   let deps = []
   let paths = Object.keys(nodesDeps)
 
@@ -15,6 +11,7 @@ function getFullDeps(nodesDeps, path) {
     let dep = nodeDeps[j]
     let reg = new RegExp('^' + dep)
     let parts = decomposePath(dep)
+    parts.push(dep)
     let selected = false
 
     // Add all dynamic nodes
