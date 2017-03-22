@@ -43,7 +43,8 @@ module.exports = data => {
 
     },
     cache: {
-
+      paths: {},
+      tree: {}
     },
     updates: {
 

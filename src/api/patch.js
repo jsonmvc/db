@@ -10,6 +10,7 @@ const splitPath = require('./../fn/splitPath')
 const isPatch = require('./../fn/isPatch')
 const applyPatch = require('./../fn/applyPatch')
 const pathTriggers = require('./../fn/pathTriggers')
+const invalidateCache = require('./../fn/invalidateCache')
 const err = require('./../fn/err')
 
 function getAffected(db, path) {
@@ -50,13 +51,20 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     return
   }
 
+  try {
+    patch = JSON.parse(JSON.stringify(patch))
+  } catch (e) {
+    err(db, '/err/types/patch/3', {})
+    return
+  }
+
   // @TODO by the way object data that is passed
   // through reference might need copying before
   // applying the patch
   let result
   result = applyPatch(db, patch, shouldClone)
 
-  if (!result) {
+  if (result.revert !== undefined) {
     err(db, '/err/types/patch/2', patch)
     return result
   }
@@ -113,6 +121,10 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     }
 
   })
+
+  delete db.cache['/']
+
+  // invalidateCache(db, result.changed)
 
   let trigger = []
 

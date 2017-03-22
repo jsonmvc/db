@@ -8,7 +8,7 @@ const dbFn = require(`${root}/src/index`)
 const merge = require('lodash/merge')
 const identity = x => x
 
-// tests = [tests[tests.length - 1]]
+const additionalProps = ['err']
 
 tests.forEach(x => {
 
@@ -21,7 +21,9 @@ tests.forEach(x => {
       let db = dbFn(x.doc)
 
       if (x.expected) {
-        x.expected = merge(db.get('/'), x.expected)
+        additionalProps.forEach(y => {
+          x.expected[y] = db.get('/' + y)
+        })
       }
 
       if (x.dynamic) {

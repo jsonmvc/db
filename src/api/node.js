@@ -6,6 +6,8 @@ const isValidPath = require('./../fn/isValidPath')
 const clearNode = require('./../fn/clearNode')
 const triggerListener = require('./../fn/triggerListener')
 const pathTriggers = require('./../fn/pathTriggers')
+const expandNodeDeps = require('./../fn/expandNodeDeps')
+const invalidateCache = require('./../fn/invalidateCache')
 
 /**
  * node
@@ -65,6 +67,7 @@ module.exports = db => (path, deps, fn) => {
   // @TODO: Add the root to the nesting so that:
   // db.get('/') also gets all the dynamic nodes in
   let xs = decomposePath(path)
+  xs.push('/')
   xs.map(x => {
     if (!db.dynamic.nesting[x]) {
       db.dynamic.nesting[x] = []
@@ -74,6 +77,7 @@ module.exports = db => (path, deps, fn) => {
       db.dynamic.nesting[x].push(path)
     }
   })
+
 
   // @TODO: Based on this nesting create a new array that
   // contains also the dependencies of the nested nodes
@@ -101,6 +105,10 @@ module.exports = db => (path, deps, fn) => {
     })
 
   })
+
+  expandNodeDeps(db.dynamic)
+
+  invalidateCache(db, { full: [node.path] })
 
   pathTriggers(db, path).map(x => {
     triggerListener(db, x)

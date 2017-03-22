@@ -14,10 +14,17 @@ module.exports = function applyPatch(db, patch, shouldClone) {
   let objIsArray = false
   let fromIsArray = false
   let revert
+  let changed = {
+    full: [],
+    partial: []
+  }
+
 
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
     x = patch[i]
+
+    changed.full.push(x.path)
 
     // @TODO: Implement both path && from in a function
 
@@ -154,6 +161,9 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     // @TODO: Revert all changes done up until revertIndex
   }
 
-  return revert === undefined
+  return {
+    revert,
+    changed
+  }
 
 }

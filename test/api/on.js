@@ -57,11 +57,11 @@ tests.forEach(x => {
         if (len === 1) {
           fn = x => x
         } else if (len === 2) {
-          fn = (x, y) => `${x}-${y}`
+          fn = (x, y) => [x, y]
         } else if (len === 3) {
-          fn = (x, y, z) => `${x}-${y}-${z}`
+          fn = (x, y, z) => [x, y, z]
         } else if (len === 4) {
-          fn = (x, y, z, t) => `${x}-${y}-${z}-${t}`
+          fn = (x, y, z, t) => [x, y, z, t]
         }
 
         db.node(y, x.dynamic[y], fn)

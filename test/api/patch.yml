@@ -56,7 +56,7 @@
   - op: add
     path: /foo
   circular: true
-  expected: {}
+  error: patch invalid
 
 - comment: should fail with a nonvalid jsondata
   doc: {}
@@ -166,7 +166,8 @@
     value: '5'
   error: Out of bounds (lower)
 
-- doc:
+- comment: Should add a boolean
+  doc:
     foo: 1
   patch:
   - op: add
@@ -230,7 +231,8 @@
   expected:
     foo: 1
 
-- doc:
+- comment: Should remove an item from an array
+  doc:
     foo: 1
     baz:
     - qux: hello

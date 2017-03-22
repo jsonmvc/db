@@ -274,6 +274,7 @@
   - /foo
   async: true
   expectDoc:
+    bam: 145
     foo:
       bar:
         baz: 145
@@ -304,11 +305,7 @@
         baz: 129
         bam: 130
   dynamic:
-    /foo2/bar/baz: ['/foo/bar/baz']
-    /foo2/baz: ['/foo/bar']
     /foo2: ['/foo']
-    /foo3/bar/bam: ['/foo/bar/bam']
-    /foo3/bar: ['/foo/bar']
     /foo3: ['/foo']
     /foo4: ['/foo', '/foo2', '/foo3']
     /foo5: ['/foo4', '/foo/bar/bam']
@@ -326,6 +323,35 @@
   - /foo5
   async: true
   expectDoc:
+    foo2:
+      bar:
+        baz: 129
+        bam: 130
+    foo3:
+      bar:
+        baz: 129
+        bam: 130
+    foo4:
+    - bar:
+        baz: 129
+        bam: 130
+    - bar:
+        baz: 129
+        bam: 130
+    - bar:
+        baz: 129
+        bam: 130
+    foo5:
+    - - bar:
+          baz: 129
+          bam: 130
+      - bar:
+          baz: 129
+          bam: 130
+      - bar:
+          baz: 129
+          bam: 130
+    - 130
     foo:
       bar:
         baz: 129

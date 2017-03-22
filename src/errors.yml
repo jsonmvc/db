@@ -5,6 +5,9 @@ patch:
   2:
     text: Tried to apply patch but failed and rolled back.
     name: patch
+  3:
+    text: Patch is not a valid json.
+    name: patch
 
 on:
   1:

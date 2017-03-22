@@ -4,6 +4,7 @@ const getValue = require('./getValue')
 const setValue = require('./setValue')
 const decomposePath = require('./decomposePath')
 const err = require('./err')
+const clone = require('lodash').cloneDeep
 
 const getNode = (db, path) => {
   let result
@@ -18,6 +19,7 @@ const getNode = (db, path) => {
   //
   // @TODO: Add a flag that clones or gives a reference to the cache
   // as needed
+
   if (db.cache[path]) {
     return db.cache[path]
   }
@@ -97,7 +99,10 @@ const getNode = (db, path) => {
         if (nodes) {
           val = nodes.reduce((acc, x) => {
             let node = getNode(db, x)
-            let root = x.replace(path, '')
+            let root = x
+            if (path !== '/') {
+              root = root.replace(path, '')
+            }
             setValue(acc, root, node)
             return acc
           }, val)
@@ -113,7 +118,8 @@ const getNode = (db, path) => {
   }
 
   if (result) {
-    db.cache[path] = result
+    db.cache[path] = clone(result)
+    // db.cache[path] = result
 
     if (dynamicChildrenBkp) {
       if (!db.cachedChildren[dynamicParent]) {
