@@ -16,7 +16,9 @@ const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-// tests = [tests[tests.length - 2]]
+// tests = [tests[tests.length - 1]]
+
+// tests = tests.filter(x => x.comment === 'Should trigger a listener')
 
 require('setimmediate')
 
@@ -35,7 +37,6 @@ const errFn = x => {
 const noArgsFn = () => undefined
 
 const identity = x => x
-
 
 tests.forEach(x => {
 
@@ -66,6 +67,12 @@ tests.forEach(x => {
 
         db.node(y, x.dynamic[y], fn)
         dynamicFns[y] = fn
+      })
+    }
+
+    if (x.cache) {
+      x.cache.forEach(y => {
+        db.get(y)
       })
     }
 
@@ -167,86 +174,93 @@ tests.forEach(x => {
 
         }
 
-        x.listeners.forEach(y => {
-          let calls = fns[y].mock.calls
+        if (x.unsubscribe !== true) {
+          x.listeners.forEach(y => {
+            let calls = fns[y].mock.calls
 
-          // Test all values match up
-          calls.forEach(x => {
-            expect(x[0]).toEqual(x[1])
-          })
+            // Test all values match up
+            calls.forEach(x => {
+              expect(x[0]).toEqual(x[1])
+            })
 
-          let last = calls[calls.length - 1]
+            let last = calls[calls.length - 1]
 
-          if (!last) {
-            return
-          }
-
-          let path = last[2]
-
-          let parts = decomposePath(path)
-
-          let dynamicParent
-
-          parts.forEach(y => {
-            if (x.dynamic && x.dynamic[y]) {
-              dynamicParent = y
-            }
-          })
-
-          // The last listener called must match the current
-          // value if the path is a dynamic node
-          if (x.dynamic && (x.dynamic[y] || dynamicParent)) {
-            let loc = dynamicParent ? dynamicParent : y
-            let node = x.dynamic[loc]
-            let args = node.reduce((acc, x) => {
-              acc.push(db.get(x))
-              return acc
-            }, [])
-
-            let result = dynamicFns[loc].apply(null, args)
-
-            if (dynamicParent) {
-              let childParts = y.split('/')
-              childParts.shift()
-
-              let parentParts = dynamicParent.split('/')
-              parentParts.shift()
-
-              parentParts.forEach(x => {
-                childParts.shift()
-              })
-
-              childParts.forEach(x => {
-                if (result) {
-                  result = result[x]
-                } else {
-                  result = undefined
-                }
-              })
-
+            if (!last) {
+              return
             }
 
-            expect(last[0]).toEqual(result)
+            let path = last[2]
 
-          } else if (last) {
-            let parts = path.split('/')
-            parts.shift()
+            let parts = decomposePath(path)
 
-            let val = db.get('/')
-            while (parts.length > 0) {
-              let prop = parts.shift()
-              if (val) {
-                val = val[prop]
-              } else {
-                val = void 0
-                break
+            let dynamicParent
+
+            parts.forEach(y => {
+              if (x.dynamic && x.dynamic[y]) {
+                dynamicParent = y
               }
+            })
+
+            // The last listener called must match the current
+            // value if the path is a dynamic node
+            if (x.dynamic && (x.dynamic[y] || dynamicParent)) {
+              let loc = dynamicParent ? dynamicParent : y
+              let node = x.dynamic[loc]
+              let args = node.reduce((acc, x) => {
+                acc.push(db.get(x))
+                return acc
+              }, [])
+
+              let result = dynamicFns[loc].apply(null, args)
+
+              if (dynamicParent) {
+                let childParts = y.split('/')
+                childParts.shift()
+
+                let parentParts = dynamicParent.split('/')
+                parentParts.shift()
+
+                parentParts.forEach(x => {
+                  childParts.shift()
+                })
+
+                childParts.forEach(x => {
+                  if (result) {
+                    result = result[x]
+                  } else {
+                    result = undefined
+                  }
+                })
+
+              }
+
+              if (last[0] === null && result === undefined) {
+                // The node will always return null if it can't
+                // compute or it's values are undefined
+              } else {
+                expect(last[0]).toEqual(result)
+              }
+
+            } else if (last) {
+              let parts = path.split('/')
+              parts.shift()
+
+              let val = db.get('/')
+              while (parts.length > 0 && parts[0] !== '') {
+                let prop = parts.shift()
+                if (val) {
+                  val = val[prop]
+                } else {
+                  val = void 0
+                  break
+                }
+              }
+
+              expect(last[0]).toEqual(val)
             }
 
-            // expect(last[0]).toEqual(val)
-          }
-
-        })
+          })
+        }
 
         if (x.async && x.unsubscribe !== true) {
           let result

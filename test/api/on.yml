@@ -401,4 +401,31 @@
   - /foo/bar/baz
   async: true
 
+- comment: Should properly expand nested deps and remove the cache
+  doc:
+    fi: 123
+    bla:
+      bam:
+        bak:
+          blu: 123
+  dynamic:
+    /bar: ['/baz/bam']
+    /baz: ['/bla/bam/bak']
+    /bla/bam/bak/baz/lop: ['/qux']
+    /qux: ['/fi']
+  patch:
+  - op: replace
+    path: /fi
+    value: 321
+  - op: replace
+    path: /bla/bam/bak/blu
+    value: 321
+  listeners:
+  - /bla
+  - /bar
+  cache:
+  - /bar
+  - /baz
+  async: true
+
 # @TODO: Add testing for triggering listeners on node removal / replace

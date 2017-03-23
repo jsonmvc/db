@@ -117,9 +117,7 @@ const getNode = (db, path) => {
     result = val
   }
 
-  if (result) {
-    setCache(db, path, result)
-  }
+  setCache(db, path, result)
 
   return result
 }

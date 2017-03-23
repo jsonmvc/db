@@ -1,10 +1,14 @@
 'use strict'
 const decomposePath = require('./decomposePath')
+const uniq = require('lodash/uniq')
 
-function getFullDeps(nodesDeps, path) {
+function getFullDeps(nodesDeps, path, deps) {
   let nodeDeps = nodesDeps[path]
 
-  let deps = []
+  if (!deps) {
+    deps = []
+  }
+
   let paths = Object.keys(nodesDeps)
 
   for (let j = 0; j < nodeDeps.length; j += 1) {
@@ -17,15 +21,18 @@ function getFullDeps(nodesDeps, path) {
     // Add all dynamic nodes
     for (let k = 0; k < paths.length; k += 1) {
       let cur = paths[k]
-      if (parts.indexOf(cur) !== -1 || cur.match(reg) !== null && deps.indexOf(cur) !== -1) {
+
+      if ((parts.indexOf(cur) !== -1 || cur.match(reg) !== null) && deps.indexOf(cur) === -1) {
         selected = true
         deps.push(cur)
-        deps = deps.concat(getFullDeps(nodesDeps, cur))
+        getFullDeps(nodesDeps, cur, deps)
+
+        let curParts = decomposePath(cur)
 
         // if the path is a child of the dep then
         // it is a static node containing a child dynamic
         // node
-        if (decomposePath(cur).length > parts.length) {
+        if (curParts.length > parts.length) {
           deps.push(dep)
         }
       }

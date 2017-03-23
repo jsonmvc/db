@@ -2,30 +2,27 @@ const splitPath = require('./splitPath')
 const clone = require('lodash').cloneDeep
 
 function setCache(db, path, value) {
-  let parts = splitPath(path)
-
-  // If there's a dynamic path of some sort here
-  // then store it somehow so that it can be
-  // recognized
-  // else just store it plain
-  // - move the responsability to the patching
-  // system to give all the paths that have
-  // been changed
 
   db.cache.paths[path] = clone(value)
 
-  let ref = db.cache.tree
-  let curPath = ''
-  parts.forEach(x => {
-    curPath += '/' + x
-    if (!ref[x]) {
-      ref[x] = {
-        path: curPath,
-        children: {}
+  if (db.cache.initialized[path] !== true) {
+    let parts = splitPath(path)
+    let ref = db.cache.tree
+    let curPath = ''
+    parts.forEach(x => {
+      curPath += '/' + x
+      if (!ref[x]) {
+        ref[x] = {
+          path: curPath,
+          children: {}
+        }
       }
-    }
-    ref = ref[x].children
-  })
+      ref = ref[x].children
+    })
+
+    db.cache.initialized[path] = true
+  }
+
 }
 
 module.exports = setCache

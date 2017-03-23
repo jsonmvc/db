@@ -31,7 +31,8 @@ module.exports = data => {
     },
     cache: {
       paths: {},
-      tree: {}
+      tree: {},
+      initialized: {}
     },
     updates: {
 
