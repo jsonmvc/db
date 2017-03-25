@@ -1,5 +1,6 @@
 'use strict'
 const getFullDeps = require('./getFullDeps')
+const decomposePath = require('./decomposePath')
 const uniq = require('lodash/uniq')
 
 function expandNodeDeps(dynamic) {
@@ -13,6 +14,7 @@ function expandNodeDeps(dynamic) {
     let path = paths[i]
     let deps = uniq(getFullDeps(dynamic.deps, path))
     dynamic.fullDeps[path] = deps
+    dynamic.decomposed[path] = decomposePath(path)
   }
 
   paths = Object.keys(dynamic.fullDeps)

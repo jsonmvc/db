@@ -8,6 +8,25 @@ const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
 const clone = require('lodash/cloneDeep')
 
+
+function recursivePathProps(obj, path, result) {
+
+  if (!result) {
+    result = []
+  }
+
+  Object.keys(obj).forEach(x => {
+    let newPath = path + '/' + x
+    if (isPlainObject(obj[x])) {
+      recursivePathProps(obj[x], newPath, result)
+    }
+    result.push(newPath)
+  })
+
+  return result
+
+}
+
 module.exports = function applyPatch(db, patch, shouldClone) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
@@ -27,6 +46,10 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     x = patch[i]
 
     changed.full.push(x.path)
+
+    if (isPlainObject(x.value)) {
+      changed.full = changed.full.concat(recursivePathProps(x.value, x.path))
+    }
 
     // @TODO: Implement both path && from in a function
 

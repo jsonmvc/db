@@ -30,29 +30,27 @@
   - "/foo/bar"
 
 - comment: Should trigger a listener when multiple static values change underneath that node
-  doc: {
-    foo: {
+  doc:
+    foo:
       qux: 123
-    }
-  }
   patch:
   - op: add
-    path: "/foo/bar/baz"
+    path: /foo/bar/baz
     value: 123
   - op: add
-    path: "/foo/bam/boo"
+    path: /foo/bam/boo
     value: 321
   - op: add
-    path: "/foo/bla/blo"
+    path: /foo/bla/blo
     value: 444
   dynamic:
-    /foo/bar/boo: ['/foo/bam/boo']
+    /foo/bar/boo: [/foo/bam/boo]
   async: true
   listeners:
-  - "/foo/bar"
-  - "/foo"
-  - "/foo"
-  - "/bam"
+  - /foo/bar
+  - /foo
+  - /foo
+  - /bam
 
 - comment: One dynamic node with single path
   doc:

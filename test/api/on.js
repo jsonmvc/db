@@ -16,9 +16,9 @@ const decomposePath = require(`${root}/src/fn/decomposePath`)
 
 const additionalProps = ['err']
 
-// tests = [tests[tests.length - 1]]
+// tests = [tests[tests.length - 19]]
 
-// tests = tests.filter(x => x.comment === 'Should trigger a listener')
+// tests = tests.filter(x => x.comment === 'Two dynamic nodes with two paths')
 
 require('setimmediate')
 
@@ -116,7 +116,6 @@ tests.forEach(x => {
     }
 
     jest.runAllTimers()
-      return
 
     return delayed(() => {
       if (x.errFn || x.invalidFn || x.noArgsFn) {
