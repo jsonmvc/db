@@ -108,6 +108,8 @@ module.exports = db => (path, deps, fn) => {
 
   expandNodeDeps(db.dynamic)
 
+  db.cache.dynamic[node.path] = []
+
   invalidateCache(db, { full: [node.path] })
 
   pathTriggers(db, path).map(x => {

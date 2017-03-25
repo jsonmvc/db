@@ -10,6 +10,8 @@ const identity = x => x
 
 const additionalProps = ['err']
 
+// tests = [tests[tests.length - 1]]
+
 tests.forEach(x => {
 
   if (x.disabled) {

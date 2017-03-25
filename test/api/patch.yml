@@ -886,6 +886,12 @@
   - op: replace
     path: /bam/baz/bim
     value: 555
+  - op: merge
+    path: /bam
+    value:
+      baz:
+        qux: 123
+        bim: 777
   dynamic:
     /foo: ['/bar']
     /bam/baz/bloo: ['/foo']
@@ -899,11 +905,13 @@
     foo: 444
     bam:
       baz:
-        bim: 555
+        bim: 777
         bloo: 444
+        qux: 123
     bla:
       baz:
-        bim: 555
+        qux: 123
+        bim: 777
         bloo: 444
 
 #TODO:

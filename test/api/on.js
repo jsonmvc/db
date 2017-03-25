@@ -116,6 +116,7 @@ tests.forEach(x => {
     }
 
     jest.runAllTimers()
+      return
 
     return delayed(() => {
       if (x.errFn || x.invalidFn || x.noArgsFn) {

@@ -20,7 +20,7 @@ const getNode = (db, path) => {
   // @TODO: Add a flag that clones or gives a reference to the cache
   // as needed
 
-  if (db.cache.paths[path]) {
+  if (db.cache.paths.hasOwnProperty(path)) {
     return db.cache.paths[path]
   }
 
@@ -117,7 +117,7 @@ const getNode = (db, path) => {
     result = val
   }
 
-  setCache(db, path, result)
+  setCache(db, path, result, isDynamic ? dynamicParent : false)
 
   return result
 }

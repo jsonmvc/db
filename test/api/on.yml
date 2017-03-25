@@ -420,12 +420,20 @@
   - op: replace
     path: /bla/bam/bak/blu
     value: 321
+  - op: merge
+    path: /bla
+    value:
+      bam:
+        bak:
+          blu: 555
   listeners:
   - /bla
   - /bar
+  - /bla/bam/bak/blu
   cache:
   - /bar
   - /baz
+  - /bla/bam/bak/blu
   async: true
 
 # @TODO: Add testing for triggering listeners on node removal / replace

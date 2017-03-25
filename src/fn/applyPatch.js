@@ -19,6 +19,8 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     partial: []
   }
 
+  let path = ''
+
 
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
@@ -32,7 +34,11 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     obj = db.static
     for (j = 0, lenj = parts.length - 1; j < lenj; j += 1) {
 
+
       part = parts[j]
+      path += '/' + part
+      changed.full.push(path)
+
       if (!obj[part] && x.op === 'add') {
         obj[part] = {}
         obj = obj[part]

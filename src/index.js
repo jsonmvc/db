@@ -31,8 +31,7 @@ module.exports = data => {
     },
     cache: {
       paths: {},
-      tree: {},
-      initialized: {}
+      dynamic: {}
     },
     updates: {
 
@@ -45,6 +44,8 @@ module.exports = data => {
       nesting: {},
       reverseDeps: {},
       inverseDeps: {},
+      staticDeps: {},
+      fullDeps: {},
       deps: {},
       fns: {}
     },
