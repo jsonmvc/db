@@ -28,25 +28,24 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     return
   }
 
-  try {
-    patch = JSON.parse(JSON.stringify(patch))
-  } catch (e) {
-    err(db, '/err/types/patch/3', {})
-    return
+  if (shouldValidate) {
+    try {
+      patch = JSON.parse(JSON.stringify(patch))
+    } catch (e) {
+      err(db, '/err/types/patch/3', {})
+      return
+    }
   }
 
   // @TODO by the way object data that is passed
   // through reference might need copying before
   // applying the patch
-  let result
-  result = applyPatch(db, patch, shouldClone)
+  let result = applyPatch(db, patch, shouldClone)
 
   if (result.revert !== undefined) {
     err(db, '/err/types/patch/2', patch)
     return result
   }
-
-  invalidateCache(db, result.changed)
 
   let trigger = []
 

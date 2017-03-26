@@ -8,26 +8,55 @@ const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
 const clone = require('lodash/cloneDeep')
 
+function clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, path) {
+  let staticDepList = staticDeps[path]
+  if (staticDepList) {
+    let cacheDynamicList
+    let decomposedList
+    let k
+    let p
+    let dep
+    k = staticDepList.length
 
-function recursivePathProps(obj, path, result) {
+    while (k--) {
+      dep = staticDepList[k]
 
-  if (!result) {
-    result = []
-  }
+      cacheDynamicList = cacheDynamic[dep]
+      if (cacheDynamicList) {
+        p = cacheDynamicList.length
+        while (p--) {
+          delete cachePaths[cacheDynamicList[p]]
+        }
+      }
 
-  Object.keys(obj).forEach(x => {
-    let newPath = path + '/' + x
-    if (isPlainObject(obj[x])) {
-      recursivePathProps(obj[x], newPath, result)
+      decomposedList = decomposed[dep]
+      p = decomposedList.length
+      while (p--) {
+        delete cachePaths[decomposedList[p]]
+      }
     }
-    result.push(newPath)
-  })
+  }
+}
 
-  return result
+function clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, path, obj) {
+  if (isPlainObject(obj)) {
+    let k = Object.keys(obj)
+    let i = k.length
+    let prop
+    let newPath
 
+    while (i--) {
+      prop = k[i]
+      newPath = path + '/' + prop
+      delete cachePaths[newPath]
+      clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, newPath, obj[prop])
+      clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, newPath)
+    }
+  }
 }
 
 module.exports = function applyPatch(db, patch, shouldClone) {
+  
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
   let objIsArray = false
@@ -38,29 +67,35 @@ module.exports = function applyPatch(db, patch, shouldClone) {
     partial: []
   }
 
+  let xPath
+  let xValue
   let path = ''
-
+  let isTest
+  let fullPath
+  let isValuePlainObject
+  let cachePaths = db.cache.paths
+  let decomposed = db.dynamic.decomposed
+  let cacheDynamic = db.cache.dynamic
+  let staticDeps = db.dynamic.staticDeps
 
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
     x = patch[i]
+    xPath = x.path
+    xValue = x.value
 
-    changed.full.push(x.path)
-
-    if (isPlainObject(x.value)) {
-      changed.full = changed.full.concat(recursivePathProps(x.value, x.path))
-    }
+    // @TODO: Add test/move/copy cases for deleting cache
+    delete cachePaths[xPath]
+    clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, xPath, xValue)
+    clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, xPath)
 
     // @TODO: Implement both path && from in a function
-
-    parts = splitPath(x.path)
+    parts = splitPath(xPath)
     obj = db.static
     for (j = 0, lenj = parts.length - 1; j < lenj; j += 1) {
 
-
       part = parts[j]
       path += '/' + part
-      changed.full.push(path)
 
       if (!obj[part] && x.op === 'add') {
         obj[part] = {}
@@ -72,6 +107,9 @@ module.exports = function applyPatch(db, patch, shouldClone) {
           break root
         }
       }
+
+      delete cachePaths[path]
+      clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, path)
     }
 
     last = parts[parts.length - 1]
@@ -139,9 +177,9 @@ module.exports = function applyPatch(db, patch, shouldClone) {
       case 'replace':
 
         if (objIsArray) {
-          obj.splice(last, 0, shouldClone ? clone(x.value) : x.value)
+          obj.splice(last, 0, shouldClone ? clone(xValue) : xValue)
         } else if (isPlainObject(obj)) {
-          obj[last] = shouldClone ? clone(x.value) : x.value
+          obj[last] = shouldClone ? clone(xValue) : xValue
         }
       break
 
@@ -169,7 +207,7 @@ module.exports = function applyPatch(db, patch, shouldClone) {
       break
 
       case 'test':
-        if (!isEqual(obj[last], x.value)) {
+        if (!isEqual(obj[last], xValue)) {
           revert = i
           break root
         }
@@ -180,10 +218,9 @@ module.exports = function applyPatch(db, patch, shouldClone) {
           revert = i
           break root
         }
-        obj[last] = merge(obj[last], x.value)
+        obj[last] = merge(obj[last], xValue)
       break
     }
-
   }
 
   if (revert !== undefined) {

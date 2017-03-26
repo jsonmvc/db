@@ -2,6 +2,18 @@
 const splitPath = require('./splitPath')
 const decomposePath = require('./decomposePath')
 
+
+// @TODO: Instead of using the global 
+// static deps object, create a cachedStaticDeps
+// in order to parse only the dependencies that 
+// are actually cached
+//
+// @TODO: In order to remove a step, add to the
+// cachedStaticDeps all the cacheDynamicList nodes.
+//
+// Also do not include dynamic deps for inner 
+// objects because those are taken cared of at the root
+
 function invalidateCache(db, changed) {
   let cacheDynamic = db.cache.dynamic
   let cachePaths = db.cache.paths
