@@ -76,5 +76,37 @@ module.exports = db => (path, fn) => {
   let id = listenerId
   return function unsubscribe() {
     delete db.updates.fns[path][id]
+
+    // Remove everything related to this path as no
+    // more listeners exist
+    if (Object.keys(db.updates.fns[path]).length === 0) {
+      db.updates.fns[path] = null
+      delete db.updates.fns[path]
+      db.updates.cache[path] = null
+      delete db.updates.cache[path]
+
+      let triggers = db.updates.triggers
+      let key
+      let keys = Object.keys(triggers)
+      let l = keys.length
+      let i
+      let arr
+
+      while (l--) {
+        key = keys[l]
+        arr = triggers[key]
+        i = arr.indexOf(path)
+
+        if (i !== -1) {
+          arr.splice(i, 1)
+        }
+
+        if (arr.length === 0) {
+          triggers[key] = null
+          delete triggers[key]
+        }
+      }
+    }
+
   }
 }
