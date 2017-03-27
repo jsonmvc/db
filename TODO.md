@@ -14,6 +14,19 @@ string, numbers -> null
 However if one tries to get a static property from the data tree
 and it does not exists it will return undefined.
 
+----
+Storage
+----
+Extend the db to use localStorage and internal storage for non-data objects:
+
+{
+  op: add,
+  path: /storage/pic.jpg,
+  value: new Blob()
+}
+
+var a = db.get('/storage/pic.jpg')
+a.size = 0
 
 ----
 Patch
