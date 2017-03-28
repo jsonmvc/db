@@ -6,11 +6,13 @@ const err = require('./err')
 require('setimmediate')
 
 function callNode(db, path, i) {
-  let fn = db.updates.fns[path][i]
+  let fns = db.updates.fns[path]
 
-  if (!fn) {
+  if (!fns || !fns[i]) {
     return
   }
+
+  let fn = fns[i]
 
   let val = getNode(db, path)
   let cacheTest = JSON.stringify(val)
