@@ -28,6 +28,143 @@ Extend the db to use localStorage and internal storage for non-data objects:
 var a = db.get('/storage/pic.jpg')
 a.size = 0
 
+
+----
+Optimized nodes
+----
+For nodes that have nested dependencies e.g. '/foo/data' define this as a 
+prop bases execution in order to ensure than a minimum amount of data is
+necessary for computation.
+
+node:
+- path: /foo/computed
+- args: '/foo/data',
+- prop: 'id'
+- fn -> fn
+
+get('/foo/computed/23') will only use /foo/data/23 for the computation
+
+A better way is to provide an arg to provide the fn with additional info:
+
+node:
+- path: '/foo/bam',
+- args: ['/foo/bar'],
+- opts: true
+- fn -> (opts, fooBar) => {
+  opts.pathExtra => Array() of path extra
+  opts.changed => What has changed on which argument that made the fn
+  to be called
+}
+
+/foo/bam/23 ->
+
+Have a paramter that tells the model why it was called:
+
+/foo/bar => 23
+
+node:
+- args: ['/foo/qux', '/foo/bar']
+
+{ op: 'replace', path: '/foo/bar', value: 123 }
+
+fn (opts, fooBar) => {
+
+  opts.changed = [
+    // The number of the argument that changed
+    [], [ {
+      length: {
+        old: 2,
+        new: 3
+      },
+      value: {
+        old: 23,
+        new: 123
+      }
+    } ]
+  ]
+}
+
+In order to standardize the entire api, make all arguments to be named instead of using the
+array form:
+
+module.exports = {
+  args: {
+    foo: '/foo',
+    bar: '/bam/bar
+  },
+  fn: o => {
+    o.foo // /foo
+    o.bar // /bam/bar
+    o.changed = { foo: { value: { old: 123, new: 321 } } }
+  }
+}
+
+//---
+Which is basically the same as:
+args: ['/foo', '/bam/bar'],
+fn: (foo, bar) => {}
+//---
+
+// Array of extra props
+fn: (args, changed, prev, opts) => {
+  args.foo
+  args.bar
+  changed.foo
+  changed.bar
+
+  if (changed.bar.length !== false) return prev
+
+  if (opts[0]) {
+    prev[opts[0]] = 123
+    return prev
+  }
+}
+
+By doing this then the function can be tested if it tries to modify the values through augmenting the
+args object with a mutation observer.
+If values are modifed the developer can be informed of this. If the application goes in production mode the cloning can be removed
+to get a serious boost in performance.
+
+// ---
+// Instead of above API
+// ---
+Model:
+
+module.exports = {
+  path: '/foo/<id>',
+  args: {
+    bam: '/baz/bam'
+  },
+  filter: changed => {
+    if (changed.bam.length) {
+      return false
+    } else {
+      return true
+    }
+  },
+  fn: args => {
+    // args.id
+    // args.bam
+
+    function compute(val) {
+      // Do stuff with data
+      return val + 1
+    }
+
+    let result
+    if (args.id) {
+      result = compute(args.bam[args.id])
+    } else {
+      result = Object.keys(args.bam).reduce((acc, x) => {
+        acc[x] = compute(args.bam[x])
+        return acc
+      }, {})
+    }
+
+    return result
+  }
+}
+
 ----
 Patch
 ----
