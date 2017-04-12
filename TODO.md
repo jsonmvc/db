@@ -14,6 +14,29 @@ string, numbers -> null
 However if one tries to get a static property from the data tree
 and it does not exists it will return undefined.
 
+------
+Wildcard implementation
+------
+Wildcards are only available on listeners
+
+db.on('/foo/<id>/bar', (val, props) => {
+  val // value in bar
+  props // { id: 123 }
+})
+
+module.exports = {
+  path: '/foo/<id>/bar',
+  args: {
+    bam: '/bla/<id2>/baz'
+  },
+  fn: args => {
+    args.id
+    args.id2
+    args.bam
+  }
+}
+
+
 ----
 Storage
 ----
