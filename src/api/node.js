@@ -122,6 +122,7 @@ module.exports = db => (path, deps, fn) => {
     delete db.dynamic.fns[path]
 
     invalidateCache(db, { full: [node.path] })
+    delete db.cache.dynamic[path]
 
     clearNode(db.dynamic.nesting, path)
 

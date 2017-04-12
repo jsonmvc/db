@@ -70,6 +70,15 @@ function invalidateCache(db, changed) {
 
         }
       }
+
+      cacheDynamicList = cacheDynamic[part]
+      if (cacheDynamicList) {
+        k = cacheDynamicList.length
+        while (k--) {
+          delete cachePaths[cacheDynamicList[k]]
+        }
+      }
+
     }
   }
 

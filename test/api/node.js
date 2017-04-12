@@ -20,6 +20,17 @@ const undefinedFn = () => undefined
 
 const invalidFn = 123
 
+const nestedFn = () => {
+  let x = {
+    foo: {
+      bar: 123
+    },
+    baz: {}
+  }
+
+  return x
+}
+
 const errFn = () => {
   throw new Error('This is an error')
 }
@@ -59,6 +70,8 @@ tests.forEach(x => {
         fn = errFn
       } else if (x.invalidFn) {
         fn = invalidFn
+      } else if (x.nestedFn && x.nestedFn[y]) {
+        fn = nestedFn
       } else if (x.dynamic[y].length === 1) {
         fn = identity
       } else {
@@ -129,9 +142,11 @@ tests.forEach(x => {
 
       expect(db.get('/')).toEqual(initial)
 
-      x.cache.forEach(y => {
-        expect(db.get(y)).toBe(undefined)
-      })
+      if (x.cache) {
+        x.cache.forEach(y => {
+          expect(db.get(y)).toBe(undefined)
+        })
+      }
     }
 
   })

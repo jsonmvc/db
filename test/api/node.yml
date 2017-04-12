@@ -1,6 +1,5 @@
 # Add a test that disallows static overlaping dynamic or the other way around
 
-
 - comment: Should add a few nodes
   doc:
     bar: 123
@@ -88,3 +87,28 @@
   listeners:
   - '/bar'
   - '/bar/bla'
+
+- comment: Should clear cache when removing a node
+  doc:
+    foo: 123
+  dynamic:
+    /bam: ['/foo']
+    /bla: ['/bam/foo']
+  nestedFn:
+    /bam: true
+  remove: true
+  cache:
+  - /bam
+  - /bam/foo
+  - /bam/foo/bar
+  - /bam/baz
+  - /bla
+  - /bla/bar
+  listeners:
+  - /bla/bar
+  - /bla
+  - /bam
+  - /bam/foo/bar
+
+
+
