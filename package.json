@@ -1,6 +1,6 @@
 {
   "name": "jsonmvc-db",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "The jsonmvc data library",
   "main": "src/index.js",
   "scripts": {
