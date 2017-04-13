@@ -116,6 +116,16 @@ module.exports = db => (path, deps, fn) => {
 
   db.cache.dynamic[node.path] = []
 
+  // Search for any cached values on the node.path
+  // as a result of requesting the path before the
+  // node was created
+  let reg = new RegExp('^' + node.path)
+  Object.keys(db.cache.paths).forEach(x => {
+    if (x.search(reg) !== -1) {
+      delete db.cache.paths[x]
+    }
+  })
+
   invalidateCache(db, { full: [node.path] })
 
   Object.keys(db.updates.fns).forEach(x => {

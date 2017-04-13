@@ -14,6 +14,15 @@ module.exports = function pathTriggers(db, path) {
     }
   })
 
+  // @TODO: Suboptimal way, this should be precompiled
+  let reg = new RegExp('^' +path, 'g')
+
+  Object.keys(db.updates.triggers).forEach(x => {
+    if (x.search(reg) !== -1) {
+      trigger.push(db.updates.triggers[x])
+    }
+  })
+
   let dep = db.dynamic.inverseDeps[path]
 
   if (dep) {

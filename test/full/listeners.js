@@ -5,28 +5,43 @@ jest.useFakeTimers()
 const root = process.cwd()
 const dbFn = require(`${root}/src/index`)
 
-it('Should trigger listeners even with falsy values', () => {
+it('Should trigger listeners with nodes that are loaded in inorder', () => {
   let doc = {}
 
   let db = dbFn(doc)
   let fn = jest.fn()
 
+
   db.on('/bim/baz', fn)
-  db.node('/bim', ['/bla'], x => x)
-  db.node('/bla', ['/boo'], x => ({ foo: x, baz: x }))
 
   setTimeout(() => {
-    db.patch([{ op: 'add', path: '/boo', value: true }])
+    db.node('/bim', ['/bla'], x => x)
+    db.node('/bla', ['/boo/value'], x => ({ foo: x, baz: x }))
+  })
+
+  setTimeout(() => {
+    db.patch([{ op: 'add', path: '/boo', value: { value: true }}])
+  })
+
+  setTimeout(() => {
+    db.patch([{ op: 'add', path: '/boo', value: { value: false }}])
+  })
+
+  setTimeout(() => {
+    db.patch([{ op: 'add', path: '/boo', value: { value: true }}])
   })
 
   return new Promise((resolve) => {
 
-
     jest.runAllTimers()
 
-    expect(fn.mock.calls.length).toBe(1)
+    expect(fn.mock.calls.length).toBe(3)
+    expect(fn.mock.calls[0][0]).toBe(true)
+    expect(fn.mock.calls[1][0]).toBe(false)
+    expect(fn.mock.calls[2][0]).toBe(true)
 
     resolve()
+
   })
 
 })
