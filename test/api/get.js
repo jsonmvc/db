@@ -15,6 +15,7 @@ const concat = function () {
 }
 
 const undefinedFn = () => undefined
+const falseFn = () => false
 const errFn = () => {
   throw new Error('This is an error')
 }
@@ -48,6 +49,8 @@ tests.forEach(x => {
           toCall = undefinedFn
         } else if (x.errFn) {
           toCall = errFn
+        } else if (x.falseFn && x.falseFn[y]) {
+          toCall = falseFn
         }
 
         if (len === 1) {

@@ -20,6 +20,8 @@ const undefinedFn = () => undefined
 
 const invalidFn = 123
 
+const falseFn = () => false
+
 const nestedFn = () => {
   let x = {
     foo: {
@@ -72,6 +74,8 @@ tests.forEach(x => {
         fn = invalidFn
       } else if (x.nestedFn && x.nestedFn[y]) {
         fn = nestedFn
+      } else if (x.falseFn && x.falseFn[y]) {
+        fn = falseFn
       } else if (x.dynamic[y].length === 1) {
         fn = identity
       } else {

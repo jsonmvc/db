@@ -94,8 +94,11 @@
   dynamic:
     /bam: ['/foo']
     /bla: ['/bam/foo']
+    /boo: ['/bam/foo/bar']
   nestedFn:
     /bam: true
+  falseFn:
+    /blo: true
   remove: true
   cache:
   - /bam
@@ -104,11 +107,22 @@
   - /bam/baz
   - /bla
   - /bla/bar
+  - /blo
   listeners:
   - /bla/bar
   - /bla
   - /bam
   - /bam/foo/bar
 
+- comment: Should trigger a listener with a falsy value from a dynamic node
+  doc:
+    foo: 123
+  dynamic:
+    /bar: ['/foo']
+  falseFn:
+    /bar: true
+  listeners:
+  - /bar
+  remove: true
 
 

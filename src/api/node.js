@@ -8,6 +8,12 @@ const triggerListener = require('./../fn/triggerListener')
 const pathTriggers = require('./../fn/pathTriggers')
 const expandNodeDeps = require('./../fn/expandNodeDeps')
 const invalidateCache = require('./../fn/invalidateCache')
+const updateTriggers = require('./../fn/updateTriggers')
+
+// !Importat.
+// When adding a new node previous listeners should be refreshed
+// in order to be triggered by updates on the node's
+// dependencies
 
 /**
  * node
@@ -111,6 +117,10 @@ module.exports = db => (path, deps, fn) => {
   db.cache.dynamic[node.path] = []
 
   invalidateCache(db, { full: [node.path] })
+
+  Object.keys(db.updates.fns).forEach(x => {
+    updateTriggers(db, x)
+  })
 
   pathTriggers(db, path).map(x => {
     triggerListener(db, x)

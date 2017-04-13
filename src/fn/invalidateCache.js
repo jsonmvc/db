@@ -78,7 +78,6 @@ function invalidateCache(db, changed) {
           delete cachePaths[cacheDynamicList[k]]
         }
       }
-
     }
   }
 

@@ -44,7 +44,6 @@ it('Should test complex node scenarios', () => {
 
     setTimeout(() => {
       resolve()
-
     }, 2000)
 
     jest.runAllTimers()

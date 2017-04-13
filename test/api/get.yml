@@ -236,5 +236,15 @@
     bar:
       baz: 123
 
+- comment: Should return a falsy value from a dynamic node
+  doc:
+    foo: 123
+  dynamic:
+    /bar: ['/foo']
+  falseFn:
+    /bar: true
+  get: /bar
+  expect: false
+
 # @TODO: Should not return a reference to the cache that can then be altered
 

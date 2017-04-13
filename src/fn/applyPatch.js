@@ -35,6 +35,7 @@ function clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, path) {
         delete cachePaths[decomposedList[p]]
       }
     }
+
   }
 }
 
@@ -56,7 +57,6 @@ function clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, p
 }
 
 module.exports = function applyPatch(db, patch, shouldClone) {
-  
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
   let objIsArray = false

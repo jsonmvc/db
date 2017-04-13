@@ -3,6 +3,7 @@ const isFunction = require('lodash/isFunction')
 const getStaticNodes = require('./../fn/getStaticNodes')
 const triggerListener = require('./../fn/triggerListener')
 const decomposePath = require('./../fn/decomposePath')
+const updateTriggers = require('./../fn/updateTriggers')
 const patch = require('./patch')
 const err = require('./../fn/err')
 
@@ -41,31 +42,7 @@ module.exports = db => (path, fn) => {
     db.updates.fns[path][listenerId] = fn
     db.updates.cache[path] = {}
 
-    let parts = decomposePath(path)
-    let nodes = getStaticNodes(db, path)
-
-    parts.forEach(x => {
-      if (db.dynamic.fns[x]) {
-        let n = getStaticNodes(db, x)
-        nodes = nodes.concat(n)
-      }
-    })
-
-    nodes.forEach(x => {
-      if (!db.updates.triggers[x]) {
-        db.updates.triggers[x] = [path]
-      } else if (db.updates.triggers[x].indexOf(path) === -1) {
-        db.updates.triggers[x].push(path)
-      }
-    })
-
-    parts.forEach(y => {
-      if (!db.updates.triggers[y]) {
-        db.updates.triggers[y] = [path]
-      } else if (db.updates.triggers[y].indexOf(path) === -1) {
-        db.updates.triggers[y].push(path)
-      }
-    })
+    updateTriggers(db, path)
 
   } else {
     db.updates.fns[path][listenerId] = fn
