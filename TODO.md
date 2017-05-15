@@ -1,5 +1,26 @@
 
 -----
+Privacy Rules
+-----
+A database can have read/write rules similar to Firebase's rules.
+
+let dbInst = dbFn({ data... }, { rules...})
+
+which will enforce those rules on any access, patch, etc on dbInst
+
+Further more, dbInst can generate further databases that have stricter or losser policies:
+
+let userInst = dbInst({ rules... }) // stricter
+let adminInst = dbInst({ rules... }) // less strict
+
+these can then be used with jsonmvc as follows:
+
+let userPage = jsonmvc({ module }, userInst)
+let adminPage = jsonmvc({ module }, adminInst)
+
+This way multiple security/componetization tiers can be made
+
+-----
 Note on nodes
 -----
 A node will always either return a value different from undefined.
@@ -36,6 +57,18 @@ module.exports = {
   }
 }
 
+-----
+History
+-----
+Keep all db history on the db instance for future references.
+
+/history -> is an array will all db snapshots
+
+Another method would be to give the user a super powered get method:
+
+db.get(path, timestamp)
+
+This will get the value at that path at that timestamp
 
 ----
 Storage
