@@ -2,9 +2,10 @@
   "name": "jsonmvc-db",
   "version": "0.6.7",
   "description": "The jsonmvc data library",
-  "main": "src/index.js",
+  "main": "dist/jsonmvcdb.js",
   "scripts": {
     "buildErrors": "./node_modules/.bin/yaml2json src/errors.yml -s",
+    "build": "./node_modules/.bin/rollup -c build/rollup.config.js",
     "test": "npm run buildErrors && jest",
     "test-on-travis": "npm run buildErrors && jest && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "perf": "node perf/test.js"
@@ -41,6 +42,11 @@
     "coveralls": "^2.11.15",
     "jest-cli": "^19.0.2",
     "promise": "^7.1.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-alias": "^1.3.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "yaml-js": "^0.1.4",
     "yamljs": "^0.2.8"
   },

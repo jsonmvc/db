@@ -7,3 +7,6 @@ coverage/
 *.tgz
 .npmignore
 *.yml
+src
+build
+npm-shrinkwrap.json

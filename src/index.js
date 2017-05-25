@@ -6,7 +6,7 @@ const patch = require('./api/patch')
 const node = require('./api/node')
 const err = require('./fn/err')
 
-const errTypes = require('./errors.json')
+const errTypes = require('./errors.js')
 
 require('setimmediate')
 
