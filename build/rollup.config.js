@@ -8,6 +8,7 @@ export default {
   entry: __dirname + '/../src/index.js',
   format: 'umd',
   moduleName: 'jsonmvcdb',
+  sourceMap: true,
   plugins: [
     alias(),
     commonjs(),
