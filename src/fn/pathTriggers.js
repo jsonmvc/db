@@ -1,8 +1,9 @@
-const flatten = require('lodash/flattenDeep')
-const uniq = require('uniq')
-const decomposePath = require('./../fn/decomposePath')
 
-module.exports = function pathTriggers(db, path) {
+import flatten from 'lodash/flattenDeep'
+import uniq from 'uniq'
+import decomposePath from './../fn/decomposePath'
+
+function pathTriggers(db, path) {
   let trigger = []
 
   let parts = decomposePath(path)
@@ -37,3 +38,5 @@ module.exports = function pathTriggers(db, path) {
 
   return trigger
 }
+
+export default pathTriggers

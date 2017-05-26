@@ -10,7 +10,7 @@ const errTypes = require('./errors.js')
 
 require('setimmediate')
 
-module.exports = data => {
+function jsomvcdb(data) {
 
   // An error message should contain:
   // 1. Error number
@@ -84,3 +84,5 @@ module.exports = data => {
     db: db
   }
 }
+
+export default jsonmvcdb

@@ -1,6 +1,5 @@
-'use strict'
 
-module.exports = function clearNode(o, path) {
+function clearNode(o, path) {
 
   Object.keys(o).forEach(x => {
     let pos = o[x].indexOf(path)
@@ -13,3 +12,5 @@ module.exports = function clearNode(o, path) {
   })
 
 }
+
+export default clearNode

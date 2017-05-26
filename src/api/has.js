@@ -1,10 +1,13 @@
-const pathExists = require('./../fn/pathExists.js')
+
+import pathExists from './../fn/pathExists'
 
 /**
  * has
  *
  * Checks if a path exists
  */
-module.exports = db => path => {
+const has = db => path => {
   return pathExists(db, path)
 }
+
+export default has

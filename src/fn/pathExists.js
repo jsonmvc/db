@@ -1,8 +1,8 @@
-'use strict'
-const getValue = require('./getValue')
-const splitPath = require('./splitPath')
 
-module.exports = function pathExists(db, path) {
+import getValue from './getValue'
+import splitPath from './splitPath'
+
+function pathExists(db, path) {
   let parts = splitPath(path)
   let val = db.static
 
@@ -20,3 +20,5 @@ module.exports = function pathExists(db, path) {
 
   return hasStaticNode || hasDynamicNode
 }
+
+export default pathExists

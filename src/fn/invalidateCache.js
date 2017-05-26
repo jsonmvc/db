@@ -1,6 +1,6 @@
-'use strict'
-const splitPath = require('./splitPath')
-const decomposePath = require('./decomposePath')
+
+import splitPath from './splitPath'
+import decomposePath from './decomposePath'
 
 
 // @TODO: Instead of using the global 
@@ -85,4 +85,4 @@ function invalidateCache(db, changed) {
 
 }
 
-module.exports = invalidateCache
+export default invalidateCache

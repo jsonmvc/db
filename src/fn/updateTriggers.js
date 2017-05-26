@@ -1,8 +1,8 @@
 
-const getStaticNodes = require('./../fn/getStaticNodes')
-const decomposePath = require('./../fn/decomposePath')
+import getStaticNodes from './../fn/getStaticNodes'
+import decomposePath from './../fn/decomposePath'
 
-module.exports = (db, path) => {
+function updateTriggers(db, path) {
 
   let parts = decomposePath(path)
   let nodes = getStaticNodes(db, path)
@@ -31,3 +31,5 @@ module.exports = (db, path) => {
   })
 
 }
+
+export default updateTriggers

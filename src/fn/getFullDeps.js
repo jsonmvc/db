@@ -1,6 +1,6 @@
-'use strict'
-const decomposePath = require('./decomposePath')
-const uniq = require('lodash/uniq')
+
+import decomposePath from './decomposePath'
+import uniq from 'lodash/uniq'
 
 function getFullDeps(nodesDeps, path, deps) {
   let nodeDeps = nodesDeps[path]
@@ -47,4 +47,4 @@ function getFullDeps(nodesDeps, path, deps) {
   return deps
 }
 
-module.exports = getFullDeps
+export default getFullDeps

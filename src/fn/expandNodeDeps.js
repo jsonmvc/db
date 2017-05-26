@@ -1,7 +1,7 @@
-'use strict'
-const getFullDeps = require('./getFullDeps')
-const decomposePath = require('./decomposePath')
-const uniq = require('lodash/uniq')
+
+import getFullDeps from './getFullDeps'
+import decomposePath from './decomposePath'
+import uniq from 'lodash/uniq'
 
 function expandNodeDeps(dynamic) {
 
@@ -36,4 +36,4 @@ function expandNodeDeps(dynamic) {
 
 }
 
-module.exports = expandNodeDeps
+export default expandNodeDeps

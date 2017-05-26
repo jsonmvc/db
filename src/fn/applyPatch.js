@@ -1,12 +1,12 @@
-'use strict'
-const isEqual = require('lodash/isEqual')
-const isNumber = require('lodash/isNumber')
-const isArray = require('lodash/isArray')
-const isPlainObject = require('lodash/isPlainObject')
-const merge = require('lodash/merge')
-const splitPath = require('./splitPath')
-const decomposePath = require('./decomposePath')
-const clone = require('lodash/cloneDeep')
+
+import isEqual from 'lodash/isEqual'
+import isNumber from 'lodash/isNumber'
+import isArray from 'lodash/isArray'
+import isPlainObject from 'lodash/isPlainObject'
+import merge from 'lodash/merge'
+import splitPath from './splitPath'
+import decomposePath from './decomposePath'
+import clone from 'lodash/cloneDeep'
 
 function clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, path) {
   let staticDepList = staticDeps[path]
@@ -56,7 +56,7 @@ function clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, p
   }
 }
 
-module.exports = function applyPatch(db, patch, shouldClone) {
+function applyPatch(db, patch, shouldClone) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
   let objIsArray = false
@@ -233,3 +233,5 @@ module.exports = function applyPatch(db, patch, shouldClone) {
   }
 
 }
+
+export default applyPatch

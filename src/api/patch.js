@@ -1,24 +1,24 @@
-'use strict'
-const getValue = require('./../fn/getValue')
-const decomposePath = require('./../fn/decomposePath')
-const uniq = require('uniq')
-const flatten = require('lodash/flattenDeep')
-const isObjectLike = require('lodash/isObjectLike')
-const isArray = require('lodash/isArray')
-const triggerListener = require('./../fn/triggerListener')
-const splitPath = require('./../fn/splitPath')
-const isPatch = require('./../fn/isPatch')
-const applyPatch = require('./../fn/applyPatch')
-const pathTriggers = require('./../fn/pathTriggers')
-const invalidateCache = require('./../fn/invalidateCache')
-const err = require('./../fn/err')
+
+import getValue from './../fn/getValue'
+import decomposePath from './../fn/decomposePath'
+import uniq from 'uniq'
+import flatten from 'lodash/flattenDeep'
+import isObjectLike from 'lodash/isObjectLike'
+import isArray from 'lodash/isArray'
+import triggerListener from './../fn/triggerListener'
+import splitPath from './../fn/splitPath'
+import isPatch from './../fn/isPatch'
+import applyPatch from './../fn/applyPatch'
+import pathTriggers from './../fn/pathTriggers'
+import invalidateCache from './../fn/invalidateCache'
+import err from './../fn/err'
 
 /**
  * patch
  *
  * Applies a patch
  */
-module.exports = db => (patch, shouldValidate, shouldClone) => {
+const patch = db => (patch, shouldValidate, shouldClone) => {
 
   shouldValidate = shouldValidate !== undefined ? shouldValidate : true
   shouldClone = shouldClone !== undefined ? shouldClone : true
@@ -59,3 +59,5 @@ module.exports = db => (patch, shouldValidate, shouldClone) => {
     triggerListener(db, x)
   })
 }
+
+export default patch

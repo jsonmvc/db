@@ -1,8 +1,8 @@
-'use strict'
-const isValidPath = require('./isValidPath')
-const isValidValue = require('./isValidValue')
-const isPlainObject = require('lodash/isPlainObject')
-const diff = require('lodash/difference')
+
+import isValidPath from './isValidPath'
+import isValidValue from './isValidValue'
+import isPlainObject from 'lodash/isPlainObject'
+import diff from 'lodash/difference'
 
 const props = [
   'from',
@@ -20,8 +20,7 @@ const ops = [
   'test',
   'merge'
 ]
-
-module.exports = function isPatch(schema, patch) {
+function isPatch(schema, patch) {
 
   if (patch instanceof Array !== true) {
     return false
@@ -46,3 +45,5 @@ module.exports = function isPatch(schema, patch) {
 
   return true
 }
+
+export default isPatch

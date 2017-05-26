@@ -1,7 +1,7 @@
-'use strict'
-const splitPath = require('./splitPath')
 
-module.exports = (obj, path) => {
+import splitPath from './splitPath'
+
+export default (obj, path) => {
   let parts = splitPath(path)
   let val = obj
   let isRoot = parts.length === 1 && parts[0] === ''

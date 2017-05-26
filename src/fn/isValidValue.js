@@ -1,14 +1,13 @@
-'use strict'
 
-const isPlainObject = require('lodash/isPlainObject')
-const isArray = require('lodash/isArray')
-const isString = require('lodash/isString')
-const isNumber = require('lodash/isNumber')
-const isBoolean = require('lodash/isBoolean')
+import isPlainObject from 'lodash/isPlainObject'
+import isArray from 'lodash/isArray'
+import isString from 'lodash/isString'
+import isNumber from 'lodash/isNumber'
+import isBoolean from 'lodash/isBoolean'
 
 // @TODO: Concat these implementation to reduce
 // fn calls
-module.exports = function isValidValue(value) {
+function isValidValue(value) {
   let type = typeof value
   return value !== undefined
     && (
@@ -20,3 +19,5 @@ module.exports = function isValidValue(value) {
       isPlainObject(value)
     )
 }
+
+export default isValidValue

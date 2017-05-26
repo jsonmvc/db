@@ -1,6 +1,6 @@
-'use strict'
-const decomposePath = require('./decomposePath')
-const uniq = require('uniq')
+
+import decomposePath from './decomposePath'
+import uniq from 'uniq'
 
 // Implement https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm for faster search
 
@@ -17,7 +17,7 @@ const extendDeps = deps =>
       return acc
     }, {})
 
-module.exports = deps => {
+export default deps => {
   deps = extendDeps(deps)
 
   let parents = Object.keys(deps)

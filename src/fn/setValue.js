@@ -1,7 +1,7 @@
-'use strict'
-const splitPath = require('./splitPath')
 
-module.exports = (obj, path, val) => {
+import splitPath from './splitPath'
+
+function setValue(obj, path, val) {
   let parts = splitPath(path)
   let ref = obj
 
@@ -21,3 +21,4 @@ module.exports = (obj, path, val) => {
   }
 
 }
+export default setValue

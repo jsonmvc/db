@@ -1,14 +1,14 @@
-'use strict'
-const isCyclic = require('./../fn/isCyclic')
-const decomposePath = require('./../fn/decomposePath')
-const err = require('./../fn/err')
-const isValidPath = require('./../fn/isValidPath')
-const clearNode = require('./../fn/clearNode')
-const triggerListener = require('./../fn/triggerListener')
-const pathTriggers = require('./../fn/pathTriggers')
-const expandNodeDeps = require('./../fn/expandNodeDeps')
-const invalidateCache = require('./../fn/invalidateCache')
-const updateTriggers = require('./../fn/updateTriggers')
+
+import isCyclic from './../fn/isCyclic'
+import decomposePath from './../fn/decomposePath'
+import err from './../fn/err'
+import isValidPath from './../fn/isValidPath'
+import clearNode from './../fn/clearNode'
+import triggerListener from './../fn/triggerListener'
+import pathTriggers from './../fn/pathTriggers'
+import expandNodeDeps from './../fn/expandNodeDeps'
+import invalidateCache from './../fn/invalidateCache'
+import updateTriggers from './../fn/updateTriggers'
 
 // !Importat.
 // When adding a new node previous listeners should be refreshed
@@ -20,7 +20,7 @@ const updateTriggers = require('./../fn/updateTriggers')
  *
  * Adds a dynamic node
  */
-module.exports = db => (path, deps, fn) => {
+const node = db => (path, deps, fn) => {
 
   let node = {
     path: path,
@@ -151,3 +151,5 @@ module.exports = db => (path, deps, fn) => {
     })
   }
 }
+
+export default node

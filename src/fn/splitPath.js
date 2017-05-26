@@ -1,5 +1,5 @@
 
-module.exports = path => {
+function splitPath(path) {
   path = path.replace(/~0/g, '~')
   path = path.replace(/~1/g, '/')
   path = path.split('/')
@@ -7,4 +7,6 @@ module.exports = path => {
 
   return path
 }
+
+export default splitPath
 

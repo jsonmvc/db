@@ -1,11 +1,11 @@
-'use strict'
-const isFunction = require('lodash/isFunction')
-const getStaticNodes = require('./../fn/getStaticNodes')
-const triggerListener = require('./../fn/triggerListener')
-const decomposePath = require('./../fn/decomposePath')
-const updateTriggers = require('./../fn/updateTriggers')
-const patch = require('./patch')
-const err = require('./../fn/err')
+
+import isFunction from 'lodash/isFunction'
+import getStaticNodes from './../fn/getStaticNodes'
+import triggerListener from './../fn/triggerListener'
+import decomposePath from './../fn/decomposePath'
+import updateTriggers from './../fn/updateTriggers'
+import patch from './patch'
+import err from './../fn/err'
 
 let listenerId = 0
 
@@ -18,7 +18,7 @@ let listenerId = 0
  *   on the path and if it exists then the listener
  *   is executed (async!)
  */
-module.exports = db => (path, fn) => {
+const on = db => (path, fn) => {
   let obj = {
     path: path,
     fn: fn
@@ -87,3 +87,5 @@ module.exports = db => (path, fn) => {
 
   }
 }
+
+export default on

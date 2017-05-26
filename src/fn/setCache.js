@@ -1,5 +1,6 @@
-const splitPath = require('./splitPath')
-const clone = require('lodash').cloneDeep
+
+import splitPath from './splitPath'
+import clone from 'lodash/cloneDeep'
 
 function setCache(db, path, value, dynamicParent) {
 
@@ -11,4 +12,4 @@ function setCache(db, path, value, dynamicParent) {
 
 }
 
-module.exports = setCache
+export default setCache

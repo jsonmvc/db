@@ -1,7 +1,7 @@
-'use strict'
-const get = require('./getValue')
 
-module.exports = function errPatch(db, path, obj) {
+import get from './getValue'
+
+function errPatch(db, path, obj) {
   const patch = require('./../api/patch')
   var err = get(db.static, path)
 
@@ -15,3 +15,5 @@ module.exports = function errPatch(db, path, obj) {
   }])
 
 }
+
+export default errPatch

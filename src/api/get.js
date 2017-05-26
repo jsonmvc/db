@@ -1,13 +1,13 @@
-'use strict'
-const getNode = require('./../fn/getNode')
-const isValidPath = require('./../fn/isValidPath')
+
+import getNode from './../fn/getNode'
+import isValidPath from './../isValidPath'
 
 /**
  * get
  *
  * Gets a value
  */
-module.exports = db => path => {
+const get = db => path => {
 
   if (!isValidPath(path)) {
     return
@@ -15,3 +15,5 @@ module.exports = db => path => {
 
   return getNode(db, path)
 }
+
+export default get

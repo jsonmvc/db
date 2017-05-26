@@ -1,5 +1,5 @@
-'use strict'
-const flatten = require('lodash/flattenDeep')
+
+import flatten from 'lodash/flattenDeep'
 
 const getStaticNodes = (db, path) => {
 
@@ -12,4 +12,4 @@ const getStaticNodes = (db, path) => {
 
 }
 
-module.exports = getStaticNodes
+export default getStaticNodes

@@ -1,7 +1,6 @@
-'use strict'
 
-const getNode = require('./getNode')
-const err = require('./err')
+import getNode from './getNode'
+import err from './err'
 
 require('setimmediate')
 
@@ -55,4 +54,4 @@ function triggerListener(db, path) {
 
 }
 
-module.exports = triggerListener
+export default triggerListener

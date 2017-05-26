@@ -1,10 +1,10 @@
-'use strict'
-const splitPath = require('./splitPath')
-const getValue = require('./getValue')
-const setValue = require('./setValue')
-const decomposePath = require('./decomposePath')
-const setCache = require('./setCache')
-const err = require('./err')
+
+import splitPath from './splitPath'
+import getValue from './getValue'
+import setValue from './setValue'
+import decomposePath from './decomposePath'
+import setCache from './setCache'
+import err from './err'
 
 const getNode = (db, path) => {
   let result
@@ -122,4 +122,4 @@ const getNode = (db, path) => {
   return result
 }
 
-module.exports = getNode
+export default getNode
