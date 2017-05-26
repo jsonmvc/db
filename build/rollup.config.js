@@ -2,6 +2,7 @@
 const resolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs')
 const babel = require('rollup-plugin-babel')
+const uglify = require('rollup-plugin-uglify')
 
 module.exports = {
   entry: __dirname + '/../src/index.js',
@@ -9,6 +10,7 @@ module.exports = {
   moduleName: 'jsonmvcdb',
   sourceMap: true,
   plugins: [
+    uglify(),
     babel({
       babelrc: false,
       exclude: 'node_modules/**',
@@ -32,6 +34,6 @@ module.exports = {
       }
     })
   ],
-  external: ['lodash-es'],
+  external: ['lodash', 'lodash-es', 'setimmediate'],
   dest: __dirname + '/../dist/jsonmvcdb.js'
 }
