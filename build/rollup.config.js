@@ -34,6 +34,6 @@ module.exports = {
       }
     })
   ],
-  external: ['lodash', 'lodash-es', 'setimmediate'],
+//  external: ['lodash', 'lodash-es', 'setimmediate'],
   dest: __dirname + '/../dist/jsonmvcdb.js'
 }
