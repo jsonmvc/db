@@ -10,3 +10,4 @@ coverage/
 src
 build
 npm-shrinkwrap.json
+.babelrc
