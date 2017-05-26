@@ -1,8 +1,7 @@
 
-import resolve from 'rollup-plugin-node-resolve';
-import alias from 'rollup-plugin-alias';
-import commonjs from 'rollup-plugin-commonjs';
-import builtins from 'rollup-plugin-node-builtins';
+const resolve = require('rollup-plugin-node-resolve')
+const commonjs = require('rollup-plugin-commonjs')
+const babel = require('rollup-plugin-babel')
 
 module.exports = {
   entry: __dirname + '/../src/index.js',
@@ -10,11 +9,29 @@ module.exports = {
   moduleName: 'jsonmvcdb',
   sourceMap: true,
   plugins: [
-    alias(),
+    babel({
+      babelrc: false,
+      exclude: 'node_modules/**',
+      presets: [
+        [
+          'es2015',
+          {
+            modules: false
+          }
+        ]
+      ],
+      plugins: [
+        'lodash',
+        'external-helpers'
+      ]
+    }),
     commonjs(),
-    builtins(),
-    resolve()
+    resolve({
+      customResolveOptions: {
+        moduleDirectory: 'node_modules'
+      }
+    })
   ],
-  external: ['lodash'],
+  external: ['lodash-es'],
   dest: __dirname + '/../dist/jsonmvcdb.js'
 }

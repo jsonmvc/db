@@ -1,6 +1,6 @@
 
 import getNode from './../fn/getNode'
-import isValidPath from './../isValidPath'
+import isValidPath from './../fn/isValidPath'
 
 /**
  * get

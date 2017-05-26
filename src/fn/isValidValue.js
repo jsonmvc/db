@@ -1,9 +1,9 @@
 
-import isPlainObject from 'lodash/isPlainObject'
-import isArray from 'lodash/isArray'
-import isString from 'lodash/isString'
-import isNumber from 'lodash/isNumber'
-import isBoolean from 'lodash/isBoolean'
+import isPlainObject from 'lodash-es/isPlainObject'
+import isArray from 'lodash-es/isArray'
+import isString from 'lodash-es/isString'
+import isNumber from 'lodash-es/isNumber'
+import isBoolean from 'lodash-es/isBoolean'
 
 // @TODO: Concat these implementation to reduce
 // fn calls

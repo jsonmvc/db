@@ -1,9 +1,0 @@
-
-- comment: Append to array
-  value: /foo/-
-  expected: true
-
-- comment: Disallow array
-  value:
-  - foo
-  expected: false

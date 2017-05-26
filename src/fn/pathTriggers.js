@@ -1,5 +1,5 @@
 
-import flatten from 'lodash/flattenDeep'
+import flatten from 'lodash-es/flattenDeep'
 import uniq from 'uniq'
 import decomposePath from './../fn/decomposePath'
 

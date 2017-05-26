@@ -6,9 +6,9 @@ const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/node.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
-const dbFn = require(`${root}/src/index`)
-const decomposePath = require(`${root}/src/fn/decomposePath`)
-const splitPath = require(`${root}/src/fn/splitPath`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
+const decomposePath = require(`${root}/src/fn/decomposePath`).default
+const splitPath = require(`${root}/src/fn/splitPath`).default
 
 // tests = [tests[tests.length - 1]]
 

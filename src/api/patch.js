@@ -2,14 +2,9 @@
 import getValue from './../fn/getValue'
 import decomposePath from './../fn/decomposePath'
 import uniq from 'uniq'
-import flatten from 'lodash/flattenDeep'
-import isObjectLike from 'lodash/isObjectLike'
-import isArray from 'lodash/isArray'
-import triggerListener from './../fn/triggerListener'
 import splitPath from './../fn/splitPath'
 import isPatch from './../fn/isPatch'
 import applyPatch from './../fn/applyPatch'
-import pathTriggers from './../fn/pathTriggers'
 import invalidateCache from './../fn/invalidateCache'
 import err from './../fn/err'
 
@@ -46,18 +41,6 @@ const patch = db => (patch, shouldValidate, shouldClone) => {
     err(db, '/err/types/patch/2', patch)
     return result
   }
-
-  let trigger = []
-
-  patch.forEach(x => {
-    trigger = trigger.concat(pathTriggers(db, x.path))
-  })
-
-  trigger = flatten(trigger)
-
-  trigger.map(x => {
-    triggerListener(db, x)
-  })
 }
 
 export default patch

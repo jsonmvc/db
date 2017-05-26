@@ -8,7 +8,7 @@ let tests = require('yaml-js').load(testsFile)
 // tests = [tests[tests.length - 1]]
 
 const merge = require('lodash/merge')
-const dbFn = require(`${root}/src/index`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
 
 const concat = function () {
   return Array.prototype.join.call(arguments, '-')

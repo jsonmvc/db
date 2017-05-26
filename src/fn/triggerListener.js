@@ -1,8 +1,7 @@
 
+import 'setimmediate'
 import getNode from './getNode'
 import err from './err'
-
-require('setimmediate')
 
 function callNode(db, path, i) {
   let fns = db.updates.fns[path]

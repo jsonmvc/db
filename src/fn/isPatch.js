@@ -1,8 +1,8 @@
 
 import isValidPath from './isValidPath'
 import isValidValue from './isValidValue'
-import isPlainObject from 'lodash/isPlainObject'
-import diff from 'lodash/difference'
+import isPlainObject from 'lodash-es/isPlainObject'
+import diff from 'lodash-es/difference'
 
 const props = [
   'from',

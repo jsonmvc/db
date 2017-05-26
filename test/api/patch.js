@@ -4,7 +4,7 @@ const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/patch.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
-const dbFn = require(`${root}/src/index`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
 const merge = require('lodash/merge')
 const identity = x => x
 

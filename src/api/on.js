@@ -1,5 +1,5 @@
 
-import isFunction from 'lodash/isFunction'
+import isFunction from 'lodash-es/isFunction'
 import getStaticNodes from './../fn/getStaticNodes'
 import triggerListener from './../fn/triggerListener'
 import decomposePath from './../fn/decomposePath'

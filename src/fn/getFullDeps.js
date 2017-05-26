@@ -1,6 +1,6 @@
 
 import decomposePath from './decomposePath'
-import uniq from 'lodash/uniq'
+import uniq from 'lodash-es/uniq'
 
 function getFullDeps(nodesDeps, path, deps) {
   let nodeDeps = nodesDeps[path]

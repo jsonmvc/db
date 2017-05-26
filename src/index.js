@@ -1,16 +1,14 @@
-'use strict'
-const on = require('./api/on')
-const get = require('./api/get')
-const has = require('./api/has')
-const patch = require('./api/patch')
-const node = require('./api/node')
-const err = require('./fn/err')
 
-const errTypes = require('./errors.js')
+import on from './api/on'
+import get from './api/get'
+import has from './api/has'
+import patch from './api/patch'
+import node from './api/node'
+import err from './fn/err'
 
-require('setimmediate')
+import errTypes from './errors.js'
 
-function jsomvcdb(data) {
+function jsonmvcdb(data) {
 
   // An error message should contain:
   // 1. Error number

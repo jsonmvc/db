@@ -3,7 +3,7 @@
 jest.useFakeTimers()
 
 const root = process.cwd()
-const dbFn = require(`${root}/src/index`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
 
 it('Should trigger listeners with nodes that are loaded in inorder', () => {
   let doc = {}

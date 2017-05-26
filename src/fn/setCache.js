@@ -1,6 +1,6 @@
 
 import splitPath from './splitPath'
-import clone from 'lodash/cloneDeep'
+import clone from 'lodash-es/cloneDeep'
 
 function setCache(db, path, value, dynamicParent) {
 

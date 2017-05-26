@@ -10,9 +10,9 @@ const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/on.yml`, 'utf-8')
 let tests = require('yaml-js').load(testsFile)
-const dbFn = require(`${root}/src/index`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
 const Promise = require('promise')
-const decomposePath = require(`${root}/src/fn/decomposePath`)
+const decomposePath = require(`${root}/src/fn/decomposePath`).default
 
 const additionalProps = ['err']
 

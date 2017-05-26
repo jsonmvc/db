@@ -4,7 +4,7 @@ const root = process.cwd()
 const fs = require('fs')
 const testsFile = fs.readFileSync(`${root}/test/api/has.yml`, 'utf-8')
 const tests = require('yaml-js').load(testsFile)
-const dbFn = require(`${root}/src/index`)
+const dbFn = require(`${root}/dist/jsonmvcdb`)
 
 const concat = function () {
   return Array.prototype.join.call(arguments, '-')

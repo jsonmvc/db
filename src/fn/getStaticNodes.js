@@ -1,5 +1,5 @@
 
-import flatten from 'lodash/flattenDeep'
+import flatten from 'lodash-es/flattenDeep'
 
 const getStaticNodes = (db, path) => {
 

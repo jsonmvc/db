@@ -1,12 +1,15 @@
 
-import isEqual from 'lodash/isEqual'
-import isNumber from 'lodash/isNumber'
-import isArray from 'lodash/isArray'
-import isPlainObject from 'lodash/isPlainObject'
-import merge from 'lodash/merge'
+import isEqual from 'lodash-es/isEqual'
+import flatten from 'lodash-es/flatten'
+import isNumber from 'lodash-es/isNumber'
+import isArray from 'lodash-es/isArray'
+import isPlainObject from 'lodash-es/isPlainObject'
+import merge from 'lodash-es/merge'
 import splitPath from './splitPath'
 import decomposePath from './decomposePath'
-import clone from 'lodash/cloneDeep'
+import clone from 'lodash-es/cloneDeep'
+import triggerListener from './triggerListener'
+import pathTriggers from './pathTriggers'
 
 function clearDynamic(cachePaths, cacheDynamic, decomposed, staticDeps, path) {
   let staticDepList = staticDeps[path]
@@ -226,6 +229,18 @@ function applyPatch(db, patch, shouldClone) {
   if (revert !== undefined) {
     // @TODO: Revert all changes done up until revertIndex
   }
+
+  let trigger = []
+
+  patch.forEach(x => {
+    trigger = trigger.concat(pathTriggers(db, x.path))
+  })
+
+  trigger = flatten(trigger)
+
+  trigger.map(x => {
+    triggerListener(db, x)
+  })
 
   return {
     revert,
