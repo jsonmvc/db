@@ -62,20 +62,14 @@ function clearCacheRecursive(cachePaths, cacheDynamic, decomposed, staticDeps, p
 function applyPatch(db, patch, shouldClone) {
 
   let i, x, parts, len, j, lenj, obj, part, last, to, found, temp, from, lastFrom
-  let objIsArray = false
-  let fromIsArray = false
   let revert
   let changed = {
     full: [],
     partial: []
   }
 
-  let xPath
-  let xValue
-  let path = ''
   let isTest
   let fullPath
-  let isValuePlainObject
   let cachePaths = db.cache.paths
   let decomposed = db.dynamic.decomposed
   let cacheDynamic = db.cache.dynamic
@@ -83,6 +77,11 @@ function applyPatch(db, patch, shouldClone) {
 
   root:
   for (i = 0, len = patch.length; i < len; i += 1) {
+    let path = ''
+    let xPath
+    let xValue
+    let objIsArray = false
+    let fromIsArray = false
     x = patch[i]
     xPath = x.path
     xValue = x.value

@@ -914,5 +914,20 @@
         bim: 777
         bloo: 444
 
+- comment: should properly patch a simple addition when multiple patches are sent
+  doc:
+    foo: []
+    bar: {}
+  patch:
+  - op: add
+    path: /foo/-
+    value: 123
+  - op: add
+    path: /bar
+    value: 321
+  expected:
+    foo: [123]
+    bar: 321
+
 #TODO:
 # replace /items/0 does not update the array instead is doing a shift
