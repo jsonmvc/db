@@ -52,7 +52,9 @@ const on = db => (path, fn) => {
 
   let id = listenerId
   return function unsubscribe() {
-    delete db.updates.fns[path][id]
+    if (!db.updates.fns[path]) {
+      delete db.updates.fns[path][id]
+    }
 
     // Remove everything related to this path as no
     // more listeners exist
